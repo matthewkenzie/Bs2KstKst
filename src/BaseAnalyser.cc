@@ -1,1 +1,19 @@
-/Users/matt/Scratch/lhcb/LHCbAnalysisScripts/required_files/BaseAnalyser.cc
+/////////////////////////////////////
+//                                 //
+// BaseAnalyser.cc                 //
+// Author: Matthew Kenzie          //
+// Auto-generated                  //
+// Will run the analysis chain     //
+//                                 //
+/////////////////////////////////////
+
+#include "../interface/BaseAnalyser.h"
+
+using namespace std;
+
+BaseAnalyser::BaseAnalyser(TString _name):
+	name(_name)
+{}
+
+BaseAnalyser::~BaseAnalyser(){}
+

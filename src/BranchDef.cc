@@ -1,1 +1,7 @@
-/Users/matt/Scratch/lhcb/LHCbAnalysisScripts/required_files/BranchDef.cc
+#include "../interface/BranchDef.h"
+
+BranchDef::BranchDef(){}
+
+BranchDef::~BranchDef(){}
+
+

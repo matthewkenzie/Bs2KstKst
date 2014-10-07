@@ -55,10 +55,10 @@ void ApplyPIDCorrection::Init(Looper *l){
 	pids.push_back("ProbNNK");
 	pids.push_back("ProbNNpi");
 
-	pidFiles.push_back("nTuples/PIDHists_Strip20r1_MagDown.root");
-	pidFiles.push_back("nTuples/PIDHists_Strip20r1_MagUp.root");
-	pidFiles.push_back("nTuples/PIDHists_Strip20_MagDown.root");
-	pidFiles.push_back("nTuples/PIDHists_Strip20_MagUp.root");
+	pidFiles.push_back("input/PIDHists_Strip20r1_MagDown.root");
+	pidFiles.push_back("input/PIDHists_Strip20r1_MagUp.root");
+	pidFiles.push_back("input/PIDHists_Strip20_MagDown.root");
+	pidFiles.push_back("input/PIDHists_Strip20_MagUp.root");
 
 	// relate itype to file index
 	itypeToFileMap.insert(make_pair(-71,0));
