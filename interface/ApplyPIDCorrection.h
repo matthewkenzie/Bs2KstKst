@@ -38,6 +38,7 @@ class ApplyPIDCorrection : public BaseAnalyser {
 		std::vector<TString> particles;
 		std::vector<TString> pids;
 		std::vector<TString> pidFiles;
+    std::vector<TFile*>  pidTFiles;
 		std::map<int,int> itypeToFileMap;
 		std::map<int,std::map<TString,std::map<TString,TH1D*> > > reweightVarHists;
 		std::map<int,std::map<TString,std::map<TString,TH1D*> > > pidVarHists;

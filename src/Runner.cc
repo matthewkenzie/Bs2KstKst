@@ -11,17 +11,30 @@
 
 using namespace std;
 
-Runner::Runner(TTree *_outTree, BranchDef *_branchDef, TString _name):
+Runner::Runner(TString outFileName, TString outTreeName, BranchDef *_branchDef, TString _name):
 	name(_name),
 	nentries(0),
 	firstEntry(-1),
 	lastEntry(-1),
-	naccepted(0)
+	naccepted(0),
+  batchmode(false)
 {
-	looper = new Looper(_outTree,_branchDef,_name);
+	outFile = new TFile(outFileName,"RECREATE");
+  outTree = new TTree(outTreeName,"Analysis Output Tree");
+  looper = new Looper(outTree,_branchDef,_name);
 }
 
 Runner::~Runner(){}
+
+void Runner::save(){
+	cout << Form("%-30s","Runner::run()") << " " << "Saving tree (" << outTree->GetName() << ") to file (" << outFile->GetName() << ")." << endl;
+  outFile->cd();
+  outTree->Write();
+  outFile->Close();
+  //delete looper;
+  //delete outTree;
+  //delete outFile;
+}
 
 void Runner::addLooperTree(TTree *tree, TString name, int itype, int sqrts) {
 	looper->addTreeContainer(tree,name,itype,sqrts);
@@ -88,10 +101,17 @@ void Runner::run(){
 		if (firstEntry<0) firstEntry=0;
 		if (lastEntry<0) lastEntry=jentries;
 
-		for (Long64_t jentry=0; jentry<jentries; jentry++){
+    Long64_t run_entries = lastEntry - firstEntry;
 
-			if (jentry%int(TMath::Ceil(jentries/1000))==0) {
-				printProgressBar(jentry);
+		for (Long64_t jentry=firstEntry; jentry<lastEntry; jentry++){
+
+			if (jentry%int(TMath::Ceil(run_entries/1000.))==0) {
+				if (batchmode) {
+          cout << "\t" << "Entry " << jentry << " / " << run_entries << endl;
+        }
+        else {
+          printProgressBar(jentry);
+        }
 			}
 			looper->treeContainers[t].tree->GetEntry(jentry);
 			bool passesAll = true;
@@ -108,7 +128,7 @@ void Runner::run(){
 				looper->Fill();
 			}
 		}
-		printProgressBar(jentries,true);
+		printProgressBar(run_entries,true);
 		cout << endl;
 		firstEntry = cachedFirstEntry;
 		lastEntry = cachedLastEntry;
@@ -123,10 +143,17 @@ void Runner::run(){
 	cout << Form("%-30s","Runner::run()") << " " << "Analysers cut flow summary:" << endl;
 	for (unsigned int t=0; t<looper->treeContainers.size(); t++){
 		cout << Form("%-30s","Runner::run()") << " " << "   " << looper->treeContainers[t].name << " : " << endl;
+    double totaleff=1.;
+    int totalpass=0;
+    int totalfail=0;
 		for (unsigned int a=0; a<analysers.size(); a++){
 			double eff = double(nPassFail[t][a].first)/double(nPassFail[t][a].first + nPassFail[t][a].second) * 100.;
+      totaleff *= (eff/100.);
+      totalpass += nPassFail[t][a].first;
+      totalfail += nPassFail[t][a].second;
 			cout << Form("%-30s","Runner::run()") << " " << "      " << a+1 << ".) " << Form("%-15s",(analysers[a]->name+":").Data()) << "  " <<	nPassFail[t][a].first << "/" << nPassFail[t][a].first + nPassFail[t][a].second << " of events passed -- " << Form("%6.2f%%",eff) << " efficient" << endl;
 		}
+    cout << Form("%-30s","Runner::run()") << " " << "      " << Form("%-19s","TOTAL:") << " " << totalpass << "/" << totalpass+totalfail << " of events passed -- " << Form("%6.2f%%",totaleff*100.) << " efficient" << endl;
 	}
 
 	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << nentries << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(nentries)) << " efficient" << endl;

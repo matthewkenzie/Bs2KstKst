@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# vim: ts=2 sw=2 expandtab
 
 from optparse import OptionParser
 parser = OptionParser()
@@ -7,13 +8,22 @@ parser.add_option("-o","--outfile",default="AnalysisOut.root",help="Name of outp
 parser.add_option("-t","--treename",default="AnalysisTree",help="Name of output tree. Default=%default")
 parser.add_option("-r","--runAsReduction",default=False,action="store_true")
 parser.add_option("-q","--submitToQueue",help="Submit jobs to batch queue")
+parser.add_option("-j","--jobDir",default="sub",help="Create jobs in this directory")
+parser.add_option("-s","--splitJobs",type="int",help="Split up jobs to run this number of events per job")
 parser.add_option("--dryRun",default=False,action="store_true",help="Don't actually run anything")
+parser.add_option("--runLocal",default=False,action="store_true",help="When splitting jobs run them locally")
+parser.add_option("-f","--firstEntry",type="int",help="First entry in tree to run")
+parser.add_option("-l","--lastEntry",type="int",help="Last entry in tree to run")
+parser.add_option("-m","--memoryRequest",type="int",help="Request this much local memory (in MB) at batch node (for PID calib use 40000)")
 parser.add_option("-v","--verbose",default=False,action="store_true")
+parser.add_option("-b","--batchMode",default=False,action="store_true",help="Run in batch mode")
 (opts,args) = parser.parse_args()
 
 import ROOT as r
 r.gSystem.Load("lib/libAnalysis")
 r.gROOT.SetBatch()
+
+import sys
 
 def getListOfInputFiles(datname):
 
@@ -32,45 +42,48 @@ def getListOfInputFiles(datname):
       relfiles.append(root+'/'+fil)
   return relfiles
 
-def writeSubScript(name,datname):
+def writeSubScript(name,datname,jobN=0):
 
-  os.system('mkdir -p sub')
-  fname = '%s/sub/%s.sh'%(os.getcwd(),name)
-  f = open(fname,'w')
-  f.write('#!/bin/bash\n')
-  f.write('touch %s.run\n'%f.name)
-  f.write('rm -f %s.fail\n'%f.name)
-  f.write('rm -f %s.done\n'%f.name)
-  f.write('rm -f %s.log\n'%f.name)
-  f.write('mkdir -p scratch\n')
-  f.write('cd scratch\n')
-  f.write('mkdir -p lib\n')
-  f.write('mkdir -p python\n')
-  f.write('mkdir -p dat\n')
-  f.write('cd %s\n'%os.getcwd())
-  f.write('source setup_lxplus.sh\n')
-  f.write('cd -\n')
-  f.write('cp %s/lib/libAnalysis.so lib/\n'%os.getcwd())
-  f.write('cp %s/runAnalysis.py .\n'%os.getcwd())
-  f.write('cp %s/python/configProducer.py python/\n'%os.getcwd())
-  f.write('cp %s/python/__init__.py python/\n'%os.getcwd())
-  f.write('cp %s/%s dat/\n'%(os.getcwd(),datname))
-  for fil in getListOfInputFiles(datname):
-    fil_base = os.path.basename(fil)
-    fil_dir = os.path.dirname(fil)
-    f.write('mkdir -p %s\n'%fil_dir)
-    f.write('cp %s/%s/%s %s/\n'%(os.getcwd(),fil_dir,fil_base,fil_dir))
-  exec_line = './runAnalysis.py -d dat/%s -o %s_Reduced.root -t ReducedTree'%(os.path.basename(datname),name)
-  f.write('if ( %s ) then\n'%exec_line)
-  f.write('\ttouch %s.done\n'%f.name)
-  f.write('else\n')
-  f.write('\ttouch %s.fail\n'%f.name)
-  f.write('fi\n')
-  f.write('rm -f %s.run\n'%f.name)
-  f.write('cp %s_Reduced.root %s/sub/\n'%(name,os.getcwd()))
-  f.close()
-  os.system('chmod +x %s'%f.name)
-  return f.name
+	os.system('mkdir -p %s'%opts.jobDir)
+	fname = '%s/%s/%s_j%d.sh'%(os.getcwd(),opts.jobDir,name,jobN)
+	f = open(fname,'w')
+	f.write('#!/bin/bash\n')
+	f.write('touch %s.run\n'%f.name)
+	f.write('rm -f %s.fail\n'%f.name)
+	f.write('rm -f %s.done\n'%f.name)
+	f.write('rm -f %s.log\n'%f.name)
+	f.write('mkdir -p scratch\n')
+	f.write('cd scratch\n')
+	f.write('mkdir -p lib\n')
+	f.write('mkdir -p python\n')
+	f.write('mkdir -p dat\n')
+	f.write('cd %s\n'%os.getcwd())
+	f.write('source /afs/cern.ch/group/z5/group_login.sh\n')
+	f.write('source setup_lxplus.sh\n')
+	f.write('cd -\n')
+	f.write('cp %s/lib/libAnalysis.so lib/\n'%os.getcwd())
+	f.write('cp %s/runAnalysis.py .\n'%os.getcwd())
+	f.write('cp %s/python/configProducer.py python/\n'%os.getcwd())
+	f.write('cp %s/python/__init__.py python/\n'%os.getcwd())
+	f.write('cp %s/%s dat/\n'%(os.getcwd(),datname))
+	for fil in getListOfInputFiles(datname):
+		fil_base = os.path.basename(fil)
+		fil_dir = os.path.dirname(fil)
+		f.write('mkdir -p %s\n'%fil_dir)
+		f.write('cp %s/%s/%s %s/\n'%(os.getcwd(),fil_dir,fil_base,fil_dir))
+	exec_line = './runAnalysis.py -d dat/%s -o %s_Reduced_j%d.root -t ReducedTree -b'%(os.path.basename(datname),name,jobN)
+	if opts.firstEntry: exec_line += ' -f %d'%opts.firstEntry
+	if opts.lastEntry: exec_line += ' -l %d'%opts.lastEntry
+	f.write('if ( %s ) then\n'%exec_line)
+	f.write('\tcp %s_Reduced_j%d.root %s/%s/\n'%(name,jobN,os.getcwd(),opts.jobDir))
+	f.write('\ttouch %s.done\n'%f.name)
+	f.write('else\n')
+	f.write('\ttouch %s.fail\n'%f.name)
+	f.write('fi\n')
+	f.write('rm -f %s.run\n'%f.name)
+	f.close()
+	os.system('chmod +x %s'%f.name)
+	return f.name
 
 def getBranchDef():
 
@@ -88,6 +101,37 @@ def getBranchDef():
 		return getattr(r,branchdef)()
 	else:
 		sys.exit('No valid branchdef found in datfile %s'%f.name)
+
+def configureJobSplitting(fname,tname):
+
+  if not opts.splitJobs:
+    return { 0: (None,None) }
+
+  tf = r.TFile.Open(fname)
+  tree = tf.Get(tname)
+  if not tree:
+    sys.exit('Tree %s does not exist in file %s'%(tname,fname))
+
+  nentries = tree.GetEntries()
+  tf.Close()
+
+  splittingOpts = {}
+
+  nJobs = int(r.TMath.Ceil(float(nentries)/opts.splitJobs))
+
+  for j in range(nJobs):
+    firstEntry = opts.splitJobs*j
+    lastEntry = opts.splitJobs*(j+1)
+    if lastEntry > nentries:
+      lastEntry = nentries
+    splittingOpts[j] = (firstEntry,lastEntry)
+
+  print 'Splitting file:', fname, 'into', len(splittingOpts.keys()), 'jobs'
+  for key, item in splittingOpts.items():
+    print  '\t', '[',item[0],'-',item[1], ']'
+
+  return splittingOpts
+
 
 # run to reduce tree size (will create one output file for each input file)
 if opts.runAsReduction:
@@ -120,26 +164,45 @@ if opts.runAsReduction:
   for i, line in enumerate(file_lines):
     datname = 'tmp/%s_%d.dat'%(stripped_name,i)
     rootname = ''
+    fname = ''
+    treename = ''
     for el in line.split():
       if el.startswith('name'):
         rootname = el.split('=')[1]
+      if el.startswith('fname'):
+        fname = el.split('=')[1]
+      if el.startswith('tname'):
+        treename = el.split('=')[1]
 
+    jobSplittingOpts = configureJobSplitting(fname,treename)
 
-    exec_line = './runAnalysis.py -d %s -o root/%s_Reduced.root -t ReducedTree 2>&1 | tee root/%s_reduction_out.log'%(datname,rootname,rootname)
-    if opts.submitToQueue:
-      subscript = writeSubScript(rootname,datname)
-      if not opts.dryRun:
-        os.system('bsub -q %s -o %s.log %s'%(opts.submitToQueue,subscript,subscript))
+    for jobN, jobRange in jobSplittingOpts.items():
+
+      opts.firstEntry = jobRange[0]
+      opts.lastEntry = jobRange[1]
+      subscript = writeSubScript(rootname,datname,jobN)
+
+      if opts.submitToQueue:
+        if not opts.dryRun:
+          bsub_line = 'bsub -q %s -o %s.log'%(opts.submitToQueue,subscript)
+          if opts.memoryRequest:
+            bsub_line += ' -R "rusage[mem=%d]"'%(opts.memoryRequest)
+          bsub_line += ' %s'%subscript
+          print 'Submitting job:', subscript
+          os.system(bsub_line)
       else:
         print 'Written sub script', subscript
-    else:
-      if not opts.dryRun:
-        print '%-30s'%'runAnalysis.py', 'Running Reduction Job %d/%d'%(i+1,len(file_lines))
-        os.system(exec_line)
-      else:
-        print exec_line
+        if opts.runLocal:
+          os.system('%s'%subscript)
+        else:
+          exec_line = './runAnalysis.py -d %s -o root/%s_Reduced.root -t ReducedTree'%(datname,rootname)
+          if opts.firstEntry: exec_line += ' -f %d'%opts.firstEntry
+          if opts.lastEntry: exec_line += ' -l %d'%opts.lastEntry
+          exec_line += ' 2>&1 | tee root/%s_reduction_out.log'%(rootname)
+          if not opts.dryRun:
+            os.system(exec_line)
 
-# normal analysis below here (will merge all input files into a single output)
+  # normal analysis below here (will merge all input files into a single output)
 else:
 
 	print '%-30s'%'runAnalysis.py', 'Starting analysis'
@@ -150,24 +213,26 @@ else:
 
 	cfg_file = opts.datfile
 
-	outt = r.TTree(opts.treename,"Analysis Output Tree")
-
 	branchdefclass = getBranchDef()
-	runner = r.Runner(outt,branchdefclass,"Runner")
+	runner = r.Runner(opts.outfile,opts.treename,branchdefclass,"Runner")
 	cfg = configProducer(runner,cfg_file,opts.verbose)
 
+	if opts.firstEntry:
+		runner.setFirstEntry(opts.firstEntry)
+	if opts.lastEntry:
+		runner.setLastEntry(opts.lastEntry)
+	if opts.batchMode:
+		runner.setBatchMode()
 	runner.run()
 
 	print '%-30s'%'runAnalysis.py', 'Analysis complete!!!'
-	print '%-30s'%'runAnalysis.py', 'Writing tree', outt.GetName(), 'to output file:', opts.outfile
-	outf = r.TFile(opts.outfile,"RECREATE")
-	outf.cd()
-	outt.SetDirectory(outf)
-	#outf.Write()
-	outt.Write()
-	outf.Close()
+
+	runner.save()
 
 	print '%-30s'%'runAnalysis.py', 'Success!!!'
 
 	sw.Stop()
 	print '%-30s'%'runAnalysis.py', 'Took: %4.2f secs (real) %4.2f secs (CPU)'%(sw.RealTime(),sw.CpuTime())
+
+	del runner
+	del branchdefclass

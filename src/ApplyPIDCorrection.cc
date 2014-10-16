@@ -39,7 +39,10 @@ ApplyPIDCorrection::~ApplyPIDCorrection(){
 			delete it2->second;
 		}
 	}
-
+  for (vector<TFile*>::iterator it=pidTFiles.begin(); it!=pidTFiles.end(); it++){
+    (*it)->Close();
+    delete *it;
+  }
 }
 
 void ApplyPIDCorrection::Init(Looper *l){
@@ -113,33 +116,33 @@ void ApplyPIDCorrection::loadHistograms(){
 
 	// loop over the PID files
 	for (unsigned int f=0; f<pidFiles.size(); f++){
-		TFile *tf = TFile::Open(pidFiles[f]);
+    TFile *tf = TFile::Open(pidFiles[f]);
 
 		// within each file loop over the particle to reweight (K's and pi's)
 		for (unsigned int p=0; p<particles.size(); p++){
 
 			// loop over the reweight vars (P, ETA, nTracks)
 			for (unsigned int v=0; v<reweightVars.size(); v++){
-				reweightVarHists[f][particles[p]][reweightVars[v]] = (TH1D*)(tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),reweightVars[v].Data()))->Clone());
+				//reweightVarHists[f][particles[p]][reweightVars[v]] = (TH1D*)(tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),reweightVars[v].Data()))->Clone());
+				reweightVarHists[f][particles[p]][reweightVars[v]] = (TH1D*)tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),reweightVars[v].Data()));
 				reweightVarHists[f][particles[p]][reweightVars[v]]->SetName(Form("f%d_p%s_%s",f,particles[p].Data(),reweightVars[v].Data()));
-				reweightVarHists[f][particles[p]][reweightVars[v]]->SetDirectory(0);
+				//reweightVarHists[f][particles[p]][reweightVars[v]]->SetDirectory(0);
 			}
 
 			// loop over the pid vars (ProbNNK, ProbNNpi)
 			for (unsigned int pid=0; pid<pids.size(); pid++){
-				pidVarHists[f][particles[p]][pids[pid]] = (TH1D*)(tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),pids[pid].Data()))->Clone());
+				//pidVarHists[f][particles[p]][pids[pid]] = (TH1D*)(tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),pids[pid].Data()))->Clone());
+				pidVarHists[f][particles[p]][pids[pid]] = (TH1D*)tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),pids[pid].Data()));
 				pidVarHists[f][particles[p]][pids[pid]]->SetName(Form("f%d_p%s_%s",f,particles[p].Data(),pids[pid].Data()));
-				pidVarHists[f][particles[p]][pids[pid]]->SetDirectory(0);
+				//pidVarHists[f][particles[p]][pids[pid]]->SetDirectory(0);
 			}
 
 			// get the sparse
-			sparse[f][particles[p]] = (THnSparseD*)(tf->Get(Form("DEFAULT/%s/histo_PID",particles[p].Data()))->Clone());
+			//sparse[f][particles[p]] = (THnSparseD*)(tf->Get(Form("DEFAULT/%s/histo_PID",particles[p].Data()))->Clone());
+			sparse[f][particles[p]] = (THnSparseD*)tf->Get(Form("DEFAULT/%s/histo_PID",particles[p].Data()));
 			sparse[f][particles[p]]->SetName(Form("histo_PID_f%d_%s",f,particles[p].Data()));
 		}
-		tf->Close();
-		delete tf;
 	}
-
 }
 
 double ApplyPIDCorrection::getResampledPID(double P, double ETA, double nTracks, int fInd, TString part, TString pidVar, double originalPID) {
@@ -165,6 +168,4 @@ double ApplyPIDCorrection::getResampledPID(double P, double ETA, double nTracks,
 	delete samplingHist;
 
 	return resampledPID;
-
-
 }

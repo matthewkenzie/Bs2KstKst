@@ -40,7 +40,7 @@ DOCDIR= $(BASEDIR)/docs
 OBJ_EXT=o
 MAIN_EXT=cpp
 
-ROOT_DICT=obj/RootDict.cxx
+ROOT_DICT=$(PWD)/obj/RootDict.cxx
 ROOT_OBJ=$(subst cxx,$(OBJ_EXT),$(ROOT_DICT))
 SRCS=$(wildcard $(BASEDIR)/src/*.cc)
 EXES=$(wildcard $(BASEDIR)/main/*.cpp)
@@ -50,18 +50,21 @@ BINS=$(subst $(MAINDIR), $(EXEDIR),$(subst .$(MAIN_EXT),,$(EXES)))
 
 all: $(LIBDIR)/lib$(LIBNAME).so
 
-$(OBJDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.cc $(ROOT_DICT)
-	@echo Making object $@
-	@$(CXX) $(CXXFLAGS) -fPIC -c $<  -o $@
-
 $(LIBDIR)/lib$(LIBNAME).so: $(OBJS) $(ROOT_OBJ)
 	@echo Building shared library $@
-	@$(LD) $(LDFLAGS) -o $(LIBDIR)/lib$(LIBNAME).so $^ $(LIBS)
+	@$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 
-$(ROOT_DICT): $(SRCS) $(HEADERS)
+$(OBJDIR)/%.$(OBJ_EXT): $(SRCDIR)/%.cc $(ROOT_DICT)
+	@echo Making object $@
+	@$(CXX) $(CXXFLAGS) -fPIC -c $< -o $@
+
+$(ROOT_OBJ): $(ROOT_DICT)
+	@echo Making object $@
+	@$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+
+$(ROOT_DICT): $(HEADERS)
 	@echo Making dictionary $@
-	@rootcint -f $@ -c -L$(ROOFITSYS)/lib -I$(ROOFITSYS)/include $(HEADERS)
-	@$(CXX) $(CXXFLAGS) -fPIC -c $(ROOT_DICT) -o $(ROOT_OBJ)
+	@rootcint -f $@ -c -L$(ROOFITSYS)/lib -I$(ROOFITSYS)/include $^
 
 vars:
 	@echo "LIBS: " $(LIBS)
