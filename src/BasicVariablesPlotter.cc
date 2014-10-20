@@ -94,6 +94,7 @@ void BasicVariablesPlotter::fillHistograms(Looper *l){
   if (histMap.find(l->itype)==histMap.end()){
     for (vector<HistContainer>::iterator histIt=histList.begin(); histIt!=histList.end(); histIt++){
       histMap[l->itype][histIt->name] = new TH1F(Form("%s_t%d",histIt->name.Data(),l->itype),histIt->name.Data(),histIt->nbins,histIt->xlow,histIt->xhigh);
+      histMap[l->itype][histIt->name]->SetDirectory(0);
     }
   }
 
@@ -142,8 +143,11 @@ void BasicVariablesPlotter::fillHistograms(Looper *l){
 void BasicVariablesPlotter::saveHistograms(TString outFileName){
 
   TFile *outFile = new TFile(outFileName,"RECREATE");
+  outFile->cd();
   for (map<int,map<TString,TH1F*> >::iterator it1=histMap.begin(); it1!=histMap.end(); it1++){
     for (map<TString,TH1F*>::iterator it2=it1->second.begin(); it2!=it1->second.end(); it2++){
+      cout << it2->first << " " << it2->second << " " << it2->second->GetName() << endl;
+      it2->second->Print();
       it2->second->Write();
     }
   }

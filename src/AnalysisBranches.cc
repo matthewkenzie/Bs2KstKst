@@ -6,9 +6,9 @@
 
 #include "../interface/AnalysisBranches.h"
 
-AnalysisBranches::AnalysisBranches(){} 																	 
-AnalysisBranches::~AnalysisBranches(){} 																	 
-void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){ 
+AnalysisBranches::AnalysisBranches(){}
+AnalysisBranches::~AnalysisBranches(){}
+void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	if (l->itype<0) tree->SetBranchAddress("B_s0_BKGCAT", l->B_s0_BKGCAT, &(l->b_B_s0_BKGCAT));
 	tree->SetBranchAddress("B_s0_DIRA_OWNPV", l->B_s0_DIRA_OWNPV, &(l->b_B_s0_DIRA_OWNPV));
 	tree->SetBranchAddress("B_s0_ENDVERTEX_CHI2", l->B_s0_ENDVERTEX_CHI2, &(l->b_B_s0_ENDVERTEX_CHI2));
@@ -728,9 +728,10 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_totCandidates;
 }
 
-void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){ 
+void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("itype",&(l->itype));
 	tree->Branch("sqrts",&(l->sqrts));
+  tree->Branch("bdtoutput",&(l->bdtoutput));
 	tree->Branch("B_s0_BKGCAT",l->B_s0_BKGCAT);
 	tree->Branch("B_s0_DIRA_OWNPV",l->B_s0_DIRA_OWNPV);
 	tree->Branch("B_s0_ENDVERTEX_CHI2",l->B_s0_ENDVERTEX_CHI2);

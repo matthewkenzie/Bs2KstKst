@@ -61,6 +61,8 @@ class Looper {
 		std::vector<TreeContainer> treeContainers;
 
 		// my own variables
+    Float_t         bdtoutput;
+    //
 		Double_t   			*Kplus_ProbNNkcorr;
 		Double_t   			*Kminus_ProbNNkcorr;
 		Double_t   			*Piplus_ProbNNkcorr;
