@@ -31,6 +31,7 @@ class BDTTrainer : public BaseAnalyser {
 		TString outfilename;
 		int evCount;
 		int numberOfBDTs;
+    bool doBDTCycling;
 		std::vector<TMVA::Factory*> factoryContainer;
 		TFile *outFile;
 

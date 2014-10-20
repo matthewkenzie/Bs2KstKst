@@ -135,7 +135,7 @@ def writeSrc():
 	for key in varKeys:
 		line = 'delete l->b_%s;\n'%key
 		f.write('\t'+line)
-  f.write('}\n')
+	f.write('}\n')
 	f.write('\n')
 
 	# write setOutputBranches() here

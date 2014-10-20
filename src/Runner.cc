@@ -28,9 +28,9 @@ Runner::~Runner(){}
 
 void Runner::save(){
 	cout << Form("%-30s","Runner::run()") << " " << "Saving tree (" << outTree->GetName() << ") to file (" << outFile->GetName() << ")." << endl;
-  outFile->cd();
-  outTree->Write();
-  outFile->Close();
+  //outFile->cd();
+  outFile->Write();
+  //outFile->Close();
   //delete looper;
   //delete outTree;
   //delete outFile;
@@ -107,7 +107,7 @@ void Runner::run(){
 
 			if (jentry%int(TMath::Ceil(run_entries/1000.))==0) {
 				if (batchmode) {
-          cout << "\t" << "Entry " << jentry << " / " << run_entries << endl;
+          cout << "\t" << "Entry " << jentry-firstEntry << " / " << run_entries << endl;
         }
         else {
           printProgressBar(jentry);
@@ -156,6 +156,6 @@ void Runner::run(){
     cout << Form("%-30s","Runner::run()") << " " << "      " << Form("%-19s","TOTAL:") << " " << totalpass << "/" << totalpass+totalfail << " of events passed -- " << Form("%6.2f%%",totaleff*100.) << " efficient" << endl;
 	}
 
-	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << nentries << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(nentries)) << " efficient" << endl;
+	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << lastEntry-firstEntry << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(lastEntry-firstEntry)) << " efficient" << endl;
 }
 

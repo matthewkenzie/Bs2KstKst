@@ -12,7 +12,7 @@
 ####################################################################################################
 
 branchdef=AnalysisBranches
-analysers=BDTTrainer,BasicVariablesPlotter
+analysers=BasicVariablesPlotter
 
 itype=-71  	name=MC2011_HighMass_MagDown 	fname=file_store/mc_reduced/MC2011_HighMass_MagDown_Reduced.root           tname=ReducedTree
 itype=-72  	name=MC2011_HighMass_MagUp   	fname=file_store/mc_reduced/MC2011_HighMass_MagUp_Reduced.root             tname=ReducedTree

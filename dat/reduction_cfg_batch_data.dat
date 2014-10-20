@@ -12,7 +12,7 @@
 ####################################################################################################
 
 branchdef=ReductionBranches
-analysers=PreSelection
+analysers=TriggerSelection,TruthMatching,PreSelection
 
 itype=71  	name=Data2011_MagDown 				fname=root://eoslhcb.cern.ch//eos/lhcb/user/r/romerov/Ntuples/Bs2Kst0Kst0/Bs2Kst0Kst0_wide_Real2011_magnetDown_Job25_v2.root             tname=Bs2Kst0Kst0/DecayTree
 itype=72  	name=Data2011_MagUp 				 	fname=root://eoslhcb.cern.ch//eos/lhcb/user/r/romerov/Ntuples/Bs2Kst0Kst0/Bs2Kst0Kst0_wide_Real2011_magnetUp_Job24_v2.root               tname=Bs2Kst0Kst0/DecayTree

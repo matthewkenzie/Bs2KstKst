@@ -18,8 +18,11 @@ BDTTrainer::BDTTrainer(TString _name):
 	BaseAnalyser(_name),
 	outfilename("MVATrainingOutput.root"),
 	evCount(0),
-	numberOfBDTs(5)
-{}
+	numberOfBDTs(1),
+  doBDTCycling(false)
+{
+  if (!doBDTCycling) numberOfBDTs=1;
+}
 
 BDTTrainer::~BDTTrainer(){}
 
@@ -150,14 +153,18 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	varMap["max_track_CHI2"] = max_track_chi2;
 
 	// PID
-	//varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNKcorr - *l->Kplus_ProbNNpicorr;
-	//varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNKcorr - *l->Kplus_ProbNNpicorr;
-	//varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNKcorr - *l->Kplus_ProbNNpicorr;
-	//varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNKcorr - *l->Kplus_ProbNNpicorr;
-	varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-	varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-	varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-	varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+  if ( l->itype < 0 ) {
+    varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+  }
+  else {
+    varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+  }
 
 	// now put the variable values in a nice vector (in the right order!!)
 	assert(varNames.size()==varMap.size());
@@ -172,15 +179,25 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	// MC only
 	if ( l->itype < 0 ) {
 
-		// now put event in relevant BDT
-		for (int b=0; b<numberOfBDTs; b++){
-			if (b==relBDT){
-				factoryContainer[b]->AddSignalTestEvent(values);
-			}
-			else {
-				factoryContainer[b]->AddSignalTrainingEvent(values);
-			}
-		}
+    // now put event in relevant BDT
+    if (doBDTCycling) {
+      for (int b=0; b<numberOfBDTs; b++){
+        if (b==relBDT){
+          factoryContainer[b]->AddSignalTestEvent(values);
+        }
+        else {
+          factoryContainer[b]->AddSignalTrainingEvent(values);
+        }
+      }
+    }
+    else {
+      if (lastDigit%5==0) {
+        factoryContainer[0]->AddSignalTrainingEvent(values);
+      }
+      else {
+        factoryContainer[0]->AddSignalTestEvent(values);
+      }
+    }
 
 		// step up counter
 		evCount++;
@@ -190,17 +207,28 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	if ( l->itype > 0 ) {
 
 		// cut out signal region
-		if (*l->B_s0_MM < 5250 || *l->B_s0_MM > 5450) return false;
+		//if (*l->B_s0_MM > 5250 && *l->B_s0_MM < 5450) return false;
+		if (*l->B_s0_MM > 5250) return false;
 
 		// now put event in relevant BDT
-		for (int b=0; b<numberOfBDTs; b++){
-			if (b==relBDT){
-				factoryContainer[b]->AddBackgroundTestEvent(values);
-			}
-			else {
-				factoryContainer[b]->AddBackgroundTrainingEvent(values);
-			}
-		}
+    if (doBDTCycling) {
+      for (int b=0; b<numberOfBDTs; b++){
+        if (b==relBDT){
+          factoryContainer[b]->AddBackgroundTestEvent(values);
+        }
+        else {
+          factoryContainer[b]->AddBackgroundTrainingEvent(values);
+        }
+      }
+    }
+    else {
+      if (lastDigit%5==0) {
+        factoryContainer[0]->AddBackgroundTrainingEvent(values);
+      }
+      else {
+        factoryContainer[0]->AddBackgroundTestEvent(values);
+      }
+    }
 
 		// step up counter
 		evCount++;
