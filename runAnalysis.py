@@ -27,10 +27,13 @@ import sys
 
 def getListOfInputFiles(datname):
 
+  print 'Getting input files from', datname
   relfiles=[]
   f = open(datname)
   for line in f.readlines():
+    if not line.startswith('#'): print line
     if not line.startswith('itype'): continue
+    print 'line starting with itype', line
     els = line.split()
     if len(els)<3: continue
     fel = els[2]

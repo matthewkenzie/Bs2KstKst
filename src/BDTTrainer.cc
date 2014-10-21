@@ -104,7 +104,7 @@ void BDTTrainer::Term(Looper *l){
 
 		// TMVA methods here
 		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Booking TMVA methods" << endl;
-		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:NTrees=200:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=1:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:NTrees=200:BoostType=AdaBoost:DoPreselection:UseBaggedBoost:nCuts=-1:MinNodeSize=1:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
 
 		// Train, Test and Evaluate
 		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
