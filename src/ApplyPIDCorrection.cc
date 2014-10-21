@@ -8,6 +8,7 @@
 /////////////////////////////////////
 
 #include "TMath.h"
+#include "TLorentzVector.h"
 
 #include "../interface/ApplyPIDCorrection.h"
 
@@ -85,16 +86,21 @@ bool ApplyPIDCorrection::AnalyseEvent(Looper *l){
 	// MC only
 	if ( l->itype < 0 ) {
 
-		int fInd = getFileIndexFromType(l->itype);
-		*l->Kplus_ProbNNkcorr = getResampledPID(*l->Kplus_P,0.5*TMath::Log( ( *l->Kplus_P + *l->Kplus_PZ ) / ( *l->Kplus_P - *l->Kplus_PZ) ),*l->nTracks,fInd,"K","ProbNNK",*l->Kplus_ProbNNk);
-		*l->Kminus_ProbNNkcorr = getResampledPID(*l->Kminus_P,0.5*TMath::Log( ( *l->Kminus_P + *l->Kminus_PZ ) / ( *l->Kminus_P - *l->Kminus_PZ) ),*l->nTracks,fInd,"K","ProbNNK",*l->Kminus_ProbNNk);
-		*l->Piplus_ProbNNkcorr = getResampledPID(*l->Piplus_P,0.5*TMath::Log( ( *l->Piplus_P + *l->Piplus_PZ ) / ( *l->Piplus_P - *l->Piplus_PZ) ),*l->nTracks,fInd,"Pi","ProbNNK",*l->Piplus_ProbNNk);
-		*l->Piminus_ProbNNkcorr = getResampledPID(*l->Piminus_P,0.5*TMath::Log( ( *l->Piminus_P + *l->Piminus_PZ ) / ( *l->Piminus_P - *l->Piminus_PZ) ),*l->nTracks,fInd,"Pi","ProbNNK",*l->Piminus_ProbNNk);
+    TLorentzVector Kplus_p4(*l->Kplus_PX,*l->Kplus_PY,*l->Kplus_PZ,*l->Kplus_PE);
+    TLorentzVector Kminus_p4(*l->Kminus_PX,*l->Kminus_PY,*l->Kminus_PZ,*l->Kminus_PE);
+    TLorentzVector Piplus_p4(*l->Piplus_PX,*l->Piplus_PY,*l->Piplus_PZ,*l->Piplus_PE);
+    TLorentzVector Piminus_p4(*l->Piminus_PX,*l->Piminus_PY,*l->Piminus_PZ,*l->Piminus_PE);
 
-		*l->Kplus_ProbNNpicorr = getResampledPID(*l->Kplus_P,0.5*TMath::Log( ( *l->Kplus_P + *l->Kplus_PZ ) / ( *l->Kplus_P - *l->Kplus_PZ) ),*l->nTracks,fInd,"K","ProbNNpi",*l->Kplus_ProbNNpi);
-		*l->Kminus_ProbNNpicorr = getResampledPID(*l->Kminus_P,0.5*TMath::Log( ( *l->Kminus_P + *l->Kminus_PZ ) / ( *l->Kminus_P - *l->Kminus_PZ) ),*l->nTracks,fInd,"K","ProbNNpi",*l->Kminus_ProbNNpi);
-		*l->Piplus_ProbNNpicorr = getResampledPID(*l->Piplus_P,0.5*TMath::Log( ( *l->Piplus_P + *l->Piplus_PZ ) / ( *l->Piplus_P - *l->Piplus_PZ) ),*l->nTracks,fInd,"Pi","ProbNNpi",*l->Piplus_ProbNNpi);
-		*l->Piminus_ProbNNpicorr = getResampledPID(*l->Piminus_P,0.5*TMath::Log( ( *l->Piminus_P + *l->Piminus_PZ ) / ( *l->Piminus_P - *l->Piminus_PZ) ),*l->nTracks,fInd,"Pi","ProbNNpi",*l->Piminus_ProbNNpi);
+		int fInd = getFileIndexFromType(l->itype);
+		*l->Kplus_ProbNNkcorr    = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks,fInd,"K", "ProbNNK",*l->Kplus_ProbNNk);
+		*l->Kminus_ProbNNkcorr   = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks,fInd,"K", "ProbNNK",*l->Kminus_ProbNNk);
+		*l->Piplus_ProbNNkcorr   = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks,fInd,"Pi","ProbNNK",*l->Piplus_ProbNNk);
+		*l->Piminus_ProbNNkcorr  = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks,fInd,"Pi","ProbNNK",*l->Piminus_ProbNNk);
+
+		*l->Kplus_ProbNNpicorr   = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks,fInd,"K", "ProbNNpi",*l->Kplus_ProbNNpi);
+		*l->Kminus_ProbNNpicorr  = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks,fInd,"K", "ProbNNpi",*l->Kminus_ProbNNpi);
+		*l->Piplus_ProbNNpicorr  = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks,fInd,"Pi","ProbNNpi",*l->Piplus_ProbNNpi);
+		*l->Piminus_ProbNNpicorr = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks,fInd,"Pi","ProbNNpi",*l->Piminus_ProbNNpi);
 
 	}
 	// Data only
@@ -146,6 +152,15 @@ void ApplyPIDCorrection::loadHistograms(){
 }
 
 double ApplyPIDCorrection::getResampledPID(double P, double ETA, double nTracks, int fInd, TString part, TString pidVar, double originalPID) {
+
+  if ( ! reweightVarHists[fInd][part]["P"] || ! reweightVarHists[fInd][part]["ETA"] || ! reweightVarHists[fInd][part]["nTracks"]){
+    cerr << "ERROR -- ApplyPIDCorrection::getResampledPID() -- One of the reweighting histograms is NULL" << endl;
+    exit(1);
+  }
+  if ( ! sparse[fInd][part] ) {
+    cerr << "ERROR -- ApplyPIDCorrection::getResampledPID() -- The resampling histogram is NULL" << endl;
+    exit(1);
+  }
 
 	int bin_P = reweightVarHists[fInd][part]["P"]->FindBin(P);
 	int bin_ETA = reweightVarHists[fInd][part]["ETA"]->FindBin(ETA);

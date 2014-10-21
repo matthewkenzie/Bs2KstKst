@@ -61,8 +61,6 @@ Double_t        Kminus_PZ                                    0
 Double_t        Kminus_ProbNNk                               0
 Double_t        Kminus_ProbNNp                               0
 Double_t        Kminus_ProbNNpi                              0
-Double_t        Kminus_ProbNNkcorr                          -1
-Double_t        Kminus_ProbNNpicorr                         -1
 Double_t        Kminus_TRACK_CHI2NDOF                        0
 Bool_t          Kminus_isMuon                                0
 Double_t        Kminus_IPCHI2_OWNPV                          0
@@ -82,8 +80,6 @@ Double_t        Kplus_PZ                                     0
 Double_t        Kplus_ProbNNk                                0
 Double_t        Kplus_ProbNNp                                0
 Double_t        Kplus_ProbNNpi                               0
-Double_t        Kplus_ProbNNkcorr                           -1
-Double_t        Kplus_ProbNNpicorr                          -1
 Double_t        Kplus_TRACK_CHI2NDOF                         0
 Bool_t          Kplus_isMuon                                 0
 Double_t        Kplus_IPCHI2_OWNPV                           0
@@ -103,8 +99,6 @@ Double_t        Piminus_PZ                                   0
 Double_t        Piminus_ProbNNk                              0
 Double_t        Piminus_ProbNNp                              0
 Double_t        Piminus_ProbNNpi                             0
-Double_t        Piminus_ProbNNkcorr                         -1
-Double_t        Piminus_ProbNNpicorr                        -1
 Double_t        Piminus_TRACK_CHI2NDOF                       0
 Bool_t          Piminus_isMuon                               0
 Double_t        Piminus_IPCHI2_OWNPV                         0
@@ -124,8 +118,6 @@ Double_t        Piplus_PZ                                    0
 Double_t        Piplus_ProbNNk                               0
 Double_t        Piplus_ProbNNp                               0
 Double_t        Piplus_ProbNNpi                              0
-Double_t        Piplus_ProbNNkcorr                          -1
-Double_t        Piplus_ProbNNpicorr                         -1
 Double_t        Piplus_TRACK_CHI2NDOF                        0
 Bool_t          Piplus_isMuon                                0
 Double_t        Piplus_IPCHI2_OWNPV                          0
