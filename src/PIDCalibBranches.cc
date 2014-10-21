@@ -12,6 +12,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	if (l->itype<0) tree->SetBranchAddress("B_s0_BKGCAT", l->B_s0_BKGCAT, &(l->b_B_s0_BKGCAT));
 	tree->SetBranchAddress("B_s0_DIRA_OWNPV", l->B_s0_DIRA_OWNPV, &(l->b_B_s0_DIRA_OWNPV));
 	tree->SetBranchAddress("B_s0_ENDVERTEX_CHI2", l->B_s0_ENDVERTEX_CHI2, &(l->b_B_s0_ENDVERTEX_CHI2));
+	tree->SetBranchAddress("B_s0_ETA", l->B_s0_ETA, &(l->b_B_s0_ETA));
 	tree->SetBranchAddress("B_s0_FDCHI2_OWNPV", l->B_s0_FDCHI2_OWNPV, &(l->b_B_s0_FDCHI2_OWNPV));
 	tree->SetBranchAddress("B_s0_FD_OWNPV", l->B_s0_FD_OWNPV, &(l->b_B_s0_FD_OWNPV));
 	tree->SetBranchAddress("B_s0_Hlt1DiHadronDecision_TOS", l->B_s0_Hlt1DiHadronDecision_TOS, &(l->b_B_s0_Hlt1DiHadronDecision_TOS));
@@ -56,6 +57,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("B_s0_TAU", l->B_s0_TAU, &(l->b_B_s0_TAU));
 	tree->SetBranchAddress("B_s0_TAUCHI2", l->B_s0_TAUCHI2, &(l->b_B_s0_TAUCHI2));
 	tree->SetBranchAddress("B_s0_TAUERR", l->B_s0_TAUERR, &(l->b_B_s0_TAUERR));
+	tree->SetBranchAddress("Kminus_ETA", l->Kminus_ETA, &(l->b_Kminus_ETA));
 	tree->SetBranchAddress("Kminus_IPCHI2_OWNPV", l->Kminus_IPCHI2_OWNPV, &(l->b_Kminus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Kminus_IP_OWNPV", l->Kminus_IP_OWNPV, &(l->b_Kminus_IP_OWNPV));
 	tree->SetBranchAddress("Kminus_M", l->Kminus_M, &(l->b_Kminus_M));
@@ -74,6 +76,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kminus_ProbNNpi", l->Kminus_ProbNNpi, &(l->b_Kminus_ProbNNpi));
 	tree->SetBranchAddress("Kminus_TRACK_CHI2NDOF", l->Kminus_TRACK_CHI2NDOF, &(l->b_Kminus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Kminus_isMuon", l->Kminus_isMuon, &(l->b_Kminus_isMuon));
+	tree->SetBranchAddress("Kplus_ETA", l->Kplus_ETA, &(l->b_Kplus_ETA));
 	tree->SetBranchAddress("Kplus_IPCHI2_OWNPV", l->Kplus_IPCHI2_OWNPV, &(l->b_Kplus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Kplus_IP_OWNPV", l->Kplus_IP_OWNPV, &(l->b_Kplus_IP_OWNPV));
 	tree->SetBranchAddress("Kplus_M", l->Kplus_M, &(l->b_Kplus_M));
@@ -96,6 +99,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kst_DIRA_ORIVX", l->Kst_DIRA_ORIVX, &(l->b_Kst_DIRA_ORIVX));
 	tree->SetBranchAddress("Kst_DIRA_OWNPV", l->Kst_DIRA_OWNPV, &(l->b_Kst_DIRA_OWNPV));
 	tree->SetBranchAddress("Kst_ENDVERTEX_CHI2", l->Kst_ENDVERTEX_CHI2, &(l->b_Kst_ENDVERTEX_CHI2));
+	tree->SetBranchAddress("Kst_ETA", l->Kst_ETA, &(l->b_Kst_ETA));
 	tree->SetBranchAddress("Kst_FDCHI2_ORIVX", l->Kst_FDCHI2_ORIVX, &(l->b_Kst_FDCHI2_ORIVX));
 	tree->SetBranchAddress("Kst_FDCHI2_OWNPV", l->Kst_FDCHI2_OWNPV, &(l->b_Kst_FDCHI2_OWNPV));
 	tree->SetBranchAddress("Kst_FD_ORIVX", l->Kst_FD_ORIVX, &(l->b_Kst_FD_ORIVX));
@@ -115,6 +119,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kstb_DIRA_ORIVX", l->Kstb_DIRA_ORIVX, &(l->b_Kstb_DIRA_ORIVX));
 	tree->SetBranchAddress("Kstb_DIRA_OWNPV", l->Kstb_DIRA_OWNPV, &(l->b_Kstb_DIRA_OWNPV));
 	tree->SetBranchAddress("Kstb_ENDVERTEX_CHI2", l->Kstb_ENDVERTEX_CHI2, &(l->b_Kstb_ENDVERTEX_CHI2));
+	tree->SetBranchAddress("Kstb_ETA", l->Kstb_ETA, &(l->b_Kstb_ETA));
 	tree->SetBranchAddress("Kstb_FDCHI2_ORIVX", l->Kstb_FDCHI2_ORIVX, &(l->b_Kstb_FDCHI2_ORIVX));
 	tree->SetBranchAddress("Kstb_FDCHI2_OWNPV", l->Kstb_FDCHI2_OWNPV, &(l->b_Kstb_FDCHI2_OWNPV));
 	tree->SetBranchAddress("Kstb_FD_ORIVX", l->Kstb_FD_ORIVX, &(l->b_Kstb_FD_ORIVX));
@@ -130,6 +135,8 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kstb_PX", l->Kstb_PX, &(l->b_Kstb_PX));
 	tree->SetBranchAddress("Kstb_PY", l->Kstb_PY, &(l->b_Kstb_PY));
 	tree->SetBranchAddress("Kstb_PZ", l->Kstb_PZ, &(l->b_Kstb_PZ));
+	tree->SetBranchAddress("M_KKPiMinus", l->M_KKPiMinus, &(l->b_M_KKPiMinus));
+	tree->SetBranchAddress("M_KKPiPlus", l->M_KKPiPlus, &(l->b_M_KKPiPlus));
 	tree->SetBranchAddress("PVCHI2", l->PVCHI2, &(l->b_PVCHI2));
 	tree->SetBranchAddress("PVNDOF", l->PVNDOF, &(l->b_PVNDOF));
 	tree->SetBranchAddress("PVNTRACKS", l->PVNTRACKS, &(l->b_PVNTRACKS));
@@ -139,6 +146,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("PVYERR", l->PVYERR, &(l->b_PVYERR));
 	tree->SetBranchAddress("PVZ", l->PVZ, &(l->b_PVZ));
 	tree->SetBranchAddress("PVZERR", l->PVZERR, &(l->b_PVZERR));
+	tree->SetBranchAddress("Piminus_ETA", l->Piminus_ETA, &(l->b_Piminus_ETA));
 	tree->SetBranchAddress("Piminus_IPCHI2_OWNPV", l->Piminus_IPCHI2_OWNPV, &(l->b_Piminus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Piminus_IP_OWNPV", l->Piminus_IP_OWNPV, &(l->b_Piminus_IP_OWNPV));
 	tree->SetBranchAddress("Piminus_M", l->Piminus_M, &(l->b_Piminus_M));
@@ -157,6 +165,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piminus_ProbNNpi", l->Piminus_ProbNNpi, &(l->b_Piminus_ProbNNpi));
 	tree->SetBranchAddress("Piminus_TRACK_CHI2NDOF", l->Piminus_TRACK_CHI2NDOF, &(l->b_Piminus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Piminus_isMuon", l->Piminus_isMuon, &(l->b_Piminus_isMuon));
+	tree->SetBranchAddress("Piplus_ETA", l->Piplus_ETA, &(l->b_Piplus_ETA));
 	tree->SetBranchAddress("Piplus_IPCHI2_OWNPV", l->Piplus_IPCHI2_OWNPV, &(l->b_Piplus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Piplus_IP_OWNPV", l->Piplus_IP_OWNPV, &(l->b_Piplus_IP_OWNPV));
 	tree->SetBranchAddress("Piplus_M", l->Piplus_M, &(l->b_Piplus_M));
@@ -209,6 +218,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->B_s0_BKGCAT                           = new Int_t(0);
 	l->B_s0_DIRA_OWNPV                       = new Double_t(0);
 	l->B_s0_ENDVERTEX_CHI2                   = new Double_t(0);
+	l->B_s0_ETA                              = new Double_t(0);
 	l->B_s0_FDCHI2_OWNPV                     = new Double_t(0);
 	l->B_s0_FD_OWNPV                         = new Double_t(0);
 	l->B_s0_Hlt1DiHadronDecision_TOS         = new Bool_t(0);
@@ -253,6 +263,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->B_s0_TAU                              = new Double_t(0);
 	l->B_s0_TAUCHI2                          = new Double_t(0);
 	l->B_s0_TAUERR                           = new Double_t(0);
+	l->Kminus_ETA                            = new Double_t(0);
 	l->Kminus_IPCHI2_OWNPV                   = new Double_t(0);
 	l->Kminus_IP_OWNPV                       = new Double_t(0);
 	l->Kminus_M                              = new Double_t(0);
@@ -273,6 +284,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Kminus_ProbNNpicorr                   = new Double_t(0);
 	l->Kminus_TRACK_CHI2NDOF                 = new Double_t(0);
 	l->Kminus_isMuon                         = new Bool_t(0);
+	l->Kplus_ETA                             = new Double_t(0);
 	l->Kplus_IPCHI2_OWNPV                    = new Double_t(0);
 	l->Kplus_IP_OWNPV                        = new Double_t(0);
 	l->Kplus_M                               = new Double_t(0);
@@ -297,6 +309,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Kst_DIRA_ORIVX                        = new Double_t(0);
 	l->Kst_DIRA_OWNPV                        = new Double_t(0);
 	l->Kst_ENDVERTEX_CHI2                    = new Double_t(0);
+	l->Kst_ETA                               = new Double_t(0);
 	l->Kst_FDCHI2_ORIVX                      = new Double_t(0);
 	l->Kst_FDCHI2_OWNPV                      = new Double_t(0);
 	l->Kst_FD_ORIVX                          = new Double_t(0);
@@ -316,6 +329,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Kstb_DIRA_ORIVX                       = new Double_t(0);
 	l->Kstb_DIRA_OWNPV                       = new Double_t(0);
 	l->Kstb_ENDVERTEX_CHI2                   = new Double_t(0);
+	l->Kstb_ETA                              = new Double_t(0);
 	l->Kstb_FDCHI2_ORIVX                     = new Double_t(0);
 	l->Kstb_FDCHI2_OWNPV                     = new Double_t(0);
 	l->Kstb_FD_ORIVX                         = new Double_t(0);
@@ -331,6 +345,8 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Kstb_PX                               = new Double_t(0);
 	l->Kstb_PY                               = new Double_t(0);
 	l->Kstb_PZ                               = new Double_t(0);
+	l->M_KKPiMinus                           = new Double_t(0);
+	l->M_KKPiPlus                            = new Double_t(0);
 	l->PVCHI2                                = new Float_t(0);
 	l->PVNDOF                                = new Float_t(0);
 	l->PVNTRACKS                             = new Float_t(0);
@@ -340,6 +356,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->PVYERR                                = new Float_t(0);
 	l->PVZ                                   = new Float_t(0);
 	l->PVZERR                                = new Float_t(0);
+	l->Piminus_ETA                           = new Double_t(0);
 	l->Piminus_IPCHI2_OWNPV                  = new Double_t(0);
 	l->Piminus_IP_OWNPV                      = new Double_t(0);
 	l->Piminus_M                             = new Double_t(0);
@@ -360,6 +377,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Piminus_ProbNNpicorr                  = new Double_t(0);
 	l->Piminus_TRACK_CHI2NDOF                = new Double_t(0);
 	l->Piminus_isMuon                        = new Bool_t(0);
+	l->Piplus_ETA                            = new Double_t(0);
 	l->Piplus_IPCHI2_OWNPV                   = new Double_t(0);
 	l->Piplus_IP_OWNPV                       = new Double_t(0);
 	l->Piplus_M                              = new Double_t(0);
@@ -414,6 +432,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->B_s0_BKGCAT;
 	delete l->B_s0_DIRA_OWNPV;
 	delete l->B_s0_ENDVERTEX_CHI2;
+	delete l->B_s0_ETA;
 	delete l->B_s0_FDCHI2_OWNPV;
 	delete l->B_s0_FD_OWNPV;
 	delete l->B_s0_Hlt1DiHadronDecision_TOS;
@@ -458,6 +477,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->B_s0_TAU;
 	delete l->B_s0_TAUCHI2;
 	delete l->B_s0_TAUERR;
+	delete l->Kminus_ETA;
 	delete l->Kminus_IPCHI2_OWNPV;
 	delete l->Kminus_IP_OWNPV;
 	delete l->Kminus_M;
@@ -478,6 +498,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Kminus_ProbNNpicorr;
 	delete l->Kminus_TRACK_CHI2NDOF;
 	delete l->Kminus_isMuon;
+	delete l->Kplus_ETA;
 	delete l->Kplus_IPCHI2_OWNPV;
 	delete l->Kplus_IP_OWNPV;
 	delete l->Kplus_M;
@@ -502,6 +523,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Kst_DIRA_ORIVX;
 	delete l->Kst_DIRA_OWNPV;
 	delete l->Kst_ENDVERTEX_CHI2;
+	delete l->Kst_ETA;
 	delete l->Kst_FDCHI2_ORIVX;
 	delete l->Kst_FDCHI2_OWNPV;
 	delete l->Kst_FD_ORIVX;
@@ -521,6 +543,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Kstb_DIRA_ORIVX;
 	delete l->Kstb_DIRA_OWNPV;
 	delete l->Kstb_ENDVERTEX_CHI2;
+	delete l->Kstb_ETA;
 	delete l->Kstb_FDCHI2_ORIVX;
 	delete l->Kstb_FDCHI2_OWNPV;
 	delete l->Kstb_FD_ORIVX;
@@ -536,6 +559,8 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Kstb_PX;
 	delete l->Kstb_PY;
 	delete l->Kstb_PZ;
+	delete l->M_KKPiMinus;
+	delete l->M_KKPiPlus;
 	delete l->PVCHI2;
 	delete l->PVNDOF;
 	delete l->PVNTRACKS;
@@ -545,6 +570,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->PVYERR;
 	delete l->PVZ;
 	delete l->PVZERR;
+	delete l->Piminus_ETA;
 	delete l->Piminus_IPCHI2_OWNPV;
 	delete l->Piminus_IP_OWNPV;
 	delete l->Piminus_M;
@@ -565,6 +591,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Piminus_ProbNNpicorr;
 	delete l->Piminus_TRACK_CHI2NDOF;
 	delete l->Piminus_isMuon;
+	delete l->Piplus_ETA;
 	delete l->Piplus_IPCHI2_OWNPV;
 	delete l->Piplus_IP_OWNPV;
 	delete l->Piplus_M;
@@ -616,6 +643,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_B_s0_BKGCAT;
 	delete l->b_B_s0_DIRA_OWNPV;
 	delete l->b_B_s0_ENDVERTEX_CHI2;
+	delete l->b_B_s0_ETA;
 	delete l->b_B_s0_FDCHI2_OWNPV;
 	delete l->b_B_s0_FD_OWNPV;
 	delete l->b_B_s0_Hlt1DiHadronDecision_TOS;
@@ -660,6 +688,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_B_s0_TAU;
 	delete l->b_B_s0_TAUCHI2;
 	delete l->b_B_s0_TAUERR;
+	delete l->b_Kminus_ETA;
 	delete l->b_Kminus_IPCHI2_OWNPV;
 	delete l->b_Kminus_IP_OWNPV;
 	delete l->b_Kminus_M;
@@ -680,6 +709,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Kminus_ProbNNpicorr;
 	delete l->b_Kminus_TRACK_CHI2NDOF;
 	delete l->b_Kminus_isMuon;
+	delete l->b_Kplus_ETA;
 	delete l->b_Kplus_IPCHI2_OWNPV;
 	delete l->b_Kplus_IP_OWNPV;
 	delete l->b_Kplus_M;
@@ -704,6 +734,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Kst_DIRA_ORIVX;
 	delete l->b_Kst_DIRA_OWNPV;
 	delete l->b_Kst_ENDVERTEX_CHI2;
+	delete l->b_Kst_ETA;
 	delete l->b_Kst_FDCHI2_ORIVX;
 	delete l->b_Kst_FDCHI2_OWNPV;
 	delete l->b_Kst_FD_ORIVX;
@@ -723,6 +754,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Kstb_DIRA_ORIVX;
 	delete l->b_Kstb_DIRA_OWNPV;
 	delete l->b_Kstb_ENDVERTEX_CHI2;
+	delete l->b_Kstb_ETA;
 	delete l->b_Kstb_FDCHI2_ORIVX;
 	delete l->b_Kstb_FDCHI2_OWNPV;
 	delete l->b_Kstb_FD_ORIVX;
@@ -738,6 +770,8 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Kstb_PX;
 	delete l->b_Kstb_PY;
 	delete l->b_Kstb_PZ;
+	delete l->b_M_KKPiMinus;
+	delete l->b_M_KKPiPlus;
 	delete l->b_PVCHI2;
 	delete l->b_PVNDOF;
 	delete l->b_PVNTRACKS;
@@ -747,6 +781,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_PVYERR;
 	delete l->b_PVZ;
 	delete l->b_PVZERR;
+	delete l->b_Piminus_ETA;
 	delete l->b_Piminus_IPCHI2_OWNPV;
 	delete l->b_Piminus_IP_OWNPV;
 	delete l->b_Piminus_M;
@@ -767,6 +802,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Piminus_ProbNNpicorr;
 	delete l->b_Piminus_TRACK_CHI2NDOF;
 	delete l->b_Piminus_isMuon;
+	delete l->b_Piplus_ETA;
 	delete l->b_Piplus_IPCHI2_OWNPV;
 	delete l->b_Piplus_IP_OWNPV;
 	delete l->b_Piplus_M;
@@ -822,6 +858,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("B_s0_BKGCAT",l->B_s0_BKGCAT);
 	tree->Branch("B_s0_DIRA_OWNPV",l->B_s0_DIRA_OWNPV);
 	tree->Branch("B_s0_ENDVERTEX_CHI2",l->B_s0_ENDVERTEX_CHI2);
+	tree->Branch("B_s0_ETA",l->B_s0_ETA);
 	tree->Branch("B_s0_FDCHI2_OWNPV",l->B_s0_FDCHI2_OWNPV);
 	tree->Branch("B_s0_FD_OWNPV",l->B_s0_FD_OWNPV);
 	tree->Branch("B_s0_Hlt1DiHadronDecision_TOS",l->B_s0_Hlt1DiHadronDecision_TOS);
@@ -866,6 +903,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("B_s0_TAU",l->B_s0_TAU);
 	tree->Branch("B_s0_TAUCHI2",l->B_s0_TAUCHI2);
 	tree->Branch("B_s0_TAUERR",l->B_s0_TAUERR);
+	tree->Branch("Kminus_ETA",l->Kminus_ETA);
 	tree->Branch("Kminus_IPCHI2_OWNPV",l->Kminus_IPCHI2_OWNPV);
 	tree->Branch("Kminus_IP_OWNPV",l->Kminus_IP_OWNPV);
 	tree->Branch("Kminus_M",l->Kminus_M);
@@ -886,6 +924,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kminus_ProbNNpicorr",l->Kminus_ProbNNpicorr);
 	tree->Branch("Kminus_TRACK_CHI2NDOF",l->Kminus_TRACK_CHI2NDOF);
 	tree->Branch("Kminus_isMuon",l->Kminus_isMuon);
+	tree->Branch("Kplus_ETA",l->Kplus_ETA);
 	tree->Branch("Kplus_IPCHI2_OWNPV",l->Kplus_IPCHI2_OWNPV);
 	tree->Branch("Kplus_IP_OWNPV",l->Kplus_IP_OWNPV);
 	tree->Branch("Kplus_M",l->Kplus_M);
@@ -910,6 +949,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kst_DIRA_ORIVX",l->Kst_DIRA_ORIVX);
 	tree->Branch("Kst_DIRA_OWNPV",l->Kst_DIRA_OWNPV);
 	tree->Branch("Kst_ENDVERTEX_CHI2",l->Kst_ENDVERTEX_CHI2);
+	tree->Branch("Kst_ETA",l->Kst_ETA);
 	tree->Branch("Kst_FDCHI2_ORIVX",l->Kst_FDCHI2_ORIVX);
 	tree->Branch("Kst_FDCHI2_OWNPV",l->Kst_FDCHI2_OWNPV);
 	tree->Branch("Kst_FD_ORIVX",l->Kst_FD_ORIVX);
@@ -929,6 +969,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kstb_DIRA_ORIVX",l->Kstb_DIRA_ORIVX);
 	tree->Branch("Kstb_DIRA_OWNPV",l->Kstb_DIRA_OWNPV);
 	tree->Branch("Kstb_ENDVERTEX_CHI2",l->Kstb_ENDVERTEX_CHI2);
+	tree->Branch("Kstb_ETA",l->Kstb_ETA);
 	tree->Branch("Kstb_FDCHI2_ORIVX",l->Kstb_FDCHI2_ORIVX);
 	tree->Branch("Kstb_FDCHI2_OWNPV",l->Kstb_FDCHI2_OWNPV);
 	tree->Branch("Kstb_FD_ORIVX",l->Kstb_FD_ORIVX);
@@ -944,6 +985,8 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kstb_PX",l->Kstb_PX);
 	tree->Branch("Kstb_PY",l->Kstb_PY);
 	tree->Branch("Kstb_PZ",l->Kstb_PZ);
+	tree->Branch("M_KKPiMinus",l->M_KKPiMinus);
+	tree->Branch("M_KKPiPlus",l->M_KKPiPlus);
 	tree->Branch("PVCHI2",l->PVCHI2);
 	tree->Branch("PVNDOF",l->PVNDOF);
 	tree->Branch("PVNTRACKS",l->PVNTRACKS);
@@ -953,6 +996,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("PVYERR",l->PVYERR);
 	tree->Branch("PVZ",l->PVZ);
 	tree->Branch("PVZERR",l->PVZERR);
+	tree->Branch("Piminus_ETA",l->Piminus_ETA);
 	tree->Branch("Piminus_IPCHI2_OWNPV",l->Piminus_IPCHI2_OWNPV);
 	tree->Branch("Piminus_IP_OWNPV",l->Piminus_IP_OWNPV);
 	tree->Branch("Piminus_M",l->Piminus_M);
@@ -973,6 +1017,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piminus_ProbNNpicorr",l->Piminus_ProbNNpicorr);
 	tree->Branch("Piminus_TRACK_CHI2NDOF",l->Piminus_TRACK_CHI2NDOF);
 	tree->Branch("Piminus_isMuon",l->Piminus_isMuon);
+	tree->Branch("Piplus_ETA",l->Piplus_ETA);
 	tree->Branch("Piplus_IPCHI2_OWNPV",l->Piplus_IPCHI2_OWNPV);
 	tree->Branch("Piplus_IP_OWNPV",l->Piplus_IP_OWNPV);
 	tree->Branch("Piplus_M",l->Piplus_M);
