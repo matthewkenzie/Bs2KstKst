@@ -27,13 +27,10 @@ import sys
 
 def getListOfInputFiles(datname):
 
-  print 'Getting input files from', datname
   relfiles=[]
   f = open(datname)
   for line in f.readlines():
-    if not line.startswith('#'): print line
     if not line.startswith('itype'): continue
-    print 'line starting with itype', line
     els = line.split()
     if len(els)<3: continue
     fel = els[2]
@@ -162,7 +159,7 @@ if opts.runAsReduction:
     for l in preambe:
       newdat.write(l)
     newdat.write(line)
-    newdat.close
+    newdat.close()
 
   for i, line in enumerate(file_lines):
     datname = 'tmp/%s_%d.dat'%(stripped_name,i)
