@@ -10,6 +10,9 @@
 #include "TMath.h"
 #include "TLegend.h"
 #include "TCanvas.h"
+#include "TStyle.h"
+#include "TLorentzVector.h"
+#include "TPaveStats.h"
 #include "../interface/BasicVariablesPlotter.h"
 
 using namespace std;
@@ -76,6 +79,25 @@ void BasicVariablesPlotter::defineHists(){
   addHist("Piminus_ProbDiff",100,-1,1.);
   addHist("Piminus_ProbDiffCorr",100,-1,1.);
 
+	// BDT Vars
+	addHist("ln_B_s0_PT",100,6,12);
+	addHist("ln_Kst_PT",100,6,12);
+	addHist("ln_Kstb_PT",100,6,12);
+	addHist("ln_max_track_PT",100,7,10);
+	addHist("ln_min_track_PT",100,4,9);
+	addHist("B_s0_eta",100,1,6);
+	addHist("Kst_eta",100,1,6);
+	addHist("Kstb_eta",100,1,6);
+	addHist("max_track_eta",100,1,6);
+	addHist("min_track_eta",100,1,6);
+	addHist("B_s0_ARCCOS_DIRA_OWNPV",100,0.,0.04);
+	addHist("B_s0_ENDVERTEX_CHI2",100,0,50);
+	addHist("max_track_chi2",100,0,4);
+	addHist("Kplus_PID_DeltaProbKPi",100,-1,1.2);
+	addHist("Kminus_PID_DeltaProbKPi",100,-1,1.2);
+	addHist("Piplus_PID_DeltaProbKPi",100,-1,1.2);
+	addHist("Piminus_PID_DeltaProbKPi",100,-1,1.2);
+
 }
 
 void BasicVariablesPlotter::addHist(TString name, int nbins, float xlow, float xhigh){
@@ -138,6 +160,49 @@ void BasicVariablesPlotter::fillHistograms(Looper *l){
     histMap[l->itype]["Piplus_ProbDiffCorr"]->Fill(*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi);
     histMap[l->itype]["Piminus_ProbDiffCorr"]->Fill(*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi);
   }
+
+	// BDT Vars
+	histMap[l->itype]["ln_B_s0_PT"]->Fill(TMath::Log(*l->B_s0_PT));
+	histMap[l->itype]["ln_Kst_PT"]->Fill(TMath::Log(*l->Kst_PT));
+	histMap[l->itype]["ln_Kstb_PT"]->Fill(TMath::Log(*l->Kstb_PT));
+	histMap[l->itype]["ln_max_track_PT"]->Fill(TMath::Log( TMath::Max( TMath::Max(*l->Kplus_PT, *l->Kminus_PT), TMath::Max(*l->Piplus_PT, *l->Piminus_PT) ) ));
+	histMap[l->itype]["ln_min_track_PT"]->Fill(TMath::Log( TMath::Min( TMath::Min(*l->Kplus_PT, *l->Kminus_PT), TMath::Min(*l->Piplus_PT, *l->Piminus_PT) ) ));
+
+	TLorentzVector B_s0_p4(*l->B_s0_PX,*l->B_s0_PY,*l->B_s0_PZ,*l->B_s0_PE);
+	TLorentzVector Kst_p4(*l->Kst_PX,*l->Kst_PY,*l->Kst_PZ,*l->Kst_PE);
+	TLorentzVector Kstb_p4(*l->Kstb_PX,*l->Kstb_PY,*l->Kstb_PZ,*l->Kstb_PE);
+	TLorentzVector Kplus_p4(*l->Kplus_PX,*l->Kplus_PY,*l->Kplus_PZ,*l->Kplus_PE);
+	TLorentzVector Kminus_p4(*l->Kminus_PX,*l->Kminus_PY,*l->Kminus_PZ,*l->Kminus_PE);
+	TLorentzVector Piplus_p4(*l->Piplus_PX,*l->Piplus_PY,*l->Piplus_PZ,*l->Piplus_PE);
+	TLorentzVector Piminus_p4(*l->Piminus_PX,*l->Piminus_PY,*l->Piminus_PZ,*l->Piminus_PE);
+
+	histMap[l->itype]["B_s0_eta"]->Fill(TMath::Abs(B_s0_p4.Eta()));
+	histMap[l->itype]["Kst_eta"]->Fill(TMath::Abs(Kst_p4.Eta()));
+	histMap[l->itype]["Kstb_eta"]->Fill(TMath::Abs(Kstb_p4.Eta()));
+	histMap[l->itype]["max_track_eta"]->Fill(TMath::Max( TMath::Max(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Max(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) ));
+	histMap[l->itype]["min_track_eta"]->Fill(TMath::Min( TMath::Min(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Min(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) ));
+
+	histMap[l->itype]["B_s0_ARCCOS_DIRA_OWNPV"]->Fill(TMath::ACos(*l->B_s0_DIRA_OWNPV));
+	histMap[l->itype]["B_s0_ENDVERTEX_CHI2"]->Fill(*l->B_s0_ENDVERTEX_CHI2);
+
+	double kst_max_track_chi2 = TMath::Max(*l->Kplus_TRACK_CHI2NDOF,*l->Piminus_TRACK_CHI2NDOF);
+	double kstb_max_track_chi2 = TMath::Max(*l->Piplus_TRACK_CHI2NDOF,*l->Kminus_TRACK_CHI2NDOF);
+	double max_track_chi2 = TMath::Max(kst_max_track_chi2,kstb_max_track_chi2);
+
+	histMap[l->itype]["max_track_chi2"]->Fill(max_track_chi2);
+
+	if (l->itype < 0) {
+		histMap[l->itype]["Kplus_PID_DeltaProbKPi"]->Fill(*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr);
+		histMap[l->itype]["Kminus_PID_DeltaProbKPi"]->Fill(*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr);
+		histMap[l->itype]["Piplus_PID_DeltaProbKPi"]->Fill(*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr);
+		histMap[l->itype]["Piminus_PID_DeltaProbKPi"]->Fill(*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr);
+	}
+	else {
+		histMap[l->itype]["Kplus_PID_DeltaProbKPi"]->Fill(*l->Kplus_ProbNNk - *l->Kplus_ProbNNpi);
+		histMap[l->itype]["Kminus_PID_DeltaProbKPi"]->Fill(*l->Kminus_ProbNNk - *l->Kminus_ProbNNpi);
+		histMap[l->itype]["Piplus_PID_DeltaProbKPi"]->Fill(*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi);
+		histMap[l->itype]["Piminus_PID_DeltaProbKPi"]->Fill(*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi);
+	}
 }
 
 void BasicVariablesPlotter::saveHistograms(TString outFileName){
@@ -146,8 +211,6 @@ void BasicVariablesPlotter::saveHistograms(TString outFileName){
   outFile->cd();
   for (map<int,map<TString,TH1F*> >::iterator it1=histMap.begin(); it1!=histMap.end(); it1++){
     for (map<TString,TH1F*>::iterator it2=it1->second.begin(); it2!=it1->second.end(); it2++){
-      cout << it2->first << " " << it2->second << " " << it2->second->GetName() << endl;
-      it2->second->Print();
       it2->second->Write();
     }
   }
@@ -197,13 +260,16 @@ void BasicVariablesPlotter::drawHistograms(){
     mcHigh->SetLineWidth(3);
     mcLow->SetLineWidth(3);
 
-    TLegend *leg = new TLegend(0.7,0.6,0.89,0.89);
+    TLegend *leg = new TLegend(0.11,0.7,0.35,0.89);
     leg->SetFillColor(0);
 
     double max = TMath::Max(mcLow->GetMaximum(),mcHigh->GetMaximum());
     max = TMath::Max(max,data->GetMaximum());
 
-    data->SetStats(0);
+    data->SetStats(1);
+		mcLow->SetStats(1);
+		mcHigh->SetStats(1);
+		gStyle->SetOptStat(111111);
     data->GetYaxis()->SetRangeUser(0,max*1.3);
     data->GetXaxis()->SetTitle(hist->name);
 
@@ -212,13 +278,40 @@ void BasicVariablesPlotter::drawHistograms(){
     leg->AddEntry(mcHigh,"MC High","L");
 
     TCanvas *canv = new TCanvas();
-    data->Draw("HISTF");
-    mcLow->Draw("HISTsame");
-    mcHigh->Draw("HISTsame");
+		data->SetName("Data");
+    data->Draw("HISTFS");
+		gPad->Update();
+		TPaveStats *dataSt = (TPaveStats*)data->FindObject("stats");
+		dataSt->SetY2NDC(0.875);
+		dataSt->SetY1NDC(0.875-0.25+0.02);
+		dataSt->SetLineColor(kBlack);
+		dataSt->SetTextColor(kBlack);
+		mcLow->SetName("MC Low");
+    mcLow->Draw("HISTsameS");
+		gPad->Update();
+		TPaveStats *mcLowSt = (TPaveStats*)mcLow->FindObject("stats");
+		mcLowSt->SetY2NDC(0.875-0.25);
+		mcLowSt->SetY1NDC(0.875-0.5+0.02);
+		mcLowSt->SetLineColor(kBlue);
+		mcLowSt->SetTextColor(kBlue);
+		mcHigh->SetName("MC High");
+    mcHigh->Draw("HISTsameS");
+		gPad->Update();
+		TPaveStats *mcHighSt = (TPaveStats*)mcHigh->FindObject("stats");
+		mcHighSt->SetY2NDC(0.875-0.5);
+		mcHighSt->SetY1NDC(0.875-0.75+0.02);
+		mcHighSt->SetLineColor(kRed);
+		mcHighSt->SetTextColor(kRed);
+		canv->Update();
+		canv->Modified();
     leg->Draw("same");
     canv->Print(Form("plots/%s.pdf",hist->name.Data()));
     canv->Print(Form("plots/%s.png",hist->name.Data()));
     delete canv;
+
+		delete data;
+		delete mcLow;
+		delete mcHigh;
   }
 }
 

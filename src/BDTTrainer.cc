@@ -140,11 +140,11 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	TLorentzVector Piminus_p4(*l->Piminus_PX,*l->Piminus_PY,*l->Piminus_PZ,*l->Piminus_PE);
 
 	// eta
-	varMap["B_s0_eta"] 					= B_s0_p4.Eta();
-	varMap["Kst_eta"]           = Kst_p4.Eta();
-	varMap["Kstb_eta"]          = Kstb_p4.Eta();
-  varMap["max_track_eta"]     = TMath::Max( TMath::Max(Kplus_p4.Eta(), Kminus_p4.Eta()), TMath::Max(Piplus_p4.Eta(), Piminus_p4.Eta()) );
-  varMap["min_track_eta"]     = TMath::Min( TMath::Min(Kplus_p4.Eta(), Kminus_p4.Eta()), TMath::Min(Piplus_p4.Eta(), Piminus_p4.Eta()) );
+	varMap["B_s0_eta"] 					= TMath::Abs(B_s0_p4.Eta());
+	varMap["Kst_eta"]           = TMath::Abs(Kst_p4.Eta());
+	varMap["Kstb_eta"]          = TMath::Abs(Kstb_p4.Eta());
+  varMap["max_track_eta"]     = TMath::Max( TMath::Max(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Max(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) );
+  varMap["min_track_eta"]     = TMath::Min( TMath::Min(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Min(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) );
 	//varMap["Kplus_eta"]         = Kplus_p4.Eta();
 	//varMap["Kminus_eta"]        = Kminus_p4.Eta();
 	//varMap["Piplus_eta"]        = Piplus_p4.Eta();
@@ -152,7 +152,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 
 	// DIRA and vertex
 	varMap["B_s0_ARCCOS_DIRA_OWNPV"] 		= TMath::ACos(*l->B_s0_DIRA_OWNPV);
-	varMap["B_s0_ENDVERTEX_CHI2"] = *l->B_s0_ENDVERTEX_CHI2;
+	varMap["B_s0_ENDVERTEX_CHI2"]       = *l->B_s0_ENDVERTEX_CHI2;
 	//varMap["Kst_DIRA_OWNPV"] 			= *l->Kst_DIRA_OWNPV;
 	//varMap["Kstb_DIRA_OWNPV"] 		= *l->Kstb_DIRA_OWNPV;
 
@@ -165,20 +165,20 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 
 	// PID
   if ( l->itype < 0 ) {
-    varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) );
-    varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) );
-    //varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
-    //varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
-    //varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
-    //varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    //varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) );
+    //varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) );
+    varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
+    varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
   }
   else {
-    varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNk - *l->Kplus_ProbNNpi) , (*l->Kminus_ProbNNk - *l->Kminus_ProbNNpi) );
-    varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi) , (*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi) );
-    //varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-    //varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-    //varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-    //varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    //varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNk - *l->Kplus_ProbNNpi) , (*l->Kminus_ProbNNk - *l->Kminus_ProbNNpi) );
+    //varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi) , (*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi) );
+    varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
+    varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
   }
 
 	// now put the variable values in a nice vector (in the right order!!)
