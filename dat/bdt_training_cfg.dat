@@ -12,18 +12,31 @@
 ####################################################################################################
 
 branchdef=AnalysisBranches
-analysers=BDTTrainer,BasicVariablesPlotter
+analysers=BDTTrainer
 
-itype=-71  	name=MC2011_HighMass_MagDown 	fname=file_store/mc_reduced/MC2011_HighMass_MagDown_Reduced.root           tname=ReducedTree
-itype=-72  	name=MC2011_HighMass_MagUp   	fname=file_store/mc_reduced/MC2011_HighMass_MagUp_Reduced.root             tname=ReducedTree
-itype=-81  	name=MC2012_HighMass_MagDown 	fname=file_store/mc_reduced/MC2012_HighMass_MagDown_Reduced.root           tname=ReducedTree
-itype=-82  	name=MC2012_HighMass_MagUp  	fname=file_store/mc_reduced/MC2012_HighMass_MagUp_Reduced.root             tname=ReducedTree
-itype=-73  	name=MC2011_LowMass_MagDown 	fname=file_store/mc_reduced/MC2011_LowMass_MagDown_Reduced.root            tname=ReducedTree
-itype=-74  	name=MC2011_LowMass_MagUp   	fname=file_store/mc_reduced/MC2011_LowMass_MagUp_Reduced.root              tname=ReducedTree
-itype=-83  	name=MC2012_LowMass_MagDown 	fname=file_store/mc_reduced/MC2012_LowMass_MagDown_Reduced.root            tname=ReducedTree
-itype=-84  	name=MC2012_LowMass_MagUp   	fname=file_store/mc_reduced/MC2012_LowMass_MagUp_Reduced.root              tname=ReducedTree
-itype=71  	name=Data2011_MagDown 				fname=file_store/data_reduced/Data2011_MagDown_Reduced.root                tname=ReducedTree
-itype=72  	name=Data2011_MagUp 				 	fname=file_store/data_reduced/Data2011_MagUp_Reduced.root                  tname=ReducedTree
-itype=81  	name=Data2012_MagDown 				fname=file_store/data_reduced/Data2012_MagDown_Reduced.root                tname=ReducedTree
-itype=82 		name=Data2012_MagUp 					fname=file_store/data_reduced/Data2012_MagUp_Reduced.root 					       tname=ReducedTree
+#itype=-71  	name=MC2011_HighMass_MagDown 	fname=file_store/red_first/mc_pid_calib_hadd/MC2011_HighMass_MagDown_PIDcorr_Reduced.root           tname=ReducedTree
+#itype=-72  	name=MC2011_HighMass_MagUp   	fname=file_store/red_first/mc_pid_calib_hadd/MC2011_HighMass_MagUp_PIDcorr_Reduced.root             tname=ReducedTree
+#itype=-81  	name=MC2012_HighMass_MagDown 	fname=file_store/red_first/mc_pid_calib_hadd/MC2012_HighMass_MagDown_PIDcorr_Reduced.root           tname=ReducedTree
+#itype=-82  	name=MC2012_HighMass_MagUp  	fname=file_store/red_first/mc_pid_calib_hadd/MC2012_HighMass_MagUp_PIDcorr_Reduced.root             tname=ReducedTree
+itype=-73  	name=MC2011_LowMass_MagDown 	fname=file_store/red_first/mc_pid_calib_hadd/MC2011_LowMass_MagDown_PIDcorr_Reduced.root            tname=ReducedTree
+itype=-74  	name=MC2011_LowMass_MagUp   	fname=file_store/red_first/mc_pid_calib_hadd/MC2011_LowMass_MagUp_PIDcorr_Reduced.root              tname=ReducedTree
+itype=-83  	name=MC2012_LowMass_MagDown 	fname=file_store/red_first/mc_pid_calib_hadd/MC2012_LowMass_MagDown_PIDcorr_Reduced.root            tname=ReducedTree
+itype=-84  	name=MC2012_LowMass_MagUp   	fname=file_store/red_first/mc_pid_calib_hadd/MC2012_LowMass_MagUp_PIDcorr_Reduced.root              tname=ReducedTree
+itype=71  	name=Data2011_MagDown 				fname=file_store/red_first/data_reduced/Data2011_MagDown_Reduced_j0.root                						tname=ReducedTree
+itype=72  	name=Data2011_MagUp 				 	fname=file_store/red_first/data_reduced/Data2011_MagUp_Reduced_j0.root                  						tname=ReducedTree
+itype=81  	name=Data2012_MagDown 				fname=file_store/red_first/data_reduced/Data2012_MagDown_Reduced_j0.root                						tname=ReducedTree
+itype=82 		name=Data2012_MagUp 					fname=file_store/red_first/data_reduced/Data2012_MagUp_Reduced_j0.root 					       							tname=ReducedTree
+
+#itype=-71  	name=MC2011_HighMass_MagDown 	fname=file_store/mc_reduced/MC2011_HighMass_MagDown_Reduced.root           tname=ReducedTree
+#itype=-72  	name=MC2011_HighMass_MagUp   	fname=file_store/mc_reduced/MC2011_HighMass_MagUp_Reduced.root             tname=ReducedTree
+#itype=-81  	name=MC2012_HighMass_MagDown 	fname=file_store/mc_reduced/MC2012_HighMass_MagDown_Reduced.root           tname=ReducedTree
+#itype=-82  	name=MC2012_HighMass_MagUp  	fname=file_store/mc_reduced/MC2012_HighMass_MagUp_Reduced.root             tname=ReducedTree
+#itype=-73  	name=MC2011_LowMass_MagDown 	fname=file_store/mc_reduced/MC2011_LowMass_MagDown_Reduced.root            tname=ReducedTree
+#itype=-74  	name=MC2011_LowMass_MagUp   	fname=file_store/mc_reduced/MC2011_LowMass_MagUp_Reduced.root              tname=ReducedTree
+#itype=-83  	name=MC2012_LowMass_MagDown 	fname=file_store/mc_reduced/MC2012_LowMass_MagDown_Reduced.root            tname=ReducedTree
+#itype=-84  	name=MC2012_LowMass_MagUp   	fname=file_store/mc_reduced/MC2012_LowMass_MagUp_Reduced.root              tname=ReducedTree
+#itype=71  	name=Data2011_MagDown 				fname=file_store/data_reduced/Data2011_MagDown_Reduced.root                tname=ReducedTree
+#itype=72  	name=Data2011_MagUp 				 	fname=file_store/data_reduced/Data2011_MagUp_Reduced.root                  tname=ReducedTree
+#itype=81  	name=Data2012_MagDown 				fname=file_store/data_reduced/Data2012_MagDown_Reduced.root                tname=ReducedTree
+#itype=82 		name=Data2012_MagUp 					fname=file_store/data_reduced/Data2012_MagUp_Reduced.root 					       tname=ReducedTree
 

@@ -7,7 +7,6 @@ Double_t        B_s0_FDCHI2_OWNPV                            0
 Double_t        B_s0_FD_OWNPV                                0
 Double_t        B_s0_IPCHI2_OWNPV                            0
 Double_t        B_s0_IP_OWNPV                                0
-Bool_t          B_s0_L0HadronDecision_TOS                    0
 Double_t        B_s0_M                                       0
 Int_t           B_s0_MC_GD_GD_MOTHER_ID                     -1
 Int_t           B_s0_MC_GD_GD_MOTHER_KEY                    -1
@@ -25,6 +24,7 @@ Double_t        B_s0_PX                                      0
 Double_t        B_s0_PY                                      0
 Double_t        B_s0_PZ                                      0
 Double_t        B_s0_Phi                                     0
+Double_t        B_s0_ETA                                     0
 Int_t           B_s0_TAGCAT                                  0
 Int_t           B_s0_TAGCAT_OS                               0
 Int_t           B_s0_TAGDECISION                             0
@@ -46,6 +46,7 @@ Double_t        Kminus_PT                                    0
 Double_t        Kminus_PX                                    0
 Double_t        Kminus_PY                                    0
 Double_t        Kminus_PZ                                    0
+Double_t        Kminus_ETA                                   0
 Double_t        Kminus_ProbNNk                               0
 Double_t        Kminus_ProbNNkcorr                          -1
 Double_t        Kminus_ProbNNp                               0
@@ -63,6 +64,7 @@ Double_t        Kplus_PT                                     0
 Double_t        Kplus_PX                                     0
 Double_t        Kplus_PY                                     0
 Double_t        Kplus_PZ                                     0
+Double_t        Kplus_ETA                                    0
 Double_t        Kplus_ProbNNk                                0
 Double_t        Kplus_ProbNNkcorr                           -1
 Double_t        Kplus_ProbNNp                                0
@@ -80,6 +82,7 @@ Double_t        Piminus_PT                                   0
 Double_t        Piminus_PX                                   0
 Double_t        Piminus_PY                                   0
 Double_t        Piminus_PZ                                   0
+Double_t        Piminus_ETA                                  0
 Double_t        Piminus_ProbNNk                              0
 Double_t        Piminus_ProbNNkcorr                          -1
 Double_t        Piminus_ProbNNp                              0
@@ -97,6 +100,7 @@ Double_t        Piplus_PT                                    0
 Double_t        Piplus_PX                                    0
 Double_t        Piplus_PY                                    0
 Double_t        Piplus_PZ                                    0
+Double_t        Piplus_ETA                                   0
 Double_t        Piplus_ProbNNk                               0
 Double_t        Piplus_ProbNNkcorr                          -1
 Double_t        Piplus_ProbNNp                               0
@@ -122,6 +126,7 @@ Double_t        Kst_PT                                       0
 Double_t        Kst_PX                                       0
 Double_t        Kst_PY                                       0
 Double_t        Kst_PZ                                       0
+Double_t        Kst_ETA                                      0
 Double_t        Kstb_CosTheta                                0
 Double_t        Kstb_DIRA_ORIVX                              0
 Double_t        Kstb_DIRA_OWNPV                              0
@@ -141,6 +146,7 @@ Double_t        Kstb_PT                                      0
 Double_t        Kstb_PX                                      0
 Double_t        Kstb_PY                                      0
 Double_t        Kstb_PZ                                      0
+Double_t        Kstb_ETA                                       0
 Float_t         PVCHI2                                       0
 Float_t         PVNDOF                                       0
 Float_t         PVNTRACKS                                    0
@@ -177,3 +183,5 @@ Int_t           nVeloClusters                                0
 Int_t           nVeloTracks                                  0
 UInt_t          runNumber                                    0
 ULong64_t       totCandidates                                0
+Double_t 				M_KKPiPlus 																	 0
+Double_t        M_KKPiMinus 																 0

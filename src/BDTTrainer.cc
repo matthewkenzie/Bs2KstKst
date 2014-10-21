@@ -19,7 +19,7 @@ BDTTrainer::BDTTrainer(TString _name):
 	outfilename("MVATrainingOutput.root"),
 	evCount(0),
 	numberOfBDTs(2),
-  doBDTCycling(true)
+  doBDTCycling(false)
 {
   if (!doBDTCycling) numberOfBDTs=1;
 }
@@ -78,8 +78,8 @@ void BDTTrainer::Init(Looper *l){
 	varNames.push_back("max_track_CHI2");
 
 	// PID
-	varNames.push_back("min_K_DeltaProbKPi");
-  varNames.push_back("max_Pi_DeltaProbKPi");
+	//varNames.push_back("min_K_DeltaProbKPi");
+  //varNames.push_back("max_Pi_DeltaProbKPi");
   //varNames.push_back("Kplus_PID_DeltaProbKPi");
 	//varNames.push_back("Kminus_PID_DeltaProbKPi");
 	//varNames.push_back("Piplus_PID_DeltaProbKPi");
@@ -99,12 +99,15 @@ void BDTTrainer::Term(Looper *l){
 
 	for (int b=0; b<numberOfBDTs; b++) {
 
+		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Preparing training and test trees" << endl;
 		factoryContainer[b]->PrepareTrainingAndTestTree("","!V");
 
 		// TMVA methods here
-		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:NTrees=500:BoostType=AdaBoost:nCuts=-1:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Booking TMVA methods" << endl;
+		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:NTrees=200:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=1:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
 
 		// Train, Test and Evaluate
+		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
 		factoryContainer[b]->TrainAllMethods();
 		factoryContainer[b]->TestAllMethods();
 		factoryContainer[b]->EvaluateAllMethods();
@@ -131,24 +134,12 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	//varMap["ln_Piplus_PT"]      = TMath::Log(*l->Piplus_PT);
 	//varMap["ln_Piminus_PT"]     = TMath::Log(*l->Piminus_PT);
 
-	TLorentzVector B_s0_p4(*l->B_s0_PX,*l->B_s0_PY,*l->B_s0_PZ,*l->B_s0_PE);
-	TLorentzVector Kst_p4(*l->Kst_PX,*l->Kst_PY,*l->Kst_PZ,*l->Kst_PE);
-	TLorentzVector Kstb_p4(*l->Kstb_PX,*l->Kstb_PY,*l->Kstb_PZ,*l->Kstb_PE);
-	TLorentzVector Kplus_p4(*l->Kplus_PX,*l->Kplus_PY,*l->Kplus_PZ,*l->Kplus_PE);
-	TLorentzVector Kminus_p4(*l->Kminus_PX,*l->Kminus_PY,*l->Kminus_PZ,*l->Kminus_PE);
-	TLorentzVector Piplus_p4(*l->Piplus_PX,*l->Piplus_PY,*l->Piplus_PZ,*l->Piplus_PE);
-	TLorentzVector Piminus_p4(*l->Piminus_PX,*l->Piminus_PY,*l->Piminus_PZ,*l->Piminus_PE);
-
 	// eta
-	varMap["B_s0_eta"] 					= TMath::Abs(B_s0_p4.Eta());
-	varMap["Kst_eta"]           = TMath::Abs(Kst_p4.Eta());
-	varMap["Kstb_eta"]          = TMath::Abs(Kstb_p4.Eta());
-  varMap["max_track_eta"]     = TMath::Max( TMath::Max(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Max(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) );
-  varMap["min_track_eta"]     = TMath::Min( TMath::Min(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Min(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) );
-	//varMap["Kplus_eta"]         = Kplus_p4.Eta();
-	//varMap["Kminus_eta"]        = Kminus_p4.Eta();
-	//varMap["Piplus_eta"]        = Piplus_p4.Eta();
-	//varMap["Piminus_eta"]       = Piminus_p4.Eta();
+	varMap["B_s0_eta"] 					= TMath::Abs(*l->B_s0_ETA);
+	varMap["Kst_eta"]           = TMath::Abs(*l->Kst_ETA);
+	varMap["Kstb_eta"]          = TMath::Abs(*l->Kstb_ETA);
+  varMap["max_track_eta"]     = TMath::Max( TMath::Max(TMath::Abs(*l->Kplus_ETA), TMath::Abs(*l->Kminus_ETA)), TMath::Max(TMath::Abs(*l->Piplus_ETA), TMath::Abs(*l->Piminus_ETA)) );
+  varMap["min_track_eta"]     = TMath::Min( TMath::Min(TMath::Abs(*l->Kplus_ETA), TMath::Abs(*l->Kminus_ETA)), TMath::Min(TMath::Abs(*l->Piplus_ETA), TMath::Abs(*l->Piminus_ETA)) );
 
 	// DIRA and vertex
 	varMap["B_s0_ARCCOS_DIRA_OWNPV"] 		= TMath::ACos(*l->B_s0_DIRA_OWNPV);
@@ -164,6 +155,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	varMap["max_track_CHI2"] = max_track_chi2;
 
 	// PID
+	/*
   if ( l->itype < 0 ) {
     //varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) );
     //varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) );
@@ -180,6 +172,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
     varMap["Piplus_PID_DeltaProbKPi"]  = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
     varMap["Piminus_PID_DeltaProbKPi"] = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
   }
+	*/
 
 	// now put the variable values in a nice vector (in the right order!!)
 	assert(varNames.size()==varMap.size());
@@ -206,7 +199,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
       }
     }
     else {
-      if (lastDigit%5==0) {
+      if (lastDigit%2==0) {
         factoryContainer[0]->AddSignalTrainingEvent(values);
       }
       else {
@@ -237,7 +230,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
       }
     }
     else {
-      if (lastDigit%5==0) {
+      if (lastDigit%2==0) {
         factoryContainer[0]->AddBackgroundTrainingEvent(values);
       }
       else {

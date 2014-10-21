@@ -1,4 +1,6 @@
 import ROOT as r
+import os
+import sys
 
 class infoObj:
 	def __init__(self):
@@ -82,6 +84,17 @@ class configProducer:
 		for analyser in self.analysers:
 			print '%-30s'%'', analyser.name
 
+	def checkFile(self,fname,tname):
+		if not os.path.isfile(fname):
+			sys.exit('** ERROR ** -- The requested file (%s) does not exist'%fname)
+		if not fname.endswith('.root'):
+			sys.exit('** ERROR ** -- The requested file (%s) does not appear to be a root file'%fname)
+
+		tf = r.TFile.Open(fname)
+		if not tf.Get(tname):
+			sys.exit('** ERROR *** -- The tree (%s) was not found in the file (%s)'%(tname,fname))
+		tf.Close()
+
 	def parseDatfile(self):
 
 		for itype, flist in self.cfgDict.items():
@@ -91,6 +104,7 @@ class configProducer:
 			tree = r.TChain(name)
 
 			for f in flist:
+				self.checkFile(f.fname,f.tname)
 				tree.AddFile(f.fname+'/'+f.tname)
 				if name != f.name:
 					sys.exit('ERROR -- If the itype is the same for two lines in the datfile, the name must be the same also')
