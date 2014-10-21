@@ -12,7 +12,7 @@
 ####################################################################################################
 
 branchdef=ReductionBranches
-analysers=ApplyPIDCorrection,PreSelection
+analysers=TriggerSelection,TruthMatching,PreSelection
 
 itype=-71  	name=MC2011_HighMass_MagDown 	fname=nTuples/Bs2Kst0Kst01430_wide_MC2011_magnetDown_Job13.root              tname=Bs2Kst0Kst0/DecayTree
 itype=-72  	name=MC2011_HighMass_MagUp   	fname=nTuples/Bs2Kst0Kst01430_wide_MC2011_magnetUp_Job12.root                tname=Bs2Kst0Kst0/DecayTree

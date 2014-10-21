@@ -105,11 +105,15 @@ void Runner::run(){
 
 		for (Long64_t jentry=firstEntry; jentry<lastEntry; jentry++){
 
-			if (jentry%int(TMath::Ceil(run_entries/1000.))==0) {
-				if (batchmode) {
+			if (batchmode) {
+				// print every 1%
+				if (jentry%int(TMath::Ceil(run_entries/100.))==0) {
           cout << "\t" << "Entry " << jentry-firstEntry << " / " << run_entries << endl;
-        }
-        else {
+				}
+			}
+			else {
+				// do progress bar update every 0.1%
+				if (jentry%int(TMath::Ceil(run_entries/1000.))==0) {
           printProgressBar(jentry);
         }
 			}
