@@ -62,7 +62,30 @@ class Looper {
 
 		// my own variables
     Float_t         bdtoutput;
-    //
+
+		//
+		Double_t        *B_s0_ETA;
+		Double_t        *Kst_ETA;
+		Double_t        *Kstb_ETA;
+		Double_t        *Kplus_ETA;
+		Double_t        *Kminus_ETA;
+		Double_t        *Piplus_ETA;
+		Double_t        *Piminus_ETA;
+
+		TBranch         *b_B_s0_ETA;
+		TBranch         *b_Kst_ETA;
+		TBranch         *b_Kstb_ETA;
+		TBranch        	*b_Kplus_ETA;
+		TBranch        	*b_Kminus_ETA;
+		TBranch        	*b_Piplus_ETA;
+		TBranch        	*b_Piminus_ETA;
+
+		Double_t  			*M_KKPiPlus;
+		Double_t 				*M_KKPiMinus;
+
+		TBranch 				*b_M_KKPiPlus;
+		TBranch  				*b_M_KKPiMinus;
+		//
 		Double_t   			*Kplus_ProbNNkcorr;
 		Double_t   			*Kminus_ProbNNkcorr;
 		Double_t   			*Piplus_ProbNNkcorr;

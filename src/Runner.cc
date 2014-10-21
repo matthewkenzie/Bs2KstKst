@@ -17,10 +17,13 @@ Runner::Runner(TString outFileName, TString outTreeName, BranchDef *_branchDef, 
 	firstEntry(-1),
 	lastEntry(-1),
 	naccepted(0),
+	nprocessed(0),
   batchmode(false)
 {
 	outFile = new TFile(outFileName,"RECREATE");
   outTree = new TTree(outTreeName,"Analysis Output Tree");
+	// Large autosave number to avoid duplicate trees in outfile
+	outTree->SetAutoSave(3e9);
   looper = new Looper(outTree,_branchDef,_name);
 }
 
@@ -28,9 +31,9 @@ Runner::~Runner(){}
 
 void Runner::save(){
 	cout << Form("%-30s","Runner::run()") << " " << "Saving tree (" << outTree->GetName() << ") to file (" << outFile->GetName() << ")." << endl;
-  //outFile->cd();
-  outFile->Write();
-  //outFile->Close();
+  outFile->cd();
+	outFile->Write();
+  outFile->Close();
   //delete looper;
   //delete outTree;
   //delete outFile;
@@ -118,6 +121,7 @@ void Runner::run(){
         }
 			}
 			looper->treeContainers[t].tree->GetEntry(jentry);
+			nprocessed++;
 			bool passesAll = true;
 			for (unsigned a=0; a<analysers.size(); a++){
 				if ( ! analysers[a]->AnalyseEvent(looper) ) {
@@ -147,19 +151,24 @@ void Runner::run(){
 	cout << Form("%-30s","Runner::run()") << " " << "Analysers cut flow summary:" << endl;
 	for (unsigned int t=0; t<looper->treeContainers.size(); t++){
 		cout << Form("%-30s","Runner::run()") << " " << "   " << looper->treeContainers[t].name << " : " << endl;
-    double totaleff=1.;
     int totalpass=0;
-    int totalfail=0;
+    int totaltried=0;
 		for (unsigned int a=0; a<analysers.size(); a++){
+
+			// total tried will be those from first analyser
+			if (a==0) totaltried = nPassFail[t][a].first + nPassFail[t][a].second;
+			// total passes wilb those which passes last analyser
+			if (a==analysers.size()-1) totalpass = nPassFail[t][a].first;
+
+			// print efficiency of each analyser on each looper
 			double eff = double(nPassFail[t][a].first)/double(nPassFail[t][a].first + nPassFail[t][a].second) * 100.;
-      totaleff *= (eff/100.);
-      totalpass += nPassFail[t][a].first;
-      totalfail += nPassFail[t][a].second;
 			cout << Form("%-30s","Runner::run()") << " " << "      " << a+1 << ".) " << Form("%-15s",(analysers[a]->name+":").Data()) << "  " <<	nPassFail[t][a].first << "/" << nPassFail[t][a].first + nPassFail[t][a].second << " of events passed -- " << Form("%6.2f%%",eff) << " efficient" << endl;
 		}
-    cout << Form("%-30s","Runner::run()") << " " << "      " << Form("%-19s","TOTAL:") << " " << totalpass << "/" << totalpass+totalfail << " of events passed -- " << Form("%6.2f%%",totaleff*100.) << " efficient" << endl;
+
+		// print efficiency for each looper
+    cout << Form("%-30s","Runner::run()") << " " << "      " << Form("%-19s","TOTAL:") << " " << totalpass << "/" << totaltried << " of events passed -- " << Form("%6.2f%%",double(totalpass)/double(totaltried)*100.) << " efficient" << endl;
 	}
 
-	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << lastEntry-firstEntry << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(lastEntry-firstEntry)) << " efficient" << endl;
+	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << nprocessed << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(nprocessed)) << " efficient" << endl;
 }
 

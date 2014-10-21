@@ -29,12 +29,17 @@ void TriggerSelection::Term(Looper *l){
 bool TriggerSelection::AnalyseEvent(Looper *l){
 
 	// do physics here e.g.:
-	if ( ! *l->B_s0_L0HadronDecision_TOS ) return false;
 
+	// L0
+	if ( ! *l->B_s0_L0HadronDecision_TOS                 &&
+			 ! *l->B_s0_L0Global_TIS														 ) return false;
+
+	// HLT1
 	if ( ! *l->B_s0_Hlt1DiHadronDecision_TOS             &&
 			 ! *l->B_s0_Hlt1SingleHadronDecision_TOS         &&
 			 ! *l->B_s0_Hlt1TrackAllL0Decision_TOS               ) return false;
 
+	// HLT2
 	if ( ! *l->B_s0_Hlt2B2HHDecision_TOS            			&&
 			 ! *l->B_s0_Hlt2Topo2BodyBBDTDecision_TOS    			&&
 			 ! *l->B_s0_Hlt2Topo2BodySimpleDecision_TOS 			&&

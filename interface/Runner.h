@@ -53,6 +53,7 @@ class Runner {
 		Long64_t firstEntry;
 		Long64_t lastEntry;
 		Long64_t naccepted;
+		Long64_t nprocessed;
     bool batchmode;
 		TStopwatch timer;
 
