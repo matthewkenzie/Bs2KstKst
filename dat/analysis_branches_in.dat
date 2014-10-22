@@ -1,6 +1,5 @@
 # auto-generated
 # type           name                                     itype (1=data, -1=mc, 0=both)
-Int_t           B_s0_BKGCAT                                 -1
 Double_t        B_s0_DIRA_OWNPV                              0
 Double_t        B_s0_ENDVERTEX_CHI2                          0
 Double_t        B_s0_FDCHI2_OWNPV                            0
@@ -53,6 +52,9 @@ Double_t        Kminus_ProbNNp                               0
 Double_t        Kminus_ProbNNpi                              0
 Double_t        Kminus_ProbNNpicorr                         -1
 Double_t        Kminus_TRACK_CHI2NDOF                        0
+Bool_t          Kminus_isMuon                                0
+Double_t        Kminus_IPCHI2_OWNPV                          0
+Double_t        Kminus_IP_OWNPV                              0
 Double_t        Kplus_M                                      0
 Double_t        Kplus_P                                      0
 Double_t        Kplus_PE                                     0
@@ -71,6 +73,9 @@ Double_t        Kplus_ProbNNp                                0
 Double_t        Kplus_ProbNNpi                               0
 Double_t        Kplus_ProbNNpicorr                          -1
 Double_t        Kplus_TRACK_CHI2NDOF                         0
+Bool_t          Kplus_isMuon                                 0
+Double_t        Kplus_IPCHI2_OWNPV                           0
+Double_t        Kplus_IP_OWNPV                               0
 Double_t        Piminus_M                                    0
 Double_t        Piminus_P                                    0
 Double_t        Piminus_PE                                   0
@@ -89,6 +94,9 @@ Double_t        Piminus_ProbNNp                              0
 Double_t        Piminus_ProbNNpi                             0
 Double_t        Piminus_ProbNNpicorr                         -1
 Double_t        Piminus_TRACK_CHI2NDOF                       0
+Bool_t          Piminus_isMuon                               0
+Double_t        Piminus_IPCHI2_OWNPV                         0
+Double_t        Piminus_IP_OWNPV                             0
 Double_t        Piplus_M                                     0
 Double_t        Piplus_P                                     0
 Double_t        Piplus_PE                                    0
@@ -107,13 +115,13 @@ Double_t        Piplus_ProbNNp                               0
 Double_t        Piplus_ProbNNpi                              0
 Double_t        Piplus_ProbNNpicorr                         -1
 Double_t        Piplus_TRACK_CHI2NDOF                        0
+Bool_t          Piplus_isMuon                                0
+Double_t        Piplus_IPCHI2_OWNPV                          0
+Double_t        Piplus_IP_OWNPV                              0
 Double_t        Kst_CosTheta                                 0
-Double_t        Kst_DIRA_ORIVX                               0
 Double_t        Kst_DIRA_OWNPV                               0
 Double_t        Kst_ENDVERTEX_CHI2                           0
-Double_t        Kst_FDCHI2_ORIVX                             0
 Double_t        Kst_FDCHI2_OWNPV                             0
-Double_t        Kst_FD_ORIVX                                 0
 Double_t        Kst_FD_OWNPV                                 0
 Double_t        Kst_IPCHI2_OWNPV                             0
 Double_t        Kst_IP_OWNPV                                 0
@@ -128,12 +136,9 @@ Double_t        Kst_PY                                       0
 Double_t        Kst_PZ                                       0
 Double_t        Kst_ETA                                      0
 Double_t        Kstb_CosTheta                                0
-Double_t        Kstb_DIRA_ORIVX                              0
 Double_t        Kstb_DIRA_OWNPV                              0
 Double_t        Kstb_ENDVERTEX_CHI2                          0
-Double_t        Kstb_FDCHI2_ORIVX                            0
 Double_t        Kstb_FDCHI2_OWNPV                            0
-Double_t        Kstb_FD_ORIVX                                0
 Double_t        Kstb_FD_OWNPV                                0
 Double_t        Kstb_IPCHI2_OWNPV                            0
 Double_t        Kstb_IP_OWNPV                                0

@@ -72,12 +72,24 @@ void BasicVariablesPlotter::defineHists(){
   addHist("Kminus_ProbDiffCorr",100,-1,1.);
   addHist("Piplus_ETA",100,1.,6.);
   addHist("Piplus_PT",100,0,10e3);
-  addHist("Piplus_ProbDiff",100,-1,1.);
-  addHist("Piplus_ProbDiffCorr",100,-1,1.);
   addHist("Piminus_ETA",100,1.,6.);
   addHist("Piminus_PT",100,0,10e3);
-  addHist("Piminus_ProbDiff",100,-1,1.);
-  addHist("Piminus_ProbDiffCorr",100,-1,1.);
+	addHist("Kplus_ProbNNk",100,0,1.3);
+	addHist("Kminus_ProbNNk",100,0,1.3);
+	addHist("Piplus_ProbNNk",100,0,1.3);
+	addHist("Piminus_ProbNNk",100,0,1.3);
+	addHist("Kplus_ProbNNpi",100,0,1.3);
+	addHist("Kminus_ProbNNpi",100,0,1.3);
+	addHist("Piplus_ProbNNpi",100,0,1.3);
+	addHist("Piminus_ProbNNpi",100,0,1.3);
+	addHist("Kplus_ProbNNkcorr",100,0,1.3);
+	addHist("Kminus_ProbNNkcorr",100,0,1.3);
+	addHist("Piplus_ProbNNkcorr",100,0,1.3);
+	addHist("Piminus_ProbNNkcorr",100,0,1.3);
+	addHist("Kplus_ProbNNpicorr",100,0,1.3);
+	addHist("Kminus_ProbNNpicorr",100,0,1.3);
+	addHist("Piplus_ProbNNpicorr",100,0,1.3);
+	addHist("Piminus_ProbNNpicorr",100,0,1.3);
 
 	// BDT Vars
 	addHist("ln_B_s0_PT",100,6,12);
@@ -93,11 +105,12 @@ void BasicVariablesPlotter::defineHists(){
 	addHist("B_s0_ARCCOS_DIRA_OWNPV",100,0.,0.04);
 	addHist("B_s0_ENDVERTEX_CHI2",100,0,50);
 	addHist("max_track_chi2",100,0,4);
-	addHist("Kplus_PID_DeltaProbKPi",100,-1,1.2);
-	addHist("Kminus_PID_DeltaProbKPi",100,-1,1.2);
-	addHist("Piplus_PID_DeltaProbKPi",100,-1,1.2);
-	addHist("Piminus_PID_DeltaProbKPi",100,-1,1.2);
+	addHist("Kplus_PID_DeltaProbKPi",100,-1,1.4);
+	addHist("Kminus_PID_DeltaProbKPi",100,-1,1.4);
+	addHist("Piplus_PID_DeltaProbKPi",100,-1,1.4);
+	addHist("Piminus_PID_DeltaProbKPi",100,-1,1.4);
 
+	addHist("bdtoutput",100,-1,1);
 }
 
 void BasicVariablesPlotter::addHist(TString name, int nbins, float xlow, float xhigh){
@@ -134,32 +147,48 @@ void BasicVariablesPlotter::fillHistograms(Looper *l){
 
   histMap[l->itype]["Kplus_ETA"]->Fill(0.5*TMath::Log( (*l->Kplus_P + *l->Kplus_PZ) / (*l->Kplus_P - *l->Kplus_PZ) ));
   histMap[l->itype]["Kplus_PT"]->Fill(*l->Kplus_PT);
-  histMap[l->itype]["Kplus_ProbDiff"]->Fill(*l->Kplus_ProbNNk - *l->Kplus_ProbNNpi);
 
   histMap[l->itype]["Kminus_ETA"]->Fill(0.5*TMath::Log( (*l->Kminus_P + *l->Kminus_PZ) / (*l->Kminus_P - *l->Kminus_PZ) ));
   histMap[l->itype]["Kminus_PT"]->Fill(*l->Kplus_PT);
-  histMap[l->itype]["Kminus_ProbDiff"]->Fill(*l->Kminus_ProbNNk - *l->Kminus_ProbNNpi);
 
   histMap[l->itype]["Piplus_ETA"]->Fill(0.5*TMath::Log( (*l->Piplus_P + *l->Piplus_PZ) / (*l->Piplus_P - *l->Piplus_PZ) ));
   histMap[l->itype]["Piplus_PT"]->Fill(*l->Kplus_PT);
-  histMap[l->itype]["Piplus_ProbDiff"]->Fill(*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi);
 
   histMap[l->itype]["Piminus_ETA"]->Fill(0.5*TMath::Log( (*l->Piminus_P + *l->Piminus_PZ) / (*l->Piminus_P - *l->Piminus_PZ) ));
   histMap[l->itype]["Piminus_PT"]->Fill(*l->Kplus_PT);
-  histMap[l->itype]["Piminus_ProbDiff"]->Fill(*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi);
+
+	histMap[l->itype]["Kplus_ProbNNk"]->Fill(*l->Kplus_ProbNNk);
+	histMap[l->itype]["Kminus_ProbNNk"]->Fill(*l->Kminus_ProbNNk);
+	histMap[l->itype]["Piplus_ProbNNk"]->Fill(*l->Piplus_ProbNNk);
+	histMap[l->itype]["Piminus_ProbNNk"]->Fill(*l->Piminus_ProbNNk);
+
+	histMap[l->itype]["Kplus_ProbNNpi"]->Fill(*l->Kplus_ProbNNpi);
+	histMap[l->itype]["Kminus_ProbNNpi"]->Fill(*l->Kminus_ProbNNpi);
+	histMap[l->itype]["Piplus_ProbNNpi"]->Fill(*l->Piplus_ProbNNpi);
+	histMap[l->itype]["Piminus_ProbNNpi"]->Fill(*l->Piminus_ProbNNpi);
 
 	if ( l->itype < 0 ) {
-    histMap[l->itype]["Kplus_ProbDiffCorr"]->Fill(*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr);
-    histMap[l->itype]["Kminus_ProbDiffCorr"]->Fill(*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr);
-    histMap[l->itype]["Piplus_ProbDiffCorr"]->Fill(*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr);
-    histMap[l->itype]["Piminus_ProbDiffCorr"]->Fill(*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr);
-  }
-  else {
-    histMap[l->itype]["Kplus_ProbDiffCorr"]->Fill(*l->Kplus_ProbNNk - *l->Kplus_ProbNNpi);
-    histMap[l->itype]["Kminus_ProbDiffCorr"]->Fill(*l->Kminus_ProbNNk - *l->Kminus_ProbNNpi);
-    histMap[l->itype]["Piplus_ProbDiffCorr"]->Fill(*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi);
-    histMap[l->itype]["Piminus_ProbDiffCorr"]->Fill(*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi);
-  }
+		histMap[l->itype]["Kplus_ProbNNkcorr"]->Fill(*l->Kplus_ProbNNkcorr);
+		histMap[l->itype]["Kminus_ProbNNkcorr"]->Fill(*l->Kminus_ProbNNkcorr);
+		histMap[l->itype]["Piplus_ProbNNkcorr"]->Fill(*l->Piplus_ProbNNkcorr);
+		histMap[l->itype]["Piminus_ProbNNkcorr"]->Fill(*l->Piminus_ProbNNkcorr);
+
+		histMap[l->itype]["Kplus_ProbNNpicorr"]->Fill(*l->Kplus_ProbNNpicorr);
+		histMap[l->itype]["Kminus_ProbNNpicorr"]->Fill(*l->Kminus_ProbNNpicorr);
+		histMap[l->itype]["Piplus_ProbNNpicorr"]->Fill(*l->Piplus_ProbNNpicorr);
+		histMap[l->itype]["Piminus_ProbNNpicorr"]->Fill(*l->Piminus_ProbNNpicorr);
+	}
+	else {
+		histMap[l->itype]["Kplus_ProbNNkcorr"]->Fill(*l->Kplus_ProbNNk);
+		histMap[l->itype]["Kminus_ProbNNkcorr"]->Fill(*l->Kminus_ProbNNk);
+		histMap[l->itype]["Piplus_ProbNNkcorr"]->Fill(*l->Piplus_ProbNNk);
+		histMap[l->itype]["Piminus_ProbNNkcorr"]->Fill(*l->Piminus_ProbNNk);
+
+		histMap[l->itype]["Kplus_ProbNNpicorr"]->Fill(*l->Kplus_ProbNNpi);
+		histMap[l->itype]["Kminus_ProbNNpicorr"]->Fill(*l->Kminus_ProbNNpi);
+		histMap[l->itype]["Piplus_ProbNNpicorr"]->Fill(*l->Piplus_ProbNNpi);
+		histMap[l->itype]["Piminus_ProbNNpicorr"]->Fill(*l->Piminus_ProbNNpi);
+	}
 
 	// BDT Vars
 	histMap[l->itype]["ln_B_s0_PT"]->Fill(TMath::Log(*l->B_s0_PT));
@@ -203,6 +232,8 @@ void BasicVariablesPlotter::fillHistograms(Looper *l){
 		histMap[l->itype]["Piplus_PID_DeltaProbKPi"]->Fill(*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi);
 		histMap[l->itype]["Piminus_PID_DeltaProbKPi"]->Fill(*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi);
 	}
+
+	histMap[l->itype]["bdtoutput"]->Fill(*l->bdtoutput);
 }
 
 void BasicVariablesPlotter::saveHistograms(TString outFileName){

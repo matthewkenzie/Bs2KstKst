@@ -17,7 +17,7 @@ using namespace TMVA;
 BDTReader::BDTReader(TString _name):
 	BaseAnalyser(_name),
 	evCount(0),
-	numberOfBDTs(2)
+	numberOfBDTs(1)
 {}
 
 BDTReader::~BDTReader(){}
@@ -46,8 +46,12 @@ void BDTReader::Init(Looper *l){
     readerContainer[b]->AddVariable("B_s0_ENDVERTEX_CHI2",    &B_s0_ENDVERTEX_CHI2);
     readerContainer[b]->AddVariable("max_track_CHI2",         &max_track_CHI2);
 
-    readerContainer[b]->AddVariable("min_K_DeltaProbKPi",     &min_K_DeltaProbKPi);
-    readerContainer[b]->AddVariable("max_Pi_DeltaProbKPi",    &max_Pi_DeltaProbKPi);
+    //readerContainer[b]->AddVariable("min_K_DeltaProbKPi",     &min_K_DeltaProbKPi);
+    //readerContainer[b]->AddVariable("max_Pi_DeltaProbKPi",    &max_Pi_DeltaProbKPi);
+    readerContainer[b]->AddVariable("Kplus_PID_DeltaProbKPi",    &Kplus_PID_DeltaProbKPi);
+    readerContainer[b]->AddVariable("Kminus_PID_DeltaProbKPi",   &Kminus_PID_DeltaProbKPi);
+    readerContainer[b]->AddVariable("Piplus_PID_DeltaProbPiK",   &Piplus_PID_DeltaProbPiK);
+    readerContainer[b]->AddVariable("Piminus_PID_DeltaProbPiK",  &Piminus_PID_DeltaProbPiK);
 
 		// Book MVA methods
 		weightsFile = Form("weights/BDTTrainerFactory%d_BDT%d.weights.xml",b,b);
@@ -95,17 +99,21 @@ bool BDTReader::AnalyseEvent(Looper *l){
 
   max_track_CHI2          = float(max_track_chi2);
 
-  min_K_DeltaProbKPi      = float(TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) ));
-  max_Pi_DeltaProbKPi     = float(TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) ));
+  //min_K_DeltaProbKPi      = float(TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) ));
+  //max_Pi_DeltaProbKPi     = float(TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) ));
+	Kplus_PID_DeltaProbKPi   = float(*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr);
+	Kminus_PID_DeltaProbKPi  = float(*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr);
+	Piplus_PID_DeltaProbPiK  = float(*l->Piplus_ProbNNpicorr - *l->Piplus_ProbNNkcorr);
+	Piminus_PID_DeltaProbPiK = float(*l->Piminus_ProbNNpicorr - *l->Piminus_ProbNNkcorr);
 
 	int lastDigit = *l->eventNumber%10;
 	int relBDT = int(floor(lastDigit/2))%numberOfBDTs;
 	assert(relBDT < numberOfBDTs);
 
-	l->bdtoutput = readerContainer[relBDT]->EvaluateMVA( Form("BDT%dmethod",relBDT) );
+	*l->bdtoutput = readerContainer[relBDT]->EvaluateMVA( Form("BDT%dmethod",relBDT) );
 
 	// bdt cut?
-	if ( l->bdtoutput < 0.08 ) return false;
+	//if ( l->bdtoutput < 0.08 ) return false;
 
 	// step up counter
 	evCount++;

@@ -9,7 +9,6 @@
 AnalysisBranches::AnalysisBranches(){} 																	 
 AnalysisBranches::~AnalysisBranches(){} 																	 
 void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){ 
-	if (l->itype<0) tree->SetBranchAddress("B_s0_BKGCAT", l->B_s0_BKGCAT, &(l->b_B_s0_BKGCAT));
 	tree->SetBranchAddress("B_s0_DIRA_OWNPV", l->B_s0_DIRA_OWNPV, &(l->b_B_s0_DIRA_OWNPV));
 	tree->SetBranchAddress("B_s0_ENDVERTEX_CHI2", l->B_s0_ENDVERTEX_CHI2, &(l->b_B_s0_ENDVERTEX_CHI2));
 	tree->SetBranchAddress("B_s0_ETA", l->B_s0_ETA, &(l->b_B_s0_ETA));
@@ -45,6 +44,8 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("B_s0_TAUCHI2", l->B_s0_TAUCHI2, &(l->b_B_s0_TAUCHI2));
 	tree->SetBranchAddress("B_s0_TAUERR", l->B_s0_TAUERR, &(l->b_B_s0_TAUERR));
 	tree->SetBranchAddress("Kminus_ETA", l->Kminus_ETA, &(l->b_Kminus_ETA));
+	tree->SetBranchAddress("Kminus_IPCHI2_OWNPV", l->Kminus_IPCHI2_OWNPV, &(l->b_Kminus_IPCHI2_OWNPV));
+	tree->SetBranchAddress("Kminus_IP_OWNPV", l->Kminus_IP_OWNPV, &(l->b_Kminus_IP_OWNPV));
 	tree->SetBranchAddress("Kminus_M", l->Kminus_M, &(l->b_Kminus_M));
 	tree->SetBranchAddress("Kminus_P", l->Kminus_P, &(l->b_Kminus_P));
 	tree->SetBranchAddress("Kminus_PE", l->Kminus_PE, &(l->b_Kminus_PE));
@@ -62,7 +63,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kminus_ProbNNpi", l->Kminus_ProbNNpi, &(l->b_Kminus_ProbNNpi));
 	if (l->itype<0) tree->SetBranchAddress("Kminus_ProbNNpicorr", l->Kminus_ProbNNpicorr, &(l->b_Kminus_ProbNNpicorr));
 	tree->SetBranchAddress("Kminus_TRACK_CHI2NDOF", l->Kminus_TRACK_CHI2NDOF, &(l->b_Kminus_TRACK_CHI2NDOF));
+	tree->SetBranchAddress("Kminus_isMuon", l->Kminus_isMuon, &(l->b_Kminus_isMuon));
 	tree->SetBranchAddress("Kplus_ETA", l->Kplus_ETA, &(l->b_Kplus_ETA));
+	tree->SetBranchAddress("Kplus_IPCHI2_OWNPV", l->Kplus_IPCHI2_OWNPV, &(l->b_Kplus_IPCHI2_OWNPV));
+	tree->SetBranchAddress("Kplus_IP_OWNPV", l->Kplus_IP_OWNPV, &(l->b_Kplus_IP_OWNPV));
 	tree->SetBranchAddress("Kplus_M", l->Kplus_M, &(l->b_Kplus_M));
 	tree->SetBranchAddress("Kplus_P", l->Kplus_P, &(l->b_Kplus_P));
 	tree->SetBranchAddress("Kplus_PE", l->Kplus_PE, &(l->b_Kplus_PE));
@@ -80,14 +84,12 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kplus_ProbNNpi", l->Kplus_ProbNNpi, &(l->b_Kplus_ProbNNpi));
 	if (l->itype<0) tree->SetBranchAddress("Kplus_ProbNNpicorr", l->Kplus_ProbNNpicorr, &(l->b_Kplus_ProbNNpicorr));
 	tree->SetBranchAddress("Kplus_TRACK_CHI2NDOF", l->Kplus_TRACK_CHI2NDOF, &(l->b_Kplus_TRACK_CHI2NDOF));
+	tree->SetBranchAddress("Kplus_isMuon", l->Kplus_isMuon, &(l->b_Kplus_isMuon));
 	tree->SetBranchAddress("Kst_CosTheta", l->Kst_CosTheta, &(l->b_Kst_CosTheta));
-	tree->SetBranchAddress("Kst_DIRA_ORIVX", l->Kst_DIRA_ORIVX, &(l->b_Kst_DIRA_ORIVX));
 	tree->SetBranchAddress("Kst_DIRA_OWNPV", l->Kst_DIRA_OWNPV, &(l->b_Kst_DIRA_OWNPV));
 	tree->SetBranchAddress("Kst_ENDVERTEX_CHI2", l->Kst_ENDVERTEX_CHI2, &(l->b_Kst_ENDVERTEX_CHI2));
 	tree->SetBranchAddress("Kst_ETA", l->Kst_ETA, &(l->b_Kst_ETA));
-	tree->SetBranchAddress("Kst_FDCHI2_ORIVX", l->Kst_FDCHI2_ORIVX, &(l->b_Kst_FDCHI2_ORIVX));
 	tree->SetBranchAddress("Kst_FDCHI2_OWNPV", l->Kst_FDCHI2_OWNPV, &(l->b_Kst_FDCHI2_OWNPV));
-	tree->SetBranchAddress("Kst_FD_ORIVX", l->Kst_FD_ORIVX, &(l->b_Kst_FD_ORIVX));
 	tree->SetBranchAddress("Kst_FD_OWNPV", l->Kst_FD_OWNPV, &(l->b_Kst_FD_OWNPV));
 	tree->SetBranchAddress("Kst_IPCHI2_OWNPV", l->Kst_IPCHI2_OWNPV, &(l->b_Kst_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Kst_IP_OWNPV", l->Kst_IP_OWNPV, &(l->b_Kst_IP_OWNPV));
@@ -101,13 +103,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kst_PY", l->Kst_PY, &(l->b_Kst_PY));
 	tree->SetBranchAddress("Kst_PZ", l->Kst_PZ, &(l->b_Kst_PZ));
 	tree->SetBranchAddress("Kstb_CosTheta", l->Kstb_CosTheta, &(l->b_Kstb_CosTheta));
-	tree->SetBranchAddress("Kstb_DIRA_ORIVX", l->Kstb_DIRA_ORIVX, &(l->b_Kstb_DIRA_ORIVX));
 	tree->SetBranchAddress("Kstb_DIRA_OWNPV", l->Kstb_DIRA_OWNPV, &(l->b_Kstb_DIRA_OWNPV));
 	tree->SetBranchAddress("Kstb_ENDVERTEX_CHI2", l->Kstb_ENDVERTEX_CHI2, &(l->b_Kstb_ENDVERTEX_CHI2));
 	tree->SetBranchAddress("Kstb_ETA", l->Kstb_ETA, &(l->b_Kstb_ETA));
-	tree->SetBranchAddress("Kstb_FDCHI2_ORIVX", l->Kstb_FDCHI2_ORIVX, &(l->b_Kstb_FDCHI2_ORIVX));
 	tree->SetBranchAddress("Kstb_FDCHI2_OWNPV", l->Kstb_FDCHI2_OWNPV, &(l->b_Kstb_FDCHI2_OWNPV));
-	tree->SetBranchAddress("Kstb_FD_ORIVX", l->Kstb_FD_ORIVX, &(l->b_Kstb_FD_ORIVX));
 	tree->SetBranchAddress("Kstb_FD_OWNPV", l->Kstb_FD_OWNPV, &(l->b_Kstb_FD_OWNPV));
 	tree->SetBranchAddress("Kstb_IPCHI2_OWNPV", l->Kstb_IPCHI2_OWNPV, &(l->b_Kstb_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Kstb_IP_OWNPV", l->Kstb_IP_OWNPV, &(l->b_Kstb_IP_OWNPV));
@@ -132,6 +131,8 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("PVZ", l->PVZ, &(l->b_PVZ));
 	tree->SetBranchAddress("PVZERR", l->PVZERR, &(l->b_PVZERR));
 	tree->SetBranchAddress("Piminus_ETA", l->Piminus_ETA, &(l->b_Piminus_ETA));
+	tree->SetBranchAddress("Piminus_IPCHI2_OWNPV", l->Piminus_IPCHI2_OWNPV, &(l->b_Piminus_IPCHI2_OWNPV));
+	tree->SetBranchAddress("Piminus_IP_OWNPV", l->Piminus_IP_OWNPV, &(l->b_Piminus_IP_OWNPV));
 	tree->SetBranchAddress("Piminus_M", l->Piminus_M, &(l->b_Piminus_M));
 	tree->SetBranchAddress("Piminus_P", l->Piminus_P, &(l->b_Piminus_P));
 	tree->SetBranchAddress("Piminus_PE", l->Piminus_PE, &(l->b_Piminus_PE));
@@ -149,7 +150,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piminus_ProbNNpi", l->Piminus_ProbNNpi, &(l->b_Piminus_ProbNNpi));
 	if (l->itype<0) tree->SetBranchAddress("Piminus_ProbNNpicorr", l->Piminus_ProbNNpicorr, &(l->b_Piminus_ProbNNpicorr));
 	tree->SetBranchAddress("Piminus_TRACK_CHI2NDOF", l->Piminus_TRACK_CHI2NDOF, &(l->b_Piminus_TRACK_CHI2NDOF));
+	tree->SetBranchAddress("Piminus_isMuon", l->Piminus_isMuon, &(l->b_Piminus_isMuon));
 	tree->SetBranchAddress("Piplus_ETA", l->Piplus_ETA, &(l->b_Piplus_ETA));
+	tree->SetBranchAddress("Piplus_IPCHI2_OWNPV", l->Piplus_IPCHI2_OWNPV, &(l->b_Piplus_IPCHI2_OWNPV));
+	tree->SetBranchAddress("Piplus_IP_OWNPV", l->Piplus_IP_OWNPV, &(l->b_Piplus_IP_OWNPV));
 	tree->SetBranchAddress("Piplus_M", l->Piplus_M, &(l->b_Piplus_M));
 	tree->SetBranchAddress("Piplus_P", l->Piplus_P, &(l->b_Piplus_P));
 	tree->SetBranchAddress("Piplus_PE", l->Piplus_PE, &(l->b_Piplus_PE));
@@ -167,6 +171,7 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piplus_ProbNNpi", l->Piplus_ProbNNpi, &(l->b_Piplus_ProbNNpi));
 	if (l->itype<0) tree->SetBranchAddress("Piplus_ProbNNpicorr", l->Piplus_ProbNNpicorr, &(l->b_Piplus_ProbNNpicorr));
 	tree->SetBranchAddress("Piplus_TRACK_CHI2NDOF", l->Piplus_TRACK_CHI2NDOF, &(l->b_Piplus_TRACK_CHI2NDOF));
+	tree->SetBranchAddress("Piplus_isMuon", l->Piplus_isMuon, &(l->b_Piplus_isMuon));
 	tree->SetBranchAddress("Polarity", l->Polarity, &(l->b_Polarity));
 	tree->SetBranchAddress("eventNumber", l->eventNumber, &(l->b_eventNumber));
 	tree->SetBranchAddress("nBackTracks", l->nBackTracks, &(l->b_nBackTracks));
@@ -198,7 +203,6 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 }
 
 void AnalysisBranches::initialiseVariables(Looper *l) {
-	l->B_s0_BKGCAT                           = new Int_t(0);
 	l->B_s0_DIRA_OWNPV                       = new Double_t(0);
 	l->B_s0_ENDVERTEX_CHI2                   = new Double_t(0);
 	l->B_s0_ETA                              = new Double_t(0);
@@ -206,7 +210,6 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->B_s0_FD_OWNPV                         = new Double_t(0);
 	l->B_s0_IPCHI2_OWNPV                     = new Double_t(0);
 	l->B_s0_IP_OWNPV                         = new Double_t(0);
-	l->B_s0_L0HadronDecision_TOS             = new Bool_t(0);
 	l->B_s0_M                                = new Double_t(0);
 	l->B_s0_MC_GD_GD_MOTHER_ID               = new Int_t(0);
 	l->B_s0_MC_GD_GD_MOTHER_KEY              = new Int_t(0);
@@ -235,7 +238,10 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->B_s0_TAUCHI2                          = new Double_t(0);
 	l->B_s0_TAUERR                           = new Double_t(0);
 	l->Kminus_ETA                            = new Double_t(0);
+	l->Kminus_IPCHI2_OWNPV                   = new Double_t(0);
+	l->Kminus_IP_OWNPV                       = new Double_t(0);
 	l->Kminus_M                              = new Double_t(0);
+	l->Kminus_ORIVX_CHI2                     = new Double_t(0);
 	l->Kminus_P                              = new Double_t(0);
 	l->Kminus_PE                             = new Double_t(0);
 	l->Kminus_PIDK                           = new Double_t(0);
@@ -252,8 +258,12 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->Kminus_ProbNNpi                       = new Double_t(0);
 	l->Kminus_ProbNNpicorr                   = new Double_t(0);
 	l->Kminus_TRACK_CHI2NDOF                 = new Double_t(0);
+	l->Kminus_isMuon                         = new Bool_t(0);
 	l->Kplus_ETA                             = new Double_t(0);
+	l->Kplus_IPCHI2_OWNPV                    = new Double_t(0);
+	l->Kplus_IP_OWNPV                        = new Double_t(0);
 	l->Kplus_M                               = new Double_t(0);
+	l->Kplus_ORIVX_CHI2                      = new Double_t(0);
 	l->Kplus_P                               = new Double_t(0);
 	l->Kplus_PE                              = new Double_t(0);
 	l->Kplus_PIDK                            = new Double_t(0);
@@ -270,6 +280,7 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->Kplus_ProbNNpi                        = new Double_t(0);
 	l->Kplus_ProbNNpicorr                    = new Double_t(0);
 	l->Kplus_TRACK_CHI2NDOF                  = new Double_t(0);
+	l->Kplus_isMuon                          = new Bool_t(0);
 	l->Kst_CosTheta                          = new Double_t(0);
 	l->Kst_DIRA_ORIVX                        = new Double_t(0);
 	l->Kst_DIRA_OWNPV                        = new Double_t(0);
@@ -322,7 +333,10 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->PVZ                                   = new Float_t(0);
 	l->PVZERR                                = new Float_t(0);
 	l->Piminus_ETA                           = new Double_t(0);
+	l->Piminus_IPCHI2_OWNPV                  = new Double_t(0);
+	l->Piminus_IP_OWNPV                      = new Double_t(0);
 	l->Piminus_M                             = new Double_t(0);
+	l->Piminus_ORIVX_CHI2                    = new Double_t(0);
 	l->Piminus_P                             = new Double_t(0);
 	l->Piminus_PE                            = new Double_t(0);
 	l->Piminus_PIDK                          = new Double_t(0);
@@ -339,8 +353,12 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->Piminus_ProbNNpi                      = new Double_t(0);
 	l->Piminus_ProbNNpicorr                  = new Double_t(0);
 	l->Piminus_TRACK_CHI2NDOF                = new Double_t(0);
+	l->Piminus_isMuon                        = new Bool_t(0);
 	l->Piplus_ETA                            = new Double_t(0);
+	l->Piplus_IPCHI2_OWNPV                   = new Double_t(0);
+	l->Piplus_IP_OWNPV                       = new Double_t(0);
 	l->Piplus_M                              = new Double_t(0);
+	l->Piplus_ORIVX_CHI2                     = new Double_t(0);
 	l->Piplus_P                              = new Double_t(0);
 	l->Piplus_PE                             = new Double_t(0);
 	l->Piplus_PIDK                           = new Double_t(0);
@@ -357,7 +375,9 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->Piplus_ProbNNpi                       = new Double_t(0);
 	l->Piplus_ProbNNpicorr                   = new Double_t(0);
 	l->Piplus_TRACK_CHI2NDOF                 = new Double_t(0);
+	l->Piplus_isMuon                         = new Bool_t(0);
 	l->Polarity                              = new Short_t(0);
+	l->bdtoutput                             = new Float_t(0);
 	l->eventNumber                           = new ULong64_t(0);
 	l->nBackTracks                           = new Int_t(0);
 	l->nCandidate                            = new UInt_t(0);
@@ -388,7 +408,6 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 }
 
 void AnalysisBranches::cleanVariables(Looper *l) {
-	delete l->B_s0_BKGCAT;
 	delete l->B_s0_DIRA_OWNPV;
 	delete l->B_s0_ENDVERTEX_CHI2;
 	delete l->B_s0_ETA;
@@ -396,7 +415,6 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->B_s0_FD_OWNPV;
 	delete l->B_s0_IPCHI2_OWNPV;
 	delete l->B_s0_IP_OWNPV;
-	delete l->B_s0_L0HadronDecision_TOS;
 	delete l->B_s0_M;
 	delete l->B_s0_MC_GD_GD_MOTHER_ID;
 	delete l->B_s0_MC_GD_GD_MOTHER_KEY;
@@ -425,7 +443,10 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->B_s0_TAUCHI2;
 	delete l->B_s0_TAUERR;
 	delete l->Kminus_ETA;
+	delete l->Kminus_IPCHI2_OWNPV;
+	delete l->Kminus_IP_OWNPV;
 	delete l->Kminus_M;
+	delete l->Kminus_ORIVX_CHI2;
 	delete l->Kminus_P;
 	delete l->Kminus_PE;
 	delete l->Kminus_PIDK;
@@ -442,8 +463,12 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->Kminus_ProbNNpi;
 	delete l->Kminus_ProbNNpicorr;
 	delete l->Kminus_TRACK_CHI2NDOF;
+	delete l->Kminus_isMuon;
 	delete l->Kplus_ETA;
+	delete l->Kplus_IPCHI2_OWNPV;
+	delete l->Kplus_IP_OWNPV;
 	delete l->Kplus_M;
+	delete l->Kplus_ORIVX_CHI2;
 	delete l->Kplus_P;
 	delete l->Kplus_PE;
 	delete l->Kplus_PIDK;
@@ -460,6 +485,7 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->Kplus_ProbNNpi;
 	delete l->Kplus_ProbNNpicorr;
 	delete l->Kplus_TRACK_CHI2NDOF;
+	delete l->Kplus_isMuon;
 	delete l->Kst_CosTheta;
 	delete l->Kst_DIRA_ORIVX;
 	delete l->Kst_DIRA_OWNPV;
@@ -512,7 +538,10 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->PVZ;
 	delete l->PVZERR;
 	delete l->Piminus_ETA;
+	delete l->Piminus_IPCHI2_OWNPV;
+	delete l->Piminus_IP_OWNPV;
 	delete l->Piminus_M;
+	delete l->Piminus_ORIVX_CHI2;
 	delete l->Piminus_P;
 	delete l->Piminus_PE;
 	delete l->Piminus_PIDK;
@@ -529,8 +558,12 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->Piminus_ProbNNpi;
 	delete l->Piminus_ProbNNpicorr;
 	delete l->Piminus_TRACK_CHI2NDOF;
+	delete l->Piminus_isMuon;
 	delete l->Piplus_ETA;
+	delete l->Piplus_IPCHI2_OWNPV;
+	delete l->Piplus_IP_OWNPV;
 	delete l->Piplus_M;
+	delete l->Piplus_ORIVX_CHI2;
 	delete l->Piplus_P;
 	delete l->Piplus_PE;
 	delete l->Piplus_PIDK;
@@ -547,7 +580,9 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->Piplus_ProbNNpi;
 	delete l->Piplus_ProbNNpicorr;
 	delete l->Piplus_TRACK_CHI2NDOF;
+	delete l->Piplus_isMuon;
 	delete l->Polarity;
+	delete l->bdtoutput;
 	delete l->eventNumber;
 	delete l->nBackTracks;
 	delete l->nCandidate;
@@ -575,7 +610,6 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->runNumber;
 	delete l->totCandidates;
 
-	delete l->b_B_s0_BKGCAT;
 	delete l->b_B_s0_DIRA_OWNPV;
 	delete l->b_B_s0_ENDVERTEX_CHI2;
 	delete l->b_B_s0_ETA;
@@ -583,7 +617,6 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_B_s0_FD_OWNPV;
 	delete l->b_B_s0_IPCHI2_OWNPV;
 	delete l->b_B_s0_IP_OWNPV;
-	delete l->b_B_s0_L0HadronDecision_TOS;
 	delete l->b_B_s0_M;
 	delete l->b_B_s0_MC_GD_GD_MOTHER_ID;
 	delete l->b_B_s0_MC_GD_GD_MOTHER_KEY;
@@ -612,7 +645,10 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_B_s0_TAUCHI2;
 	delete l->b_B_s0_TAUERR;
 	delete l->b_Kminus_ETA;
+	delete l->b_Kminus_IPCHI2_OWNPV;
+	delete l->b_Kminus_IP_OWNPV;
 	delete l->b_Kminus_M;
+	delete l->b_Kminus_ORIVX_CHI2;
 	delete l->b_Kminus_P;
 	delete l->b_Kminus_PE;
 	delete l->b_Kminus_PIDK;
@@ -629,8 +665,12 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_Kminus_ProbNNpi;
 	delete l->b_Kminus_ProbNNpicorr;
 	delete l->b_Kminus_TRACK_CHI2NDOF;
+	delete l->b_Kminus_isMuon;
 	delete l->b_Kplus_ETA;
+	delete l->b_Kplus_IPCHI2_OWNPV;
+	delete l->b_Kplus_IP_OWNPV;
 	delete l->b_Kplus_M;
+	delete l->b_Kplus_ORIVX_CHI2;
 	delete l->b_Kplus_P;
 	delete l->b_Kplus_PE;
 	delete l->b_Kplus_PIDK;
@@ -647,6 +687,7 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_Kplus_ProbNNpi;
 	delete l->b_Kplus_ProbNNpicorr;
 	delete l->b_Kplus_TRACK_CHI2NDOF;
+	delete l->b_Kplus_isMuon;
 	delete l->b_Kst_CosTheta;
 	delete l->b_Kst_DIRA_ORIVX;
 	delete l->b_Kst_DIRA_OWNPV;
@@ -699,7 +740,10 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_PVZ;
 	delete l->b_PVZERR;
 	delete l->b_Piminus_ETA;
+	delete l->b_Piminus_IPCHI2_OWNPV;
+	delete l->b_Piminus_IP_OWNPV;
 	delete l->b_Piminus_M;
+	delete l->b_Piminus_ORIVX_CHI2;
 	delete l->b_Piminus_P;
 	delete l->b_Piminus_PE;
 	delete l->b_Piminus_PIDK;
@@ -716,8 +760,12 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_Piminus_ProbNNpi;
 	delete l->b_Piminus_ProbNNpicorr;
 	delete l->b_Piminus_TRACK_CHI2NDOF;
+	delete l->b_Piminus_isMuon;
 	delete l->b_Piplus_ETA;
+	delete l->b_Piplus_IPCHI2_OWNPV;
+	delete l->b_Piplus_IP_OWNPV;
 	delete l->b_Piplus_M;
+	delete l->b_Piplus_ORIVX_CHI2;
 	delete l->b_Piplus_P;
 	delete l->b_Piplus_PE;
 	delete l->b_Piplus_PIDK;
@@ -734,7 +782,9 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_Piplus_ProbNNpi;
 	delete l->b_Piplus_ProbNNpicorr;
 	delete l->b_Piplus_TRACK_CHI2NDOF;
+	delete l->b_Piplus_isMuon;
 	delete l->b_Polarity;
+	delete l->b_bdtoutput;
 	delete l->b_eventNumber;
 	delete l->b_nBackTracks;
 	delete l->b_nCandidate;
@@ -766,14 +816,13 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){ 
 	tree->Branch("itype",&(l->itype));
 	tree->Branch("sqrts",&(l->sqrts));
-	tree->Branch("B_s0_BKGCAT",l->B_s0_BKGCAT);
 	tree->Branch("B_s0_DIRA_OWNPV",l->B_s0_DIRA_OWNPV);
 	tree->Branch("B_s0_ENDVERTEX_CHI2",l->B_s0_ENDVERTEX_CHI2);
+	tree->Branch("B_s0_ETA",l->B_s0_ETA);
 	tree->Branch("B_s0_FDCHI2_OWNPV",l->B_s0_FDCHI2_OWNPV);
 	tree->Branch("B_s0_FD_OWNPV",l->B_s0_FD_OWNPV);
 	tree->Branch("B_s0_IPCHI2_OWNPV",l->B_s0_IPCHI2_OWNPV);
 	tree->Branch("B_s0_IP_OWNPV",l->B_s0_IP_OWNPV);
-	tree->Branch("B_s0_L0HadronDecision_TOS",l->B_s0_L0HadronDecision_TOS);
 	tree->Branch("B_s0_M",l->B_s0_M);
 	tree->Branch("B_s0_MC_GD_GD_MOTHER_ID",l->B_s0_MC_GD_GD_MOTHER_ID);
 	tree->Branch("B_s0_MC_GD_GD_MOTHER_KEY",l->B_s0_MC_GD_GD_MOTHER_KEY);
@@ -801,7 +850,11 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("B_s0_TAU",l->B_s0_TAU);
 	tree->Branch("B_s0_TAUCHI2",l->B_s0_TAUCHI2);
 	tree->Branch("B_s0_TAUERR",l->B_s0_TAUERR);
+	tree->Branch("Kminus_ETA",l->Kminus_ETA);
+	tree->Branch("Kminus_IPCHI2_OWNPV",l->Kminus_IPCHI2_OWNPV);
+	tree->Branch("Kminus_IP_OWNPV",l->Kminus_IP_OWNPV);
 	tree->Branch("Kminus_M",l->Kminus_M);
+	tree->Branch("Kminus_ORIVX_CHI2",l->Kminus_ORIVX_CHI2);
 	tree->Branch("Kminus_P",l->Kminus_P);
 	tree->Branch("Kminus_PE",l->Kminus_PE);
 	tree->Branch("Kminus_PIDK",l->Kminus_PIDK);
@@ -818,7 +871,12 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kminus_ProbNNpi",l->Kminus_ProbNNpi);
 	tree->Branch("Kminus_ProbNNpicorr",l->Kminus_ProbNNpicorr);
 	tree->Branch("Kminus_TRACK_CHI2NDOF",l->Kminus_TRACK_CHI2NDOF);
+	tree->Branch("Kminus_isMuon",l->Kminus_isMuon);
+	tree->Branch("Kplus_ETA",l->Kplus_ETA);
+	tree->Branch("Kplus_IPCHI2_OWNPV",l->Kplus_IPCHI2_OWNPV);
+	tree->Branch("Kplus_IP_OWNPV",l->Kplus_IP_OWNPV);
 	tree->Branch("Kplus_M",l->Kplus_M);
+	tree->Branch("Kplus_ORIVX_CHI2",l->Kplus_ORIVX_CHI2);
 	tree->Branch("Kplus_P",l->Kplus_P);
 	tree->Branch("Kplus_PE",l->Kplus_PE);
 	tree->Branch("Kplus_PIDK",l->Kplus_PIDK);
@@ -835,10 +893,12 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kplus_ProbNNpi",l->Kplus_ProbNNpi);
 	tree->Branch("Kplus_ProbNNpicorr",l->Kplus_ProbNNpicorr);
 	tree->Branch("Kplus_TRACK_CHI2NDOF",l->Kplus_TRACK_CHI2NDOF);
+	tree->Branch("Kplus_isMuon",l->Kplus_isMuon);
 	tree->Branch("Kst_CosTheta",l->Kst_CosTheta);
 	tree->Branch("Kst_DIRA_ORIVX",l->Kst_DIRA_ORIVX);
 	tree->Branch("Kst_DIRA_OWNPV",l->Kst_DIRA_OWNPV);
 	tree->Branch("Kst_ENDVERTEX_CHI2",l->Kst_ENDVERTEX_CHI2);
+	tree->Branch("Kst_ETA",l->Kst_ETA);
 	tree->Branch("Kst_FDCHI2_ORIVX",l->Kst_FDCHI2_ORIVX);
 	tree->Branch("Kst_FDCHI2_OWNPV",l->Kst_FDCHI2_OWNPV);
 	tree->Branch("Kst_FD_ORIVX",l->Kst_FD_ORIVX);
@@ -858,6 +918,7 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kstb_DIRA_ORIVX",l->Kstb_DIRA_ORIVX);
 	tree->Branch("Kstb_DIRA_OWNPV",l->Kstb_DIRA_OWNPV);
 	tree->Branch("Kstb_ENDVERTEX_CHI2",l->Kstb_ENDVERTEX_CHI2);
+	tree->Branch("Kstb_ETA",l->Kstb_ETA);
 	tree->Branch("Kstb_FDCHI2_ORIVX",l->Kstb_FDCHI2_ORIVX);
 	tree->Branch("Kstb_FDCHI2_OWNPV",l->Kstb_FDCHI2_OWNPV);
 	tree->Branch("Kstb_FD_ORIVX",l->Kstb_FD_ORIVX);
@@ -873,6 +934,8 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kstb_PX",l->Kstb_PX);
 	tree->Branch("Kstb_PY",l->Kstb_PY);
 	tree->Branch("Kstb_PZ",l->Kstb_PZ);
+	tree->Branch("M_KKPiMinus",l->M_KKPiMinus);
+	tree->Branch("M_KKPiPlus",l->M_KKPiPlus);
 	tree->Branch("PVCHI2",l->PVCHI2);
 	tree->Branch("PVNDOF",l->PVNDOF);
 	tree->Branch("PVNTRACKS",l->PVNTRACKS);
@@ -882,7 +945,11 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("PVYERR",l->PVYERR);
 	tree->Branch("PVZ",l->PVZ);
 	tree->Branch("PVZERR",l->PVZERR);
+	tree->Branch("Piminus_ETA",l->Piminus_ETA);
+	tree->Branch("Piminus_IPCHI2_OWNPV",l->Piminus_IPCHI2_OWNPV);
+	tree->Branch("Piminus_IP_OWNPV",l->Piminus_IP_OWNPV);
 	tree->Branch("Piminus_M",l->Piminus_M);
+	tree->Branch("Piminus_ORIVX_CHI2",l->Piminus_ORIVX_CHI2);
 	tree->Branch("Piminus_P",l->Piminus_P);
 	tree->Branch("Piminus_PE",l->Piminus_PE);
 	tree->Branch("Piminus_PIDK",l->Piminus_PIDK);
@@ -899,7 +966,12 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piminus_ProbNNpi",l->Piminus_ProbNNpi);
 	tree->Branch("Piminus_ProbNNpicorr",l->Piminus_ProbNNpicorr);
 	tree->Branch("Piminus_TRACK_CHI2NDOF",l->Piminus_TRACK_CHI2NDOF);
+	tree->Branch("Piminus_isMuon",l->Piminus_isMuon);
+	tree->Branch("Piplus_ETA",l->Piplus_ETA);
+	tree->Branch("Piplus_IPCHI2_OWNPV",l->Piplus_IPCHI2_OWNPV);
+	tree->Branch("Piplus_IP_OWNPV",l->Piplus_IP_OWNPV);
 	tree->Branch("Piplus_M",l->Piplus_M);
+	tree->Branch("Piplus_ORIVX_CHI2",l->Piplus_ORIVX_CHI2);
 	tree->Branch("Piplus_P",l->Piplus_P);
 	tree->Branch("Piplus_PE",l->Piplus_PE);
 	tree->Branch("Piplus_PIDK",l->Piplus_PIDK);
@@ -916,7 +988,9 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piplus_ProbNNpi",l->Piplus_ProbNNpi);
 	tree->Branch("Piplus_ProbNNpicorr",l->Piplus_ProbNNpicorr);
 	tree->Branch("Piplus_TRACK_CHI2NDOF",l->Piplus_TRACK_CHI2NDOF);
+	tree->Branch("Piplus_isMuon",l->Piplus_isMuon);
 	tree->Branch("Polarity",l->Polarity);
+	tree->Branch("bdtoutput",l->bdtoutput);
 	tree->Branch("eventNumber",l->eventNumber);
 	tree->Branch("nBackTracks",l->nBackTracks);
 	tree->Branch("nCandidate",l->nCandidate);

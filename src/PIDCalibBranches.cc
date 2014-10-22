@@ -29,6 +29,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("B_s0_Hlt2TopoOSTF4BodyDecision_TOS", l->B_s0_Hlt2TopoOSTF4BodyDecision_TOS, &(l->b_B_s0_Hlt2TopoOSTF4BodyDecision_TOS));
 	tree->SetBranchAddress("B_s0_IPCHI2_OWNPV", l->B_s0_IPCHI2_OWNPV, &(l->b_B_s0_IPCHI2_OWNPV));
 	tree->SetBranchAddress("B_s0_IP_OWNPV", l->B_s0_IP_OWNPV, &(l->b_B_s0_IP_OWNPV));
+	tree->SetBranchAddress("B_s0_L0Global_TIS", l->B_s0_L0Global_TIS, &(l->b_B_s0_L0Global_TIS));
 	tree->SetBranchAddress("B_s0_L0HadronDecision_TOS", l->B_s0_L0HadronDecision_TOS, &(l->b_B_s0_L0HadronDecision_TOS));
 	tree->SetBranchAddress("B_s0_M", l->B_s0_M, &(l->b_B_s0_M));
 	if (l->itype<0) tree->SetBranchAddress("B_s0_MC_GD_GD_MOTHER_ID", l->B_s0_MC_GD_GD_MOTHER_ID, &(l->b_B_s0_MC_GD_GD_MOTHER_ID));
@@ -61,6 +62,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kminus_IPCHI2_OWNPV", l->Kminus_IPCHI2_OWNPV, &(l->b_Kminus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Kminus_IP_OWNPV", l->Kminus_IP_OWNPV, &(l->b_Kminus_IP_OWNPV));
 	tree->SetBranchAddress("Kminus_M", l->Kminus_M, &(l->b_Kminus_M));
+	tree->SetBranchAddress("Kminus_ORIVX_CHI2", l->Kminus_ORIVX_CHI2, &(l->b_Kminus_ORIVX_CHI2));
 	tree->SetBranchAddress("Kminus_P", l->Kminus_P, &(l->b_Kminus_P));
 	tree->SetBranchAddress("Kminus_PE", l->Kminus_PE, &(l->b_Kminus_PE));
 	tree->SetBranchAddress("Kminus_PIDK", l->Kminus_PIDK, &(l->b_Kminus_PIDK));
@@ -80,6 +82,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kplus_IPCHI2_OWNPV", l->Kplus_IPCHI2_OWNPV, &(l->b_Kplus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Kplus_IP_OWNPV", l->Kplus_IP_OWNPV, &(l->b_Kplus_IP_OWNPV));
 	tree->SetBranchAddress("Kplus_M", l->Kplus_M, &(l->b_Kplus_M));
+	tree->SetBranchAddress("Kplus_ORIVX_CHI2", l->Kplus_ORIVX_CHI2, &(l->b_Kplus_ORIVX_CHI2));
 	tree->SetBranchAddress("Kplus_P", l->Kplus_P, &(l->b_Kplus_P));
 	tree->SetBranchAddress("Kplus_PE", l->Kplus_PE, &(l->b_Kplus_PE));
 	tree->SetBranchAddress("Kplus_PIDK", l->Kplus_PIDK, &(l->b_Kplus_PIDK));
@@ -150,6 +153,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piminus_IPCHI2_OWNPV", l->Piminus_IPCHI2_OWNPV, &(l->b_Piminus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Piminus_IP_OWNPV", l->Piminus_IP_OWNPV, &(l->b_Piminus_IP_OWNPV));
 	tree->SetBranchAddress("Piminus_M", l->Piminus_M, &(l->b_Piminus_M));
+	tree->SetBranchAddress("Piminus_ORIVX_CHI2", l->Piminus_ORIVX_CHI2, &(l->b_Piminus_ORIVX_CHI2));
 	tree->SetBranchAddress("Piminus_P", l->Piminus_P, &(l->b_Piminus_P));
 	tree->SetBranchAddress("Piminus_PE", l->Piminus_PE, &(l->b_Piminus_PE));
 	tree->SetBranchAddress("Piminus_PIDK", l->Piminus_PIDK, &(l->b_Piminus_PIDK));
@@ -169,6 +173,7 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piplus_IPCHI2_OWNPV", l->Piplus_IPCHI2_OWNPV, &(l->b_Piplus_IPCHI2_OWNPV));
 	tree->SetBranchAddress("Piplus_IP_OWNPV", l->Piplus_IP_OWNPV, &(l->b_Piplus_IP_OWNPV));
 	tree->SetBranchAddress("Piplus_M", l->Piplus_M, &(l->b_Piplus_M));
+	tree->SetBranchAddress("Piplus_ORIVX_CHI2", l->Piplus_ORIVX_CHI2, &(l->b_Piplus_ORIVX_CHI2));
 	tree->SetBranchAddress("Piplus_P", l->Piplus_P, &(l->b_Piplus_P));
 	tree->SetBranchAddress("Piplus_PE", l->Piplus_PE, &(l->b_Piplus_PE));
 	tree->SetBranchAddress("Piplus_PIDK", l->Piplus_PIDK, &(l->b_Piplus_PIDK));
@@ -235,6 +240,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->B_s0_Hlt2TopoOSTF4BodyDecision_TOS    = new Bool_t(0);
 	l->B_s0_IPCHI2_OWNPV                     = new Double_t(0);
 	l->B_s0_IP_OWNPV                         = new Double_t(0);
+	l->B_s0_L0Global_TIS                     = new Bool_t(0);
 	l->B_s0_L0HadronDecision_TOS             = new Bool_t(0);
 	l->B_s0_M                                = new Double_t(0);
 	l->B_s0_MC_GD_GD_MOTHER_ID               = new Int_t(0);
@@ -267,6 +273,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Kminus_IPCHI2_OWNPV                   = new Double_t(0);
 	l->Kminus_IP_OWNPV                       = new Double_t(0);
 	l->Kminus_M                              = new Double_t(0);
+	l->Kminus_ORIVX_CHI2                     = new Double_t(0);
 	l->Kminus_P                              = new Double_t(0);
 	l->Kminus_PE                             = new Double_t(0);
 	l->Kminus_PIDK                           = new Double_t(0);
@@ -288,6 +295,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Kplus_IPCHI2_OWNPV                    = new Double_t(0);
 	l->Kplus_IP_OWNPV                        = new Double_t(0);
 	l->Kplus_M                               = new Double_t(0);
+	l->Kplus_ORIVX_CHI2                      = new Double_t(0);
 	l->Kplus_P                               = new Double_t(0);
 	l->Kplus_PE                              = new Double_t(0);
 	l->Kplus_PIDK                            = new Double_t(0);
@@ -360,6 +368,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Piminus_IPCHI2_OWNPV                  = new Double_t(0);
 	l->Piminus_IP_OWNPV                      = new Double_t(0);
 	l->Piminus_M                             = new Double_t(0);
+	l->Piminus_ORIVX_CHI2                    = new Double_t(0);
 	l->Piminus_P                             = new Double_t(0);
 	l->Piminus_PE                            = new Double_t(0);
 	l->Piminus_PIDK                          = new Double_t(0);
@@ -381,6 +390,7 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Piplus_IPCHI2_OWNPV                   = new Double_t(0);
 	l->Piplus_IP_OWNPV                       = new Double_t(0);
 	l->Piplus_M                              = new Double_t(0);
+	l->Piplus_ORIVX_CHI2                     = new Double_t(0);
 	l->Piplus_P                              = new Double_t(0);
 	l->Piplus_PE                             = new Double_t(0);
 	l->Piplus_PIDK                           = new Double_t(0);
@@ -449,6 +459,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->B_s0_Hlt2TopoOSTF4BodyDecision_TOS;
 	delete l->B_s0_IPCHI2_OWNPV;
 	delete l->B_s0_IP_OWNPV;
+	delete l->B_s0_L0Global_TIS;
 	delete l->B_s0_L0HadronDecision_TOS;
 	delete l->B_s0_M;
 	delete l->B_s0_MC_GD_GD_MOTHER_ID;
@@ -481,6 +492,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Kminus_IPCHI2_OWNPV;
 	delete l->Kminus_IP_OWNPV;
 	delete l->Kminus_M;
+	delete l->Kminus_ORIVX_CHI2;
 	delete l->Kminus_P;
 	delete l->Kminus_PE;
 	delete l->Kminus_PIDK;
@@ -502,6 +514,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Kplus_IPCHI2_OWNPV;
 	delete l->Kplus_IP_OWNPV;
 	delete l->Kplus_M;
+	delete l->Kplus_ORIVX_CHI2;
 	delete l->Kplus_P;
 	delete l->Kplus_PE;
 	delete l->Kplus_PIDK;
@@ -574,6 +587,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Piminus_IPCHI2_OWNPV;
 	delete l->Piminus_IP_OWNPV;
 	delete l->Piminus_M;
+	delete l->Piminus_ORIVX_CHI2;
 	delete l->Piminus_P;
 	delete l->Piminus_PE;
 	delete l->Piminus_PIDK;
@@ -595,6 +609,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Piplus_IPCHI2_OWNPV;
 	delete l->Piplus_IP_OWNPV;
 	delete l->Piplus_M;
+	delete l->Piplus_ORIVX_CHI2;
 	delete l->Piplus_P;
 	delete l->Piplus_PE;
 	delete l->Piplus_PIDK;
@@ -660,6 +675,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_B_s0_Hlt2TopoOSTF4BodyDecision_TOS;
 	delete l->b_B_s0_IPCHI2_OWNPV;
 	delete l->b_B_s0_IP_OWNPV;
+	delete l->b_B_s0_L0Global_TIS;
 	delete l->b_B_s0_L0HadronDecision_TOS;
 	delete l->b_B_s0_M;
 	delete l->b_B_s0_MC_GD_GD_MOTHER_ID;
@@ -692,6 +708,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Kminus_IPCHI2_OWNPV;
 	delete l->b_Kminus_IP_OWNPV;
 	delete l->b_Kminus_M;
+	delete l->b_Kminus_ORIVX_CHI2;
 	delete l->b_Kminus_P;
 	delete l->b_Kminus_PE;
 	delete l->b_Kminus_PIDK;
@@ -713,6 +730,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Kplus_IPCHI2_OWNPV;
 	delete l->b_Kplus_IP_OWNPV;
 	delete l->b_Kplus_M;
+	delete l->b_Kplus_ORIVX_CHI2;
 	delete l->b_Kplus_P;
 	delete l->b_Kplus_PE;
 	delete l->b_Kplus_PIDK;
@@ -785,6 +803,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Piminus_IPCHI2_OWNPV;
 	delete l->b_Piminus_IP_OWNPV;
 	delete l->b_Piminus_M;
+	delete l->b_Piminus_ORIVX_CHI2;
 	delete l->b_Piminus_P;
 	delete l->b_Piminus_PE;
 	delete l->b_Piminus_PIDK;
@@ -806,6 +825,7 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Piplus_IPCHI2_OWNPV;
 	delete l->b_Piplus_IP_OWNPV;
 	delete l->b_Piplus_M;
+	delete l->b_Piplus_ORIVX_CHI2;
 	delete l->b_Piplus_P;
 	delete l->b_Piplus_PE;
 	delete l->b_Piplus_PIDK;
@@ -875,6 +895,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("B_s0_Hlt2TopoOSTF4BodyDecision_TOS",l->B_s0_Hlt2TopoOSTF4BodyDecision_TOS);
 	tree->Branch("B_s0_IPCHI2_OWNPV",l->B_s0_IPCHI2_OWNPV);
 	tree->Branch("B_s0_IP_OWNPV",l->B_s0_IP_OWNPV);
+	tree->Branch("B_s0_L0Global_TIS",l->B_s0_L0Global_TIS);
 	tree->Branch("B_s0_L0HadronDecision_TOS",l->B_s0_L0HadronDecision_TOS);
 	tree->Branch("B_s0_M",l->B_s0_M);
 	tree->Branch("B_s0_MC_GD_GD_MOTHER_ID",l->B_s0_MC_GD_GD_MOTHER_ID);
@@ -907,6 +928,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kminus_IPCHI2_OWNPV",l->Kminus_IPCHI2_OWNPV);
 	tree->Branch("Kminus_IP_OWNPV",l->Kminus_IP_OWNPV);
 	tree->Branch("Kminus_M",l->Kminus_M);
+	tree->Branch("Kminus_ORIVX_CHI2",l->Kminus_ORIVX_CHI2);
 	tree->Branch("Kminus_P",l->Kminus_P);
 	tree->Branch("Kminus_PE",l->Kminus_PE);
 	tree->Branch("Kminus_PIDK",l->Kminus_PIDK);
@@ -928,6 +950,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kplus_IPCHI2_OWNPV",l->Kplus_IPCHI2_OWNPV);
 	tree->Branch("Kplus_IP_OWNPV",l->Kplus_IP_OWNPV);
 	tree->Branch("Kplus_M",l->Kplus_M);
+	tree->Branch("Kplus_ORIVX_CHI2",l->Kplus_ORIVX_CHI2);
 	tree->Branch("Kplus_P",l->Kplus_P);
 	tree->Branch("Kplus_PE",l->Kplus_PE);
 	tree->Branch("Kplus_PIDK",l->Kplus_PIDK);
@@ -1000,6 +1023,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piminus_IPCHI2_OWNPV",l->Piminus_IPCHI2_OWNPV);
 	tree->Branch("Piminus_IP_OWNPV",l->Piminus_IP_OWNPV);
 	tree->Branch("Piminus_M",l->Piminus_M);
+	tree->Branch("Piminus_ORIVX_CHI2",l->Piminus_ORIVX_CHI2);
 	tree->Branch("Piminus_P",l->Piminus_P);
 	tree->Branch("Piminus_PE",l->Piminus_PE);
 	tree->Branch("Piminus_PIDK",l->Piminus_PIDK);
@@ -1021,6 +1045,7 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piplus_IPCHI2_OWNPV",l->Piplus_IPCHI2_OWNPV);
 	tree->Branch("Piplus_IP_OWNPV",l->Piplus_IP_OWNPV);
 	tree->Branch("Piplus_M",l->Piplus_M);
+	tree->Branch("Piplus_ORIVX_CHI2",l->Piplus_ORIVX_CHI2);
 	tree->Branch("Piplus_P",l->Piplus_P);
 	tree->Branch("Piplus_PE",l->Piplus_PE);
 	tree->Branch("Piplus_PIDK",l->Piplus_PIDK);

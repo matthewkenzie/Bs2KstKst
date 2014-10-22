@@ -86,9 +86,12 @@ void AssessBDTCut::readTree(TString fname, TString tname){
 void AssessBDTCut::constructSignalPdf(){
 
 	w->factory("mean[5300,5400]");
-	w->factory("CBShape::sig_cb1(mass,mean,sigma_1[100,0,1000],alpha_1[0.,10.],n_1[0.,10.])");
-	w->factory("CBShape::sig_cb2(mass,mean,sigma_2[100,0,1000],alpha_2[-10.,0.],n_2[0.,20.])");
-	w->factory("SUM::signal( f[0.5,0,1] * sig_cb1, sig_cb2 )");
+	//w->factory("CBShape::sig_cb1(mass,mean,sigma_1[100,0,1000],alpha_1[0.,10.],n_1[0.,10.])");
+	//w->factory("CBShape::sig_cb2(mass,mean,sigma_2[100,0,1000],alpha_2[-10.,0.],n_2[0.,20.])");
+	//w->factory("SUM::signal( f[0.5,0,1] * sig_cb1, sig_cb2 )");
+	w->factory("Gaussian::sig_g1(mass,mean,sigma_1[50,0,200])");
+	w->factory("Gaussian::sig_g2(mass,mean,sigma_2[10,0,100])");
+	w->factory("SUM::signal( f[0.1,0.,1.] * sig_g1, sig_g2)");
 
 	RooArgSet *argset = w->pdf("signal")->getParameters(*(w->var("mass")));
 	w->defineSet("signal_params",*argset);

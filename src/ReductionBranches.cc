@@ -862,6 +862,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("B_s0_Hlt2TopoOSTF4BodyDecision_TOS",l->B_s0_Hlt2TopoOSTF4BodyDecision_TOS);
 	tree->Branch("B_s0_IPCHI2_OWNPV",l->B_s0_IPCHI2_OWNPV);
 	tree->Branch("B_s0_IP_OWNPV",l->B_s0_IP_OWNPV);
+	tree->Branch("B_s0_L0Global_TIS",l->B_s0_L0Global_TIS);
 	tree->Branch("B_s0_L0HadronDecision_TOS",l->B_s0_L0HadronDecision_TOS);
 	tree->Branch("B_s0_M",l->B_s0_M);
 	tree->Branch("B_s0_MC_GD_GD_MOTHER_ID",l->B_s0_MC_GD_GD_MOTHER_ID);
@@ -894,6 +895,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kminus_IPCHI2_OWNPV",l->Kminus_IPCHI2_OWNPV);
 	tree->Branch("Kminus_IP_OWNPV",l->Kminus_IP_OWNPV);
 	tree->Branch("Kminus_M",l->Kminus_M);
+	tree->Branch("Kminus_ORIVX_CHI2",l->Kminus_ORIVX_CHI2);
 	tree->Branch("Kminus_P",l->Kminus_P);
 	tree->Branch("Kminus_PE",l->Kminus_PE);
 	tree->Branch("Kminus_PIDK",l->Kminus_PIDK);
@@ -913,6 +915,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kplus_IPCHI2_OWNPV",l->Kplus_IPCHI2_OWNPV);
 	tree->Branch("Kplus_IP_OWNPV",l->Kplus_IP_OWNPV);
 	tree->Branch("Kplus_M",l->Kplus_M);
+	tree->Branch("Kplus_ORIVX_CHI2",l->Kplus_ORIVX_CHI2);
 	tree->Branch("Kplus_P",l->Kplus_P);
 	tree->Branch("Kplus_PE",l->Kplus_PE);
 	tree->Branch("Kplus_PIDK",l->Kplus_PIDK);
@@ -983,6 +986,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piminus_IPCHI2_OWNPV",l->Piminus_IPCHI2_OWNPV);
 	tree->Branch("Piminus_IP_OWNPV",l->Piminus_IP_OWNPV);
 	tree->Branch("Piminus_M",l->Piminus_M);
+	tree->Branch("Piminus_ORIVX_CHI2",l->Piminus_ORIVX_CHI2);
 	tree->Branch("Piminus_P",l->Piminus_P);
 	tree->Branch("Piminus_PE",l->Piminus_PE);
 	tree->Branch("Piminus_PIDK",l->Piminus_PIDK);
@@ -1002,6 +1006,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piplus_IPCHI2_OWNPV",l->Piplus_IPCHI2_OWNPV);
 	tree->Branch("Piplus_IP_OWNPV",l->Piplus_IP_OWNPV);
 	tree->Branch("Piplus_M",l->Piplus_M);
+	tree->Branch("Piplus_ORIVX_CHI2",l->Piplus_ORIVX_CHI2);
 	tree->Branch("Piplus_P",l->Piplus_P);
 	tree->Branch("Piplus_PE",l->Piplus_PE);
 	tree->Branch("Piplus_PIDK",l->Piplus_PIDK);

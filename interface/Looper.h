@@ -61,7 +61,8 @@ class Looper {
 		std::vector<TreeContainer> treeContainers;
 
 		// my own variables
-    Float_t         bdtoutput;
+    Float_t         *bdtoutput;
+		TBranch         *b_bdtoutput;
 
 		//
 		Double_t        *B_s0_ETA;

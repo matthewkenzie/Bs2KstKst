@@ -6,6 +6,8 @@ parser.add_option("-i","--infile",default="AnalysisOut.root",help="Name of input
 parser.add_option("-t","--treename",default="AnalysisTree",help="Name of input tree. Default=%default")
 parser.add_option("-o","--outfile",default="FitterOut.root",help="Name of output file. Default=%default")
 parser.add_option("-a","--assessBDTCut",default=False,action="store_true",help="Run to assess the values for the BDT")
+parser.add_option("-s","--sweightFitter",default=False,action="store_true",help="Run sweights fitting")
+parser.add_option("-b","--bdtcut",default=0.0,type="float",help="Cut on this BDT value")
 (opts,args) = parser.parse_args()
 
 import ROOT as r
@@ -24,6 +26,15 @@ if opts.assessBDTCut:
 	fitter.plot()
 	fitter.save(opts.outfile)
 
+elif opts.sweightFitter:
+
+	fitter = r.SWeightFitter()
+	fitter.setBDTCut(opts.bdtcut)
+	fitter.setDiscrimVar("B_s0_MM",5000,5795)
+	fitter.setup(opts.infile,opts.treename)
+	fitter.plot()
+	fitter.save(opts.outfile)
+
 else:
 	fitter = r.Fitter()
 	fitter.addObsVar("B_s0_MM",5200,5600)
@@ -33,7 +44,7 @@ else:
 	fitter.addObsVar("Kst_MM",750,1700)
 	fitter.addObsVar("Kstb_MM",750,1700)
 	fitter.w.Print('v')
-	fitter.setBDTCut(0.08)
+	fitter.setBDTCut(-0.2)
 	fitter.setup(opts.infile,opts.treename)
 	fitter.fit()
 	fitter.plot('B_s0_MM',True,5300,5450)
