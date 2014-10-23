@@ -18,8 +18,8 @@ BDTTrainer::BDTTrainer(TString _name):
 	BaseAnalyser(_name),
 	outfilename("MVATrainingOutput.root"),
 	evCount(0),
-	numberOfBDTs(2),
-  doBDTCycling(false)
+	numberOfBDTs(4),
+  doBDTCycling(true)
 {
   if (!doBDTCycling) numberOfBDTs=1;
 }
@@ -104,7 +104,7 @@ void BDTTrainer::Term(Looper *l){
 
 		// TMVA methods here
 		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Booking TMVA methods" << endl;
-		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:VarTransform=D,G:NTrees=500:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=1:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
 
 		// Train, Test and Evaluate
 		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
