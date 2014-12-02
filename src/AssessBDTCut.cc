@@ -93,9 +93,18 @@ void AssessBDTCut::constructSignalPdf(){
 	w->factory("Gaussian::sig_g2(mass,mean,sigma_2[10,0,100])");
 	w->factory("SUM::signal( f[0.1,0.,1.] * sig_g1, sig_g2)");
 
+  w->factory("mean_bd[5200,5400]");
+	w->factory("Gaussian::sig_g3(mass,mean_bd,sigma_3[50,0,200])");
+	w->factory("Gaussian::sig_g4(mass,mean_bd,sigma_4[10,0,100])");
+	w->factory("SUM::signal_bd( f_bd[0.1,0.,1.] * sig_g3, sig_g4)");
+
 	RooArgSet *argset = w->pdf("signal")->getParameters(*(w->var("mass")));
 	w->defineSet("signal_params",*argset);
 	delete argset;
+
+  RooArgSet *argset_bd = w->pdf("signal_bd")->getParameters(*(w->var("mass")));
+  w->defineSet("signal_bd_params",*argset_bd);
+  delete argset_bd;
 }
 
 void AssessBDTCut::constructBkgPdf(){
@@ -111,7 +120,8 @@ void AssessBDTCut::constructFullPdf(){
 
 	w->factory("n_background[200,0,2e6]");
 	w->factory("n_signal[200,0,2e4]");
-	w->factory("SUM::pdf( n_background*background, n_signal*signal )");
+  w->factory("n_signal_bd[200,0,2e4]");
+	w->factory("SUM::pdf( n_background*background, n_signal*signal, n_signal_bd*signal_bd )");
 
 	RooArgSet *argset = w->pdf("pdf")->getParameters(*(w->var("mass")));
 	w->defineSet("pdf_params",*argset);
@@ -142,6 +152,9 @@ void AssessBDTCut::fit(){
 	w->pdf("signal")->fitTo(*(w->data("mc")));
 
 	((RooArgSet*)w->set("signal_params"))->setAttribAll("Constant");
+	((RooArgSet*)w->set("signal_bd_params"))->setAttribAll("Constant");
+  w->var("mean_bd")->setConstant(false);
+  //w->var("mean")->setConstant(false);
 
 	// now fit data
 	w->pdf("pdf")->fitTo(*(w->data("data")));
@@ -156,7 +169,7 @@ void AssessBDTCut::plot(){
 
 	// signal mc
 	canv->cd(1);
-	RooPlot *mcplot = w->var("mass")->frame(Title("MC: J/#psi#gamma"),Range(4750,6000));
+	RooPlot *mcplot = w->var("mass")->frame(Title("MC: B_{s}#rightarrowK*K*"),Range(4750,6000));
 	w->data("mc")->plotOn(mcplot);
 	if (hasfit){
 		w->pdf("signal")->plotOn(mcplot);
@@ -165,13 +178,15 @@ void AssessBDTCut::plot(){
 
 	// data
 	canv->cd(2);
-	RooPlot *dplot = w->var("mass")->frame(Title("Data"));
+	RooPlot *dplot = w->var("mass")->frame(Title("Data (before BDT cut)"));
 	TLegend *leg = new TLegend(0.5,0.6,0.89,0.89);
 	leg->SetFillColor(0);
 	w->data("data")->plotOn(dplot);
 	if (hasfit) {
-		w->pdf("pdf")->plotOn(dplot,Components("background,signal"),FillColor(kGreen-3),LineColor(kGreen-3),DrawOption("F"));
+		w->pdf("pdf")->plotOn(dplot,Components("background,signal_bd,signal"),FillColor(kGreen-3),LineColor(kGreen-3),DrawOption("F"));
 		TObject *sigLeg = (TObject*)dplot->getObject(dplot->numItems()-1);
+		w->pdf("pdf")->plotOn(dplot,Components("background,signal_bd"),FillColor(kRed-3),LineColor(kRed-3),DrawOption("F"));
+		TObject *sigbdLeg = (TObject*)dplot->getObject(dplot->numItems()-1);
 		w->pdf("pdf")->plotOn(dplot,Components("background"),LineColor(kOrange-2),FillColor(kOrange-2),DrawOption("F"));
 		TObject *backgroundLeg = (TObject*)dplot->getObject(dplot->numItems()-1);
 		w->data("data")->plotOn(dplot);
@@ -181,6 +196,7 @@ void AssessBDTCut::plot(){
 
 		leg->AddEntry(dataLeg,"Data (3fb^{-1})","LEP");
 		leg->AddEntry(sigLeg,"Signal","LF");
+		leg->AddEntry(sigbdLeg,"Signal (B_{d})","LF");
 		leg->AddEntry(backgroundLeg,"Combinatorial","LF");
 		leg->AddEntry(pdfLeg,"Total PDF","L");
 	}
@@ -199,6 +215,6 @@ void AssessBDTCut::save(TString fname){
 
 	cout << "Use the following estimate of signal and background events for BDT cut optimisation:" << endl;
 	cout << "\t" << "nSignal:     " << w->var("n_signal")->getVal() << endl;
-	cout << "\t" << "nBackground: " << w->var("n_background")->getVal() << endl;
+	cout << "\t" << "nBackground: " << w->var("n_background")->getVal()/8. << endl; // divide by 8. is estimate given mass window size
 }
 

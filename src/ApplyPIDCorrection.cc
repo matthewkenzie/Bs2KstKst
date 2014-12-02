@@ -9,6 +9,8 @@
 
 #include "TMath.h"
 #include "TLorentzVector.h"
+#include "TROOT.h"
+#include "TRandom3.h"
 
 #include "../interface/ApplyPIDCorrection.h"
 
@@ -16,7 +18,9 @@ using namespace std;
 
 ApplyPIDCorrection::ApplyPIDCorrection(TString _name):
 	BaseAnalyser(_name)
-{}
+{
+  gRandom->SetSeed(0); // THIS IS REALLY IMPORTANT!
+}
 
 ApplyPIDCorrection::~ApplyPIDCorrection(){
 

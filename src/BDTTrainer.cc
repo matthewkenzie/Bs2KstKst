@@ -18,7 +18,7 @@ BDTTrainer::BDTTrainer(TString _name):
 	BaseAnalyser(_name),
 	outfilename("MVATrainingOutput.root"),
 	evCount(0),
-	numberOfBDTs(4),
+	numberOfBDTs(2),
   doBDTCycling(true)
 {
   if (!doBDTCycling) numberOfBDTs=1;
@@ -75,15 +75,15 @@ void BDTTrainer::Init(Looper *l){
 	//varNames.push_back("Kstb_ARCCOS_DIRA_OWNPV");
 
 	// Max track chi2
-	varNames.push_back("max_track_CHI2");
+	//varNames.push_back("max_track_CHI2");
 
 	// PID
 	//varNames.push_back("min_K_DeltaProbKPi");
   //varNames.push_back("max_Pi_DeltaProbKPi");
-  varNames.push_back("Kplus_PID_DeltaProbKPi");
-	varNames.push_back("Kminus_PID_DeltaProbKPi");
-	varNames.push_back("Piplus_PID_DeltaProbPiK");
-	varNames.push_back("Piminus_PID_DeltaProbPiK");
+  //varNames.push_back("Kplus_PID_DeltaProbKPi");
+	//varNames.push_back("Kminus_PID_DeltaProbKPi");
+	//varNames.push_back("Piplus_PID_DeltaProbPiK");
+	//varNames.push_back("Piminus_PID_DeltaProbPiK");
 
 	// add variables to factories and inialise map
 	for (vector<TString>::iterator var=varNames.begin(); var!=varNames.end(); var++){
@@ -152,8 +152,9 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	double max_track_chi2 = TMath::Max(kst_max_track_chi2,kstb_max_track_chi2);
 
 	// Max track chi2
-	varMap["max_track_CHI2"] = max_track_chi2;
+	//varMap["max_track_CHI2"] = max_track_chi2;
 
+  /*
 	// PID
   if ( l->itype < 0 ) {
     //varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) );
@@ -171,6 +172,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
     varMap["Piplus_PID_DeltaProbPiK"]  = *l->Piplus_ProbNNpi - *l->Piplus_ProbNNk;
     varMap["Piminus_PID_DeltaProbPiK"] = *l->Piminus_ProbNNpi - *l->Piminus_ProbNNk;
   }
+  */
 
 	// now put the variable values in a nice vector (in the right order!!)
 	assert(varNames.size()==varMap.size());
@@ -215,7 +217,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 		// cut out signal region
 		//if (*l->B_s0_MM > 5250 && *l->B_s0_MM < 5500) return false;
 		//if (*l->B_s0_MM > 5250) return false;
-		if (*l->B_s0_MM < 5500) return false;
+		if (*l->B_s0_MM < 5450) return false;
 
 		// now put event in relevant BDT
     if (doBDTCycling) {

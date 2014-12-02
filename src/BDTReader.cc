@@ -111,9 +111,9 @@ bool BDTReader::AnalyseEvent(Looper *l){
 	assert(relBDT < numberOfBDTs);
 
 	*l->bdtoutput = readerContainer[relBDT]->EvaluateMVA( Form("BDT%dmethod",relBDT) );
-
 	// bdt cut?
 	//if ( l->bdtoutput < 0.08 ) return false;
+	//
 
 	// step up counter
 	evCount++;

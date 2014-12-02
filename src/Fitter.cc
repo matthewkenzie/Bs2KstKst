@@ -21,7 +21,7 @@ using namespace std;
 using namespace RooFit;
 
 Fitter::Fitter(TString wsname):
-	bdtcut(0.08),
+	bdtcut(0.01),
 	hasfit(false)
 {
 	w = new RooWorkspace(wsname);
