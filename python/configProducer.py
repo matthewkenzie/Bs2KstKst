@@ -85,7 +85,7 @@ class configProducer:
 			print '%-30s'%'', analyser.name
 
 	def checkFile(self,fname,tname):
-		if not os.path.isfile(fname):
+		if not os.path.isfile(fname) and not 'eoslhcb' in fname: # get out for eos files
 			sys.exit('** ERROR ** -- The requested file (%s) does not exist'%fname)
 		if not fname.endswith('.root'):
 			sys.exit('** ERROR ** -- The requested file (%s) does not appear to be a root file'%fname)

@@ -190,7 +190,9 @@ void PIDCalibBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piplus_TRACK_CHI2NDOF", l->Piplus_TRACK_CHI2NDOF, &(l->b_Piplus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Piplus_isMuon", l->Piplus_isMuon, &(l->b_Piplus_isMuon));
 	tree->SetBranchAddress("Polarity", l->Polarity, &(l->b_Polarity));
+	tree->SetBranchAddress("cut_based_pid", l->cut_based_pid, &(l->b_cut_based_pid));
 	tree->SetBranchAddress("eventNumber", l->eventNumber, &(l->b_eventNumber));
+	tree->SetBranchAddress("max_track_chi2", l->max_track_chi2, &(l->b_max_track_chi2));
 	tree->SetBranchAddress("nBackTracks", l->nBackTracks, &(l->b_nBackTracks));
 	tree->SetBranchAddress("nCandidate", l->nCandidate, &(l->b_nCandidate));
 	tree->SetBranchAddress("nDownstreamTracks", l->nDownstreamTracks, &(l->b_nDownstreamTracks));
@@ -409,7 +411,9 @@ void PIDCalibBranches::initialiseVariables(Looper *l) {
 	l->Piplus_TRACK_CHI2NDOF                 = new Double_t(0);
 	l->Piplus_isMuon                         = new Bool_t(0);
 	l->Polarity                              = new Short_t(0);
+	l->cut_based_pid                         = new Bool_t(0);
 	l->eventNumber                           = new ULong64_t(0);
+	l->max_track_chi2                        = new Double_t(0);
 	l->nBackTracks                           = new Int_t(0);
 	l->nCandidate                            = new UInt_t(0);
 	l->nDownstreamTracks                     = new Int_t(0);
@@ -628,7 +632,9 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->Piplus_TRACK_CHI2NDOF;
 	delete l->Piplus_isMuon;
 	delete l->Polarity;
+	delete l->cut_based_pid;
 	delete l->eventNumber;
+	delete l->max_track_chi2;
 	delete l->nBackTracks;
 	delete l->nCandidate;
 	delete l->nDownstreamTracks;
@@ -844,7 +850,9 @@ void PIDCalibBranches::cleanVariables(Looper *l) {
 	delete l->b_Piplus_TRACK_CHI2NDOF;
 	delete l->b_Piplus_isMuon;
 	delete l->b_Polarity;
+	delete l->b_cut_based_pid;
 	delete l->b_eventNumber;
+	delete l->b_max_track_chi2;
 	delete l->b_nBackTracks;
 	delete l->b_nCandidate;
 	delete l->b_nDownstreamTracks;
@@ -1064,7 +1072,9 @@ void PIDCalibBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piplus_TRACK_CHI2NDOF",l->Piplus_TRACK_CHI2NDOF);
 	tree->Branch("Piplus_isMuon",l->Piplus_isMuon);
 	tree->Branch("Polarity",l->Polarity);
+	tree->Branch("cut_based_pid",l->cut_based_pid);
 	tree->Branch("eventNumber",l->eventNumber);
+	tree->Branch("max_track_chi2",l->max_track_chi2);
 	tree->Branch("nBackTracks",l->nBackTracks);
 	tree->Branch("nCandidate",l->nCandidate);
 	tree->Branch("nDownstreamTracks",l->nDownstreamTracks);

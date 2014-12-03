@@ -14,11 +14,11 @@
 branchdef=PIDCalibBranches
 analysers=ApplyPIDCorrection
 
-itype=-71  	name=MC2011_HighMass_MagDown_PIDcorr 	fname=file_store/red_first/mc_reduced/MC2011_HighMass_MagDown_Reduced_j0.root             tname=ReducedTree
-itype=-72  	name=MC2011_HighMass_MagUp_PIDcorr   	fname=file_store/red_first/mc_reduced/MC2011_HighMass_MagUp_Reduced_j0.root               tname=ReducedTree
-itype=-81  	name=MC2012_HighMass_MagDown_PIDcorr 	fname=file_store/red_first/mc_reduced/MC2012_HighMass_MagDown_Reduced_j0.root             tname=ReducedTree
-itype=-82  	name=MC2012_HighMass_MagUp_PIDcorr  	fname=file_store/red_first/mc_reduced/MC2012_HighMass_MagUp_Reduced_j0.root               tname=ReducedTree
-itype=-73  	name=MC2011_LowMass_MagDown_PIDcorr 	fname=file_store/red_first/mc_reduced/MC2011_LowMass_MagDown_Reduced_j0.root              tname=ReducedTree
-itype=-74  	name=MC2011_LowMass_MagUp_PIDcorr   	fname=file_store/red_first/mc_reduced/MC2011_LowMass_MagUp_Reduced_j0.root                tname=ReducedTree
-itype=-83  	name=MC2012_LowMass_MagDown_PIDcorr 	fname=file_store/red_first/mc_reduced/MC2012_LowMass_MagDown_Reduced_j0.root              tname=ReducedTree
-itype=-84  	name=MC2012_LowMass_MagUp_PIDcorr   	fname=file_store/red_first/mc_reduced/MC2012_LowMass_MagUp_Reduced_j0.root                tname=ReducedTree
+itype=-71  	name=MC2011_HighMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2011_HighMass_MagDown_Reduced_j0.root             tname=ReducedTree
+itype=-72  	name=MC2011_HighMass_MagUp_PIDcorr   	fname=file_store/reduced/MC2011_HighMass_MagUp_Reduced_j0.root               tname=ReducedTree
+itype=-81  	name=MC2012_HighMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2012_HighMass_MagDown_Reduced_j0.root             tname=ReducedTree
+itype=-82  	name=MC2012_HighMass_MagUp_PIDcorr  	fname=file_store/reduced/MC2012_HighMass_MagUp_Reduced_j0.root               tname=ReducedTree
+itype=-73  	name=MC2011_LowMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2011_LowMass_MagDown_Reduced_j0.root              tname=ReducedTree
+itype=-74  	name=MC2011_LowMass_MagUp_PIDcorr   	fname=file_store/reduced/MC2011_LowMass_MagUp_Reduced_j0.root                tname=ReducedTree
+itype=-83  	name=MC2012_LowMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2012_LowMass_MagDown_Reduced_j0.root              tname=ReducedTree
+itype=-84  	name=MC2012_LowMass_MagUp_PIDcorr   	fname=file_store/reduced/MC2012_LowMass_MagUp_Reduced_j0.root                tname=ReducedTree
