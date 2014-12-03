@@ -207,6 +207,8 @@ UInt_t          runNumber                                    0
 ULong64_t       totCandidates                                0
 Double_t 				M_KKPiPlus 																	 0
 Double_t        M_KKPiMinus 																 0
+Double_t        max_track_chi2                               0
+Bool_t          cut_based_pid                                0
 Double_t        Kminus_ProbNNkcorr                           0
 Double_t        Kminus_ProbNNpicorr                          0
 Double_t        Kplus_ProbNNpicorr                           0
