@@ -22,7 +22,7 @@ Runner::Runner(TString outFileName, TString outTreeName, BranchDef *_branchDef, 
 {
 	outFile = new TFile(outFileName,"RECREATE");
   outTree = new TTree(outTreeName,"Analysis Output Tree");
-	// Large autosave number to avoid duplicate trees in outfile
+	// Large autosave number to avoid duplicate trees in outfile (this is probably a bit dumb)
 	outTree->SetAutoSave(3e9);
   looper = new Looper(outTree,_branchDef,_name);
 }
@@ -32,6 +32,9 @@ Runner::~Runner(){}
 void Runner::save(){
 	cout << Form("%-30s","Runner::run()") << " " << "Saving tree (" << outTree->GetName() << ") to file (" << outFile->GetName() << ")." << endl;
   outFile->cd();
+  hPass->Write();
+  hFail->Write();
+  hEff->Write();
 	outFile->Write();
   outFile->Close();
   //delete looper;
@@ -147,22 +150,40 @@ void Runner::run(){
 		analysers[a]->Term(looper);
 	}
 
+  // Configure efficiency historam summary
+  hPass = new TH2F("hPass","nEvents pass",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
+  hFail = new TH2F("hFail","nEvents fail",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
+  hEff = new TH2F("hEff","Efficiencies",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
+  setXLabel(1,"Start");
+
 	// Summarise results
 	cout << Form("%-30s","Runner::run()") << " " << "Analysers cut flow summary:" << endl;
 	for (unsigned int t=0; t<looper->treeContainers.size(); t++){
 		cout << Form("%-30s","Runner::run()") << " " << "   " << looper->treeContainers[t].name << " : " << endl;
+    // set histogram labels
+    setYLabel(t+1,looper->treeContainers[t].name);
+    // start counters
     int totalpass=0;
     int totaltried=0;
 		for (unsigned int a=0; a<analysers.size(); a++){
 
+      // set histogram labels
+      setXLabel(a+2,analysers[a]->name);
+
 			// total tried will be those from first analyser
-			if (a==0) totaltried = nPassFail[t][a].first + nPassFail[t][a].second;
-			// total passes wilb those which passes last analyser
+			if (a==0) {
+        totaltried = nPassFail[t][a].first + nPassFail[t][a].second;
+        setHistogramValues(0,t,totaltried,0);
+      }
+			// total passes will be those which passes last analyser
 			if (a==analysers.size()-1) totalpass = nPassFail[t][a].first;
 
 			// print efficiency of each analyser on each looper
 			double eff = double(nPassFail[t][a].first)/double(nPassFail[t][a].first + nPassFail[t][a].second) * 100.;
 			cout << Form("%-30s","Runner::run()") << " " << "      " << a+1 << ".) " << Form("%-15s",(analysers[a]->name+":").Data()) << "  " <<	nPassFail[t][a].first << "/" << nPassFail[t][a].first + nPassFail[t][a].second << " of events passed -- " << Form("%6.2f%%",eff) << " efficient" << endl;
+
+      // set values in histograms
+      setHistogramValues(a+1,t,nPassFail[t][a].first,nPassFail[t][a].second);
 		}
 
 		// print efficiency for each looper
@@ -172,3 +193,30 @@ void Runner::run(){
 	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << nprocessed << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(nprocessed)) << " efficient" << endl;
 }
 
+void Runner::setXLabel(int bin, TString label){
+  if (hPass) hPass->GetXaxis()->SetBinLabel(bin,label);
+  if (hFail) hFail->GetXaxis()->SetBinLabel(bin,label);
+  if (hEff)  hEff->GetXaxis()->SetBinLabel(bin,label);
+}
+
+void Runner::setYLabel(int bin, TString label){
+  if (hPass) hPass->GetYaxis()->SetBinLabel(bin,label);
+  if (hFail) hFail->GetYaxis()->SetBinLabel(bin,label);
+  if (hEff)  hEff->GetYaxis()->SetBinLabel(bin,label);
+}
+
+void Runner::setHistogramValues(int xval, int yval, int nPass, int nFail) {
+
+  int bin;
+  double eff = double(nPass)/double(nPass+nFail);
+
+  bin = hPass->FindBin(xval,yval);
+  hPass->SetBinContent(bin,nPass);
+
+  bin = hFail->FindBin(xval,yval);
+  hFail->SetBinContent(bin,nFail);
+
+  bin = hEff->FindBin(xval,yval);
+  hEff->SetBinContent(bin,eff);
+
+}

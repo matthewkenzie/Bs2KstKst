@@ -93,11 +93,7 @@ bool BDTReader::AnalyseEvent(Looper *l){
   B_s0_ARCCOS_DIRA_OWNPV  = float(TMath::ACos(*l->B_s0_DIRA_OWNPV));
   B_s0_ENDVERTEX_CHI2     = float(*l->B_s0_ENDVERTEX_CHI2);
 
-	double kst_max_track_chi2 = TMath::Max(*l->Kplus_TRACK_CHI2NDOF,*l->Piminus_TRACK_CHI2NDOF);
-	double kstb_max_track_chi2 = TMath::Max(*l->Piplus_TRACK_CHI2NDOF,*l->Kminus_TRACK_CHI2NDOF);
-	double max_track_chi2 = TMath::Max(kst_max_track_chi2,kstb_max_track_chi2);
-
-  max_track_CHI2          = float(max_track_chi2);
+  max_track_CHI2          = float(*l->max_track_chi2);
 
   //min_K_DeltaProbKPi      = float(TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) ));
   //max_Pi_DeltaProbKPi     = float(TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) ));

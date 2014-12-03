@@ -147,12 +147,8 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	//varMap["Kst_DIRA_OWNPV"] 			= *l->Kst_DIRA_OWNPV;
 	//varMap["Kstb_DIRA_OWNPV"] 		= *l->Kstb_DIRA_OWNPV;
 
-	double kst_max_track_chi2 = TMath::Max(*l->Kplus_TRACK_CHI2NDOF,*l->Piminus_TRACK_CHI2NDOF);
-	double kstb_max_track_chi2 = TMath::Max(*l->Piplus_TRACK_CHI2NDOF,*l->Kminus_TRACK_CHI2NDOF);
-	double max_track_chi2 = TMath::Max(kst_max_track_chi2,kstb_max_track_chi2);
-
 	// Max track chi2
-	//varMap["max_track_CHI2"] = max_track_chi2;
+	//varMap["max_track_CHI2"] = *l->max_track_chi2;
 
   /*
 	// PID

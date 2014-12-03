@@ -3,6 +3,7 @@
 Int_t           B_s0_BKGCAT                                 -1
 Double_t        B_s0_DIRA_OWNPV                              0
 Double_t        B_s0_ENDVERTEX_CHI2                          0
+Int_t           B_s0_ENDVERTEX_NDOF                          0
 Double_t        B_s0_FDCHI2_OWNPV                            0
 Double_t        B_s0_FD_OWNPV                                0
 Bool_t          B_s0_Hlt1DiHadronDecision_TOS                0
@@ -67,6 +68,7 @@ Bool_t          Kminus_isMuon                                0
 Double_t        Kminus_IPCHI2_OWNPV                          0
 Double_t        Kminus_IP_OWNPV                              0
 Double_t        Kminus_ORIVX_CHI2                            0
+Int_t           Kminus_ORIVX_NDOF                            0
 Double_t        Kplus_M                                      0
 Double_t        Kplus_P                                      0
 Double_t        Kplus_PE                                     0
@@ -86,6 +88,7 @@ Bool_t          Kplus_isMuon                                 0
 Double_t        Kplus_IPCHI2_OWNPV                           0
 Double_t        Kplus_IP_OWNPV                               0
 Double_t        Kplus_ORIVX_CHI2                             0
+Int_t           Kplus_ORIVX_NDOF                             0
 Double_t        Piminus_M                                    0
 Double_t        Piminus_P                                    0
 Double_t        Piminus_PE                                   0
@@ -105,6 +108,7 @@ Bool_t          Piminus_isMuon                               0
 Double_t        Piminus_IPCHI2_OWNPV                         0
 Double_t        Piminus_IP_OWNPV                             0
 Double_t        Piminus_ORIVX_CHI2                           0
+Int_t           Piminus_ORIVX_NDOF                           0
 Double_t        Piplus_M                                     0
 Double_t        Piplus_P                                     0
 Double_t        Piplus_PE                                    0
@@ -124,6 +128,7 @@ Bool_t          Piplus_isMuon                                0
 Double_t        Piplus_IPCHI2_OWNPV                          0
 Double_t        Piplus_IP_OWNPV                              0
 Double_t        Piplus_ORIVX_CHI2                            0
+Int_t           Piplus_ORIVX_NDOF                            0
 Double_t        Kst_CosTheta                                 0
 Double_t        Kst_DIRA_ORIVX                               0
 Double_t        Kst_DIRA_OWNPV                               0

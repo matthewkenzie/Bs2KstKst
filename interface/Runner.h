@@ -17,6 +17,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TMath.h"
+#include "TH2F.h"
 #include "TStopwatch.h"
 
 #include "../interface/Looper.h"
@@ -49,6 +50,9 @@ class Runner {
 		Looper* looper;
 		std::vector<BaseAnalyser*> analysers;
 		std::vector<std::vector<std::pair<int,int> > > nPassFail;
+    TH2F *hPass;
+    TH2F *hFail;
+    TH2F *hEff;
 		Long64_t nentries;
 		Long64_t firstEntry;
 		Long64_t lastEntry;
@@ -57,6 +61,9 @@ class Runner {
     bool batchmode;
 		TStopwatch timer;
 
+    void setYLabel(int bin, TString label);
+    void setXLabel(int bin, TString label);
+    void setHistogramValues(int xval, int yval, int nPass, int nFail);
 
 };
 
