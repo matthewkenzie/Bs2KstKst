@@ -51,12 +51,10 @@ class BDTReader : public BaseAnalyser {
     float B_s0_ENDVERTEX_CHI2;
     float max_track_CHI2;
 
-    //float min_K_DeltaProbKPi;
-    //float max_Pi_DeltaProbKPi;
-		float Kplus_PID_DeltaProbKPi;
-		float Kminus_PID_DeltaProbKPi;
-		float Piplus_PID_DeltaProbPiK;
-		float Piminus_PID_DeltaProbPiK;
+		float Kplus_ProbVar;
+		float Kminus_ProbVar;
+		float Piplus_ProbVar;
+		float Piminus_ProbVar;
 
 };
 #endif

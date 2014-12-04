@@ -17,7 +17,7 @@ using namespace TMVA;
 BDTReader::BDTReader(TString _name):
 	BaseAnalyser(_name),
 	evCount(0),
-	numberOfBDTs(1)
+	numberOfBDTs(2)
 {}
 
 BDTReader::~BDTReader(){}
@@ -46,12 +46,10 @@ void BDTReader::Init(Looper *l){
     readerContainer[b]->AddVariable("B_s0_ENDVERTEX_CHI2",    &B_s0_ENDVERTEX_CHI2);
     readerContainer[b]->AddVariable("max_track_CHI2",         &max_track_CHI2);
 
-    //readerContainer[b]->AddVariable("min_K_DeltaProbKPi",     &min_K_DeltaProbKPi);
-    //readerContainer[b]->AddVariable("max_Pi_DeltaProbKPi",    &max_Pi_DeltaProbKPi);
-    readerContainer[b]->AddVariable("Kplus_PID_DeltaProbKPi",    &Kplus_PID_DeltaProbKPi);
-    readerContainer[b]->AddVariable("Kminus_PID_DeltaProbKPi",   &Kminus_PID_DeltaProbKPi);
-    readerContainer[b]->AddVariable("Piplus_PID_DeltaProbPiK",   &Piplus_PID_DeltaProbPiK);
-    readerContainer[b]->AddVariable("Piminus_PID_DeltaProbPiK",  &Piminus_PID_DeltaProbPiK);
+    readerContainer[b]->AddVariable("Kplus_ProbVar",    &Kplus_ProbVar);
+    readerContainer[b]->AddVariable("Kminus_ProbVar",   &Kminus_ProbVar);
+    readerContainer[b]->AddVariable("Piplus_ProbVar",   &Piplus_ProbVar);
+    readerContainer[b]->AddVariable("Piminus_ProbVar",  &Piminus_ProbVar);
 
 		// Book MVA methods
 		weightsFile = Form("weights/BDTTrainerFactory%d_BDT%d.weights.xml",b,b);
@@ -76,31 +74,21 @@ bool BDTReader::AnalyseEvent(Looper *l){
   ln_max_track_PT         = float(TMath::Log( TMath::Max( TMath::Max(*l->Kplus_PT, *l->Kminus_PT), TMath::Max(*l->Piplus_PT, *l->Piminus_PT) ) ));
   ln_min_track_PT         = float(TMath::Log( TMath::Min( TMath::Min(*l->Kplus_PT, *l->Kminus_PT), TMath::Min(*l->Piplus_PT, *l->Piminus_PT) ) ));
 
-	TLorentzVector B_s0_p4(*l->B_s0_PX,*l->B_s0_PY,*l->B_s0_PZ,*l->B_s0_PE);
-	TLorentzVector Kst_p4(*l->Kst_PX,*l->Kst_PY,*l->Kst_PZ,*l->Kst_PE);
-	TLorentzVector Kstb_p4(*l->Kstb_PX,*l->Kstb_PY,*l->Kstb_PZ,*l->Kstb_PE);
-	TLorentzVector Kplus_p4(*l->Kplus_PX,*l->Kplus_PY,*l->Kplus_PZ,*l->Kplus_PE);
-	TLorentzVector Kminus_p4(*l->Kminus_PX,*l->Kminus_PY,*l->Kminus_PZ,*l->Kminus_PE);
-	TLorentzVector Piplus_p4(*l->Piplus_PX,*l->Piplus_PY,*l->Piplus_PZ,*l->Piplus_PE);
-	TLorentzVector Piminus_p4(*l->Piminus_PX,*l->Piminus_PY,*l->Piminus_PZ,*l->Piminus_PE);
-
-  B_s0_eta                = float(TMath::Abs(B_s0_p4.Eta()));
-  Kst_eta                 = float(TMath::Abs(Kst_p4.Eta()));
-  Kstb_eta                = float(TMath::Abs(Kstb_p4.Eta()));
-  max_track_eta           = float(TMath::Max( TMath::Max(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Max(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) ));
-  min_track_eta           = float(TMath::Min( TMath::Min(TMath::Abs(Kplus_p4.Eta()), TMath::Abs(Kminus_p4.Eta())), TMath::Min(TMath::Abs(Piplus_p4.Eta()), TMath::Abs(Piminus_p4.Eta())) ));
+  B_s0_eta                = float(TMath::Abs(*l->B_s0_ETA));
+  Kst_eta                 = float(TMath::Abs(*l->Kst_ETA));
+  Kstb_eta                = float(TMath::Abs(*l->Kstb_ETA));
+  max_track_eta           = float(TMath::Max( TMath::Max(TMath::Abs(*l->Kplus_ETA), TMath::Abs(*l->Kminus_ETA)), TMath::Max(TMath::Abs(*l->Piplus_ETA), TMath::Abs(*l->Piminus_ETA)) ));
+  min_track_eta           = float(TMath::Min( TMath::Min(TMath::Abs(*l->Kplus_ETA), TMath::Abs(*l->Kminus_ETA)), TMath::Min(TMath::Abs(*l->Piplus_ETA), TMath::Abs(*l->Piminus_ETA)) ));
 
   B_s0_ARCCOS_DIRA_OWNPV  = float(TMath::ACos(*l->B_s0_DIRA_OWNPV));
   B_s0_ENDVERTEX_CHI2     = float(*l->B_s0_ENDVERTEX_CHI2);
 
   max_track_CHI2          = float(*l->max_track_chi2);
 
-  //min_K_DeltaProbKPi      = float(TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) ));
-  //max_Pi_DeltaProbKPi     = float(TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) ));
-	Kplus_PID_DeltaProbKPi   = float(*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr);
-	Kminus_PID_DeltaProbKPi  = float(*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr);
-	Piplus_PID_DeltaProbPiK  = float(*l->Piplus_ProbNNpicorr - *l->Piplus_ProbNNkcorr);
-	Piminus_PID_DeltaProbPiK = float(*l->Piminus_ProbNNpicorr - *l->Piminus_ProbNNkcorr);
+	Kplus_ProbVar   = float(*l->Kplus_ProbNNkcorr * ( 1. - *l->Kplus_ProbNNpicorr));
+	Kminus_ProbVar  = float(*l->Kminus_ProbNNkcorr * ( 1. - *l->Kminus_ProbNNpicorr));
+	Piplus_ProbVar  = float(*l->Piplus_ProbNNpicorr * ( 1. - *l->Piplus_ProbNNkcorr));
+	Piminus_ProbVar = float(*l->Piminus_ProbNNpicorr * ( 1. - *l->Piminus_ProbNNkcorr));
 
 	int lastDigit = *l->eventNumber%10;
 	int relBDT = int(floor(lastDigit/2))%numberOfBDTs;

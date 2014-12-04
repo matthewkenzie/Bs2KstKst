@@ -90,6 +90,9 @@ class Looper {
     Double_t        *max_track_chi2;
     TBranch         *b_max_track_chi2;
 
+    Float_t         *weight;
+    TBranch         *b_weight;
+
     Bool_t          *cut_based_pid;
     TBranch         *b_cut_based_pid;
 

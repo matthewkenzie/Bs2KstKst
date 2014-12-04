@@ -70,7 +70,10 @@ def writeSubScript(name,datname,jobN=0):
 		fil_base = os.path.basename(fil)
 		fil_dir = os.path.dirname(fil)
 		f.write('mkdir -p %s\n'%fil_dir)
-		f.write('cp %s/%s/%s %s/\n'%(os.getcwd(),fil_dir,fil_base,fil_dir))
+		if opts.runLocal:
+			f.write('ln -s %s/%s/%s %s/%s\n'%(os.getcwd(),fil_dir,fil_base,fil_dir,fil_base))
+		else:
+			f.write('cp %s/%s/%s %s/\n'%(os.getcwd(),fil_dir,fil_base,fil_dir))
 	exec_line = './runAnalysis.py -d dat/%s -o %s_Reduced_j%d.root -t ReducedTree -b'%(os.path.basename(datname),name,jobN)
 	if opts.firstEntry: exec_line += ' -f %d'%opts.firstEntry
 	if opts.lastEntry: exec_line += ' -l %d'%opts.lastEntry

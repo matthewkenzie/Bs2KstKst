@@ -29,6 +29,9 @@ BDTTrainer::~BDTTrainer(){}
 void BDTTrainer::Init(Looper *l){
 	cout << Form("%-30s","BDTTrainer::Init()") << " " << "Initialising Analyser (" << name << ")." << endl;
 
+  reweightFile = TFile::Open("input/track_chi2_weights.root");
+  reweightHist = (TH1F*)reweightFile->Get("track_chi2_weights");
+
 	outFile = TFile::Open(outfilename,"RECREATE");
 
 	// MVA factory options
@@ -52,10 +55,6 @@ void BDTTrainer::Init(Looper *l){
 	varNames.push_back("ln_Kstb_PT");
   varNames.push_back("ln_max_track_PT");
   varNames.push_back("ln_min_track_PT");
-	//varNames.push_back("ln_Kplus_PT");
-	//varNames.push_back("ln_Kminus_PT");
-	//varNames.push_back("ln_Piplus_PT");
-	//varNames.push_back("ln_Piminus_PT");
 
 	// eta
 	varNames.push_back("B_s0_eta");
@@ -63,27 +62,19 @@ void BDTTrainer::Init(Looper *l){
 	varNames.push_back("Kstb_eta");
 	varNames.push_back("max_track_eta");
   varNames.push_back("min_track_eta");
-  //varNames.push_back("Kplus_eta");
-	//varNames.push_back("Kminus_eta");
-	//varNames.push_back("Piplus_eta");
-	//varNames.push_back("Piminus_eta");
 
 	// DIRA and vertex
 	varNames.push_back("B_s0_ARCCOS_DIRA_OWNPV");
 	varNames.push_back("B_s0_ENDVERTEX_CHI2");
-	//varNames.push_back("Kst_ARCCOR_DIRA_OWNPV");
-	//varNames.push_back("Kstb_ARCCOS_DIRA_OWNPV");
 
 	// Max track chi2
-	//varNames.push_back("max_track_CHI2");
+	varNames.push_back("max_track_CHI2");
 
 	// PID
-	//varNames.push_back("min_K_DeltaProbKPi");
-  //varNames.push_back("max_Pi_DeltaProbKPi");
-  //varNames.push_back("Kplus_PID_DeltaProbKPi");
-	//varNames.push_back("Kminus_PID_DeltaProbKPi");
-	//varNames.push_back("Piplus_PID_DeltaProbPiK");
-	//varNames.push_back("Piminus_PID_DeltaProbPiK");
+  varNames.push_back("Kplus_ProbVar");
+  varNames.push_back("Kminus_ProbVar");
+  varNames.push_back("Piplus_ProbVar");
+  varNames.push_back("Piminus_ProbVar");
 
 	// add variables to factories and inialise map
 	for (vector<TString>::iterator var=varNames.begin(); var!=varNames.end(); var++){
@@ -96,6 +87,8 @@ void BDTTrainer::Init(Looper *l){
 }
 
 void BDTTrainer::Term(Looper *l){
+
+  reweightFile->Close();
 
 	for (int b=0; b<numberOfBDTs; b++) {
 
@@ -123,16 +116,12 @@ void BDTTrainer::Term(Looper *l){
 
 bool BDTTrainer::AnalyseEvent(Looper *l){
 
-	// PT
+  // PT
 	varMap["ln_B_s0_PT"]   		  = TMath::Log(*l->B_s0_PT);
 	varMap["ln_Kst_PT"]         = TMath::Log(*l->Kst_PT);
 	varMap["ln_Kstb_PT"]        = TMath::Log(*l->Kstb_PT);
   varMap["ln_max_track_PT"]   = TMath::Log( TMath::Max( TMath::Max(*l->Kplus_PT, *l->Kminus_PT), TMath::Max(*l->Piplus_PT, *l->Piminus_PT) ) );
   varMap["ln_min_track_PT"]   = TMath::Log( TMath::Min( TMath::Min(*l->Kplus_PT, *l->Kminus_PT), TMath::Min(*l->Piplus_PT, *l->Piminus_PT) ) );
-	//varMap["ln_Kplus_PT"]       = TMath::Log(*l->Kplus_PT);
-	//varMap["ln_Kminus_PT"]      = TMath::Log(*l->Kminus_PT);
-	//varMap["ln_Piplus_PT"]      = TMath::Log(*l->Piplus_PT);
-	//varMap["ln_Piminus_PT"]     = TMath::Log(*l->Piminus_PT);
 
 	// eta
 	varMap["B_s0_eta"] 					= TMath::Abs(*l->B_s0_ETA);
@@ -144,31 +133,22 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	// DIRA and vertex
 	varMap["B_s0_ARCCOS_DIRA_OWNPV"] 		= TMath::ACos(*l->B_s0_DIRA_OWNPV);
 	varMap["B_s0_ENDVERTEX_CHI2"]       = *l->B_s0_ENDVERTEX_CHI2;
-	//varMap["Kst_DIRA_OWNPV"] 			= *l->Kst_DIRA_OWNPV;
-	//varMap["Kstb_DIRA_OWNPV"] 		= *l->Kstb_DIRA_OWNPV;
 
 	// Max track chi2
-	//varMap["max_track_CHI2"] = *l->max_track_chi2;
+	varMap["max_track_CHI2"] = *l->max_track_chi2;
 
-  /*
+  // weight
+  *l->weight = 1.;
+  if ( l->itype < 0 ){
+    *l->weight *= reweightHist->GetBinContent(reweightHist->FindBin(*l->max_track_chi2));
+  }
+
 	// PID
-  if ( l->itype < 0 ) {
-    //varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr) , (*l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr) );
-    //varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNkcorr - *l->Piplus_ProbNNpicorr) , (*l->Piminus_ProbNNkcorr - *l->Piminus_ProbNNpicorr) );
-    varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNkcorr - *l->Kplus_ProbNNpicorr;
-    varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kminus_ProbNNkcorr - *l->Kminus_ProbNNpicorr;
-    varMap["Piplus_PID_DeltaProbPiK"]  = *l->Piplus_ProbNNpicorr - *l->Piplus_ProbNNkcorr;
-    varMap["Piminus_PID_DeltaProbPiK"] = *l->Piminus_ProbNNpicorr - *l->Piminus_ProbNNkcorr;
-  }
-  else {
-    //varMap["min_K_DeltaProbKPi"]     = TMath::Min( (*l->Kplus_ProbNNk - *l->Kplus_ProbNNpi) , (*l->Kminus_ProbNNk - *l->Kminus_ProbNNpi) );
-    //varMap["max_Pi_DeltaProbKPi"]    = TMath::Max( (*l->Piplus_ProbNNk - *l->Piplus_ProbNNpi) , (*l->Piminus_ProbNNk - *l->Piminus_ProbNNpi) );
-    varMap["Kplus_PID_DeltaProbKPi"]   = *l->Kplus_ProbNNk - *l->Kplus_ProbNNpi;
-    varMap["Kminus_PID_DeltaProbKPi"]  = *l->Kminus_ProbNNk - *l->Kminus_ProbNNpi;
-    varMap["Piplus_PID_DeltaProbPiK"]  = *l->Piplus_ProbNNpi - *l->Piplus_ProbNNk;
-    varMap["Piminus_PID_DeltaProbPiK"] = *l->Piminus_ProbNNpi - *l->Piminus_ProbNNk;
-  }
-  */
+  varMap["Kplus_ProbVar"]    = *l->Kplus_ProbNNkcorr * ( 1. - *l->Kplus_ProbNNpicorr);
+  varMap["Kminus_ProbVar"]   = *l->Kminus_ProbNNkcorr * ( 1. - *l->Kminus_ProbNNpicorr);
+  varMap["Piplus_ProbVar"]   = *l->Piplus_ProbNNpicorr * ( 1. - *l->Piplus_ProbNNkcorr);
+  varMap["Piminus_ProbVar"]  = *l->Piminus_ProbNNpicorr * ( 1. - *l->Piminus_ProbNNkcorr);
+
 
 	// now put the variable values in a nice vector (in the right order!!)
 	assert(varNames.size()==varMap.size());
@@ -180,6 +160,8 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 	int lastDigit = *l->eventNumber%10;
 	int relBDT = int(floor(lastDigit/2))%numberOfBDTs;
 
+  if ( ! *l->cut_based_pid ) return false;
+
 	// MC only
 	if ( l->itype < 0 ) {
 
@@ -187,10 +169,10 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
     if (doBDTCycling) {
       for (int b=0; b<numberOfBDTs; b++){
         if (b==relBDT){
-          factoryContainer[b]->AddSignalTestEvent(values);
+          factoryContainer[b]->AddSignalTestEvent(values, *l->weight);
         }
         else {
-          factoryContainer[b]->AddSignalTrainingEvent(values);
+          factoryContainer[b]->AddSignalTrainingEvent(values, *l->weight);
         }
       }
     }
@@ -213,7 +195,7 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 		// cut out signal region
 		//if (*l->B_s0_MM > 5250 && *l->B_s0_MM < 5500) return false;
 		//if (*l->B_s0_MM > 5250) return false;
-		if (*l->B_s0_MM < 5450) return false;
+		if (*l->B_s0_MM < 5500) return false;
 
 		// now put event in relevant BDT
     if (doBDTCycling) {

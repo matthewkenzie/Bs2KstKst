@@ -58,10 +58,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kminus_PY", l->Kminus_PY, &(l->b_Kminus_PY));
 	tree->SetBranchAddress("Kminus_PZ", l->Kminus_PZ, &(l->b_Kminus_PZ));
 	tree->SetBranchAddress("Kminus_ProbNNk", l->Kminus_ProbNNk, &(l->b_Kminus_ProbNNk));
-	if (l->itype<0) tree->SetBranchAddress("Kminus_ProbNNkcorr", l->Kminus_ProbNNkcorr, &(l->b_Kminus_ProbNNkcorr));
+	tree->SetBranchAddress("Kminus_ProbNNkcorr", l->Kminus_ProbNNkcorr, &(l->b_Kminus_ProbNNkcorr));
 	tree->SetBranchAddress("Kminus_ProbNNp", l->Kminus_ProbNNp, &(l->b_Kminus_ProbNNp));
 	tree->SetBranchAddress("Kminus_ProbNNpi", l->Kminus_ProbNNpi, &(l->b_Kminus_ProbNNpi));
-	if (l->itype<0) tree->SetBranchAddress("Kminus_ProbNNpicorr", l->Kminus_ProbNNpicorr, &(l->b_Kminus_ProbNNpicorr));
+	tree->SetBranchAddress("Kminus_ProbNNpicorr", l->Kminus_ProbNNpicorr, &(l->b_Kminus_ProbNNpicorr));
 	tree->SetBranchAddress("Kminus_TRACK_CHI2NDOF", l->Kminus_TRACK_CHI2NDOF, &(l->b_Kminus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Kminus_isMuon", l->Kminus_isMuon, &(l->b_Kminus_isMuon));
 	tree->SetBranchAddress("Kplus_ETA", l->Kplus_ETA, &(l->b_Kplus_ETA));
@@ -79,10 +79,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kplus_PY", l->Kplus_PY, &(l->b_Kplus_PY));
 	tree->SetBranchAddress("Kplus_PZ", l->Kplus_PZ, &(l->b_Kplus_PZ));
 	tree->SetBranchAddress("Kplus_ProbNNk", l->Kplus_ProbNNk, &(l->b_Kplus_ProbNNk));
-	if (l->itype<0) tree->SetBranchAddress("Kplus_ProbNNkcorr", l->Kplus_ProbNNkcorr, &(l->b_Kplus_ProbNNkcorr));
+	tree->SetBranchAddress("Kplus_ProbNNkcorr", l->Kplus_ProbNNkcorr, &(l->b_Kplus_ProbNNkcorr));
 	tree->SetBranchAddress("Kplus_ProbNNp", l->Kplus_ProbNNp, &(l->b_Kplus_ProbNNp));
 	tree->SetBranchAddress("Kplus_ProbNNpi", l->Kplus_ProbNNpi, &(l->b_Kplus_ProbNNpi));
-	if (l->itype<0) tree->SetBranchAddress("Kplus_ProbNNpicorr", l->Kplus_ProbNNpicorr, &(l->b_Kplus_ProbNNpicorr));
+	tree->SetBranchAddress("Kplus_ProbNNpicorr", l->Kplus_ProbNNpicorr, &(l->b_Kplus_ProbNNpicorr));
 	tree->SetBranchAddress("Kplus_TRACK_CHI2NDOF", l->Kplus_TRACK_CHI2NDOF, &(l->b_Kplus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Kplus_isMuon", l->Kplus_isMuon, &(l->b_Kplus_isMuon));
 	tree->SetBranchAddress("Kst_CosTheta", l->Kst_CosTheta, &(l->b_Kst_CosTheta));
@@ -145,10 +145,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piminus_PY", l->Piminus_PY, &(l->b_Piminus_PY));
 	tree->SetBranchAddress("Piminus_PZ", l->Piminus_PZ, &(l->b_Piminus_PZ));
 	tree->SetBranchAddress("Piminus_ProbNNk", l->Piminus_ProbNNk, &(l->b_Piminus_ProbNNk));
-	if (l->itype<0) tree->SetBranchAddress("Piminus_ProbNNkcorr", l->Piminus_ProbNNkcorr, &(l->b_Piminus_ProbNNkcorr));
+	tree->SetBranchAddress("Piminus_ProbNNkcorr", l->Piminus_ProbNNkcorr, &(l->b_Piminus_ProbNNkcorr));
 	tree->SetBranchAddress("Piminus_ProbNNp", l->Piminus_ProbNNp, &(l->b_Piminus_ProbNNp));
 	tree->SetBranchAddress("Piminus_ProbNNpi", l->Piminus_ProbNNpi, &(l->b_Piminus_ProbNNpi));
-	if (l->itype<0) tree->SetBranchAddress("Piminus_ProbNNpicorr", l->Piminus_ProbNNpicorr, &(l->b_Piminus_ProbNNpicorr));
+	tree->SetBranchAddress("Piminus_ProbNNpicorr", l->Piminus_ProbNNpicorr, &(l->b_Piminus_ProbNNpicorr));
 	tree->SetBranchAddress("Piminus_TRACK_CHI2NDOF", l->Piminus_TRACK_CHI2NDOF, &(l->b_Piminus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Piminus_isMuon", l->Piminus_isMuon, &(l->b_Piminus_isMuon));
 	tree->SetBranchAddress("Piplus_ETA", l->Piplus_ETA, &(l->b_Piplus_ETA));
@@ -166,10 +166,10 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Piplus_PY", l->Piplus_PY, &(l->b_Piplus_PY));
 	tree->SetBranchAddress("Piplus_PZ", l->Piplus_PZ, &(l->b_Piplus_PZ));
 	tree->SetBranchAddress("Piplus_ProbNNk", l->Piplus_ProbNNk, &(l->b_Piplus_ProbNNk));
-	if (l->itype<0) tree->SetBranchAddress("Piplus_ProbNNkcorr", l->Piplus_ProbNNkcorr, &(l->b_Piplus_ProbNNkcorr));
+	tree->SetBranchAddress("Piplus_ProbNNkcorr", l->Piplus_ProbNNkcorr, &(l->b_Piplus_ProbNNkcorr));
 	tree->SetBranchAddress("Piplus_ProbNNp", l->Piplus_ProbNNp, &(l->b_Piplus_ProbNNp));
 	tree->SetBranchAddress("Piplus_ProbNNpi", l->Piplus_ProbNNpi, &(l->b_Piplus_ProbNNpi));
-	if (l->itype<0) tree->SetBranchAddress("Piplus_ProbNNpicorr", l->Piplus_ProbNNpicorr, &(l->b_Piplus_ProbNNpicorr));
+	tree->SetBranchAddress("Piplus_ProbNNpicorr", l->Piplus_ProbNNpicorr, &(l->b_Piplus_ProbNNpicorr));
 	tree->SetBranchAddress("Piplus_TRACK_CHI2NDOF", l->Piplus_TRACK_CHI2NDOF, &(l->b_Piplus_TRACK_CHI2NDOF));
 	tree->SetBranchAddress("Piplus_isMuon", l->Piplus_isMuon, &(l->b_Piplus_isMuon));
 	tree->SetBranchAddress("Polarity", l->Polarity, &(l->b_Polarity));
@@ -408,6 +408,7 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->nVeloTracks                           = new Int_t(0);
 	l->runNumber                             = new UInt_t(0);
 	l->totCandidates                         = new ULong64_t(0);
+	l->weight                                = new Float_t(0);
 
 }
 
@@ -615,6 +616,7 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->nVeloTracks;
 	delete l->runNumber;
 	delete l->totCandidates;
+	delete l->weight;
 
 	delete l->b_B_s0_DIRA_OWNPV;
 	delete l->b_B_s0_ENDVERTEX_CHI2;
@@ -819,6 +821,7 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->b_nVeloTracks;
 	delete l->b_runNumber;
 	delete l->b_totCandidates;
+	delete l->b_weight;
 }
 
 void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){ 
@@ -999,7 +1002,9 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Piplus_isMuon",l->Piplus_isMuon);
 	tree->Branch("Polarity",l->Polarity);
 	tree->Branch("bdtoutput",l->bdtoutput);
+	tree->Branch("cut_based_pid",l->cut_based_pid);
 	tree->Branch("eventNumber",l->eventNumber);
+	tree->Branch("max_track_chi2",l->max_track_chi2);
 	tree->Branch("nBackTracks",l->nBackTracks);
 	tree->Branch("nCandidate",l->nCandidate);
 	tree->Branch("nDownstreamTracks",l->nDownstreamTracks);
@@ -1025,5 +1030,6 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("nVeloTracks",l->nVeloTracks);
 	tree->Branch("runNumber",l->runNumber);
 	tree->Branch("totCandidates",l->totCandidates);
+	tree->Branch("weight",l->weight);
 }
 

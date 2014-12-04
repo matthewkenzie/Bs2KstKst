@@ -102,6 +102,7 @@ void ReductionBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kst_DIRA_ORIVX", l->Kst_DIRA_ORIVX, &(l->b_Kst_DIRA_ORIVX));
 	tree->SetBranchAddress("Kst_DIRA_OWNPV", l->Kst_DIRA_OWNPV, &(l->b_Kst_DIRA_OWNPV));
 	tree->SetBranchAddress("Kst_ENDVERTEX_CHI2", l->Kst_ENDVERTEX_CHI2, &(l->b_Kst_ENDVERTEX_CHI2));
+	tree->SetBranchAddress("Kst_ENDVERTEX_NDOF", l->Kst_ENDVERTEX_NDOF, &(l->b_Kst_ENDVERTEX_NDOF));
 	tree->SetBranchAddress("Kst_FDCHI2_ORIVX", l->Kst_FDCHI2_ORIVX, &(l->b_Kst_FDCHI2_ORIVX));
 	tree->SetBranchAddress("Kst_FDCHI2_OWNPV", l->Kst_FDCHI2_OWNPV, &(l->b_Kst_FDCHI2_OWNPV));
 	tree->SetBranchAddress("Kst_FD_ORIVX", l->Kst_FD_ORIVX, &(l->b_Kst_FD_ORIVX));
@@ -121,6 +122,7 @@ void ReductionBranches::setInputBranches(Looper *l, TTree *tree){
 	tree->SetBranchAddress("Kstb_DIRA_ORIVX", l->Kstb_DIRA_ORIVX, &(l->b_Kstb_DIRA_ORIVX));
 	tree->SetBranchAddress("Kstb_DIRA_OWNPV", l->Kstb_DIRA_OWNPV, &(l->b_Kstb_DIRA_OWNPV));
 	tree->SetBranchAddress("Kstb_ENDVERTEX_CHI2", l->Kstb_ENDVERTEX_CHI2, &(l->b_Kstb_ENDVERTEX_CHI2));
+	tree->SetBranchAddress("Kstb_ENDVERTEX_NDOF", l->Kstb_ENDVERTEX_NDOF, &(l->b_Kstb_ENDVERTEX_NDOF));
 	tree->SetBranchAddress("Kstb_FDCHI2_ORIVX", l->Kstb_FDCHI2_ORIVX, &(l->b_Kstb_FDCHI2_ORIVX));
 	tree->SetBranchAddress("Kstb_FDCHI2_OWNPV", l->Kstb_FDCHI2_OWNPV, &(l->b_Kstb_FDCHI2_OWNPV));
 	tree->SetBranchAddress("Kstb_FD_ORIVX", l->Kstb_FD_ORIVX, &(l->b_Kstb_FD_ORIVX));
@@ -312,6 +314,7 @@ void ReductionBranches::initialiseVariables(Looper *l) {
 	l->Kst_DIRA_ORIVX                        = new Double_t(0);
 	l->Kst_DIRA_OWNPV                        = new Double_t(0);
 	l->Kst_ENDVERTEX_CHI2                    = new Double_t(0);
+	l->Kst_ENDVERTEX_NDOF                    = new Int_t(0);
 	l->Kst_ETA                               = new Double_t(0);
 	l->Kst_FDCHI2_ORIVX                      = new Double_t(0);
 	l->Kst_FDCHI2_OWNPV                      = new Double_t(0);
@@ -332,6 +335,7 @@ void ReductionBranches::initialiseVariables(Looper *l) {
 	l->Kstb_DIRA_ORIVX                       = new Double_t(0);
 	l->Kstb_DIRA_OWNPV                       = new Double_t(0);
 	l->Kstb_ENDVERTEX_CHI2                   = new Double_t(0);
+	l->Kstb_ENDVERTEX_NDOF                   = new Int_t(0);
 	l->Kstb_ETA                              = new Double_t(0);
 	l->Kstb_FDCHI2_ORIVX                     = new Double_t(0);
 	l->Kstb_FDCHI2_OWNPV                     = new Double_t(0);
@@ -530,6 +534,7 @@ void ReductionBranches::cleanVariables(Looper *l) {
 	delete l->Kst_DIRA_ORIVX;
 	delete l->Kst_DIRA_OWNPV;
 	delete l->Kst_ENDVERTEX_CHI2;
+	delete l->Kst_ENDVERTEX_NDOF;
 	delete l->Kst_ETA;
 	delete l->Kst_FDCHI2_ORIVX;
 	delete l->Kst_FDCHI2_OWNPV;
@@ -550,6 +555,7 @@ void ReductionBranches::cleanVariables(Looper *l) {
 	delete l->Kstb_DIRA_ORIVX;
 	delete l->Kstb_DIRA_OWNPV;
 	delete l->Kstb_ENDVERTEX_CHI2;
+	delete l->Kstb_ENDVERTEX_NDOF;
 	delete l->Kstb_ETA;
 	delete l->Kstb_FDCHI2_ORIVX;
 	delete l->Kstb_FDCHI2_OWNPV;
@@ -745,6 +751,7 @@ void ReductionBranches::cleanVariables(Looper *l) {
 	delete l->b_Kst_DIRA_ORIVX;
 	delete l->b_Kst_DIRA_OWNPV;
 	delete l->b_Kst_ENDVERTEX_CHI2;
+	delete l->b_Kst_ENDVERTEX_NDOF;
 	delete l->b_Kst_ETA;
 	delete l->b_Kst_FDCHI2_ORIVX;
 	delete l->b_Kst_FDCHI2_OWNPV;
@@ -765,6 +772,7 @@ void ReductionBranches::cleanVariables(Looper *l) {
 	delete l->b_Kstb_DIRA_ORIVX;
 	delete l->b_Kstb_DIRA_OWNPV;
 	delete l->b_Kstb_ENDVERTEX_CHI2;
+	delete l->b_Kstb_ENDVERTEX_NDOF;
 	delete l->b_Kstb_ETA;
 	delete l->b_Kstb_FDCHI2_ORIVX;
 	delete l->b_Kstb_FDCHI2_OWNPV;
@@ -961,6 +969,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kst_DIRA_ORIVX",l->Kst_DIRA_ORIVX);
 	tree->Branch("Kst_DIRA_OWNPV",l->Kst_DIRA_OWNPV);
 	tree->Branch("Kst_ENDVERTEX_CHI2",l->Kst_ENDVERTEX_CHI2);
+	tree->Branch("Kst_ENDVERTEX_NDOF",l->Kst_ENDVERTEX_NDOF);
 	tree->Branch("Kst_ETA",l->Kst_ETA);
 	tree->Branch("Kst_FDCHI2_ORIVX",l->Kst_FDCHI2_ORIVX);
 	tree->Branch("Kst_FDCHI2_OWNPV",l->Kst_FDCHI2_OWNPV);
@@ -981,6 +990,7 @@ void ReductionBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("Kstb_DIRA_ORIVX",l->Kstb_DIRA_ORIVX);
 	tree->Branch("Kstb_DIRA_OWNPV",l->Kstb_DIRA_OWNPV);
 	tree->Branch("Kstb_ENDVERTEX_CHI2",l->Kstb_ENDVERTEX_CHI2);
+	tree->Branch("Kstb_ENDVERTEX_NDOF",l->Kstb_ENDVERTEX_NDOF);
 	tree->Branch("Kstb_ETA",l->Kstb_ETA);
 	tree->Branch("Kstb_FDCHI2_ORIVX",l->Kstb_FDCHI2_ORIVX);
 	tree->Branch("Kstb_FDCHI2_OWNPV",l->Kstb_FDCHI2_OWNPV);

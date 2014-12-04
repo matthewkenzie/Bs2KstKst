@@ -108,8 +108,17 @@ bool ApplyPIDCorrection::AnalyseEvent(Looper *l){
 
 	}
 	// Data only
-	//if ( l->itype > 0 ) {
-	//}
+	if ( l->itype > 0 ) {
+    *l->Kplus_ProbNNkcorr    = *l->Kplus_ProbNNk;
+    *l->Kminus_ProbNNkcorr   = *l->Kminus_ProbNNk;
+    *l->Piplus_ProbNNkcorr   = *l->Piplus_ProbNNk;
+    *l->Piminus_ProbNNkcorr  = *l->Piminus_ProbNNk;
+
+    *l->Kplus_ProbNNpicorr   = *l->Kplus_ProbNNpi;
+    *l->Kminus_ProbNNpicorr  = *l->Kminus_ProbNNpi;
+    *l->Piplus_ProbNNpicorr  = *l->Piplus_ProbNNpi;
+    *l->Piminus_ProbNNpicorr = *l->Piminus_ProbNNpi;
+  }
 
 	return true;
 }

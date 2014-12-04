@@ -9,6 +9,7 @@
 #ifndef BDTTrainer_h
 #define BDTTrainer_h
 
+#include "TH1F.h"
 #include "TString.h"
 #include "TMVA/Factory.h"
 
@@ -37,6 +38,9 @@ class BDTTrainer : public BaseAnalyser {
 
 		std::vector<TString> varNames;
 		std::map<TString,double> varMap;
+
+    TFile *reweightFile;
+    TH1F *reweightHist;
 
 };
 

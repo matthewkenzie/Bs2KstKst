@@ -133,6 +133,7 @@ Double_t        Kst_CosTheta                                 0
 Double_t        Kst_DIRA_ORIVX                               0
 Double_t        Kst_DIRA_OWNPV                               0
 Double_t        Kst_ENDVERTEX_CHI2                           0
+Int_t           Kst_ENDVERTEX_NDOF                           0
 Double_t        Kst_FDCHI2_ORIVX                             0
 Double_t        Kst_FDCHI2_OWNPV                             0
 Double_t        Kst_FD_ORIVX                                 0
@@ -148,10 +149,11 @@ Double_t        Kst_PT                                       0
 Double_t        Kst_PX                                       0
 Double_t        Kst_PY                                       0
 Double_t        Kst_PZ                                       0
-Double_t        Kstb_CosTheta                                 0
-Double_t        Kstb_DIRA_ORIVX                               0
-Double_t        Kstb_DIRA_OWNPV                               0
-Double_t        Kstb_ENDVERTEX_CHI2                           0
+Double_t        Kstb_CosTheta                                0
+Double_t        Kstb_DIRA_ORIVX                              0
+Double_t        Kstb_DIRA_OWNPV                              0
+Double_t        Kstb_ENDVERTEX_CHI2                          0
+Int_t           Kstb_ENDVERTEX_NDOF                          0
 Double_t        Kstb_FDCHI2_ORIVX                             0
 Double_t        Kstb_FDCHI2_OWNPV                             0
 Double_t        Kstb_FD_ORIVX                                 0
