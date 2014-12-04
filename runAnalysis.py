@@ -195,8 +195,8 @@ if opts.runAsReduction:
           os.system(bsub_line)
       else:
         print 'Written sub script', subscript
-        if opts.runLocal:
-          os.system('%s'%subscript)
+        if opts.runLocal and not opts.dryRun:
+          os.system('./%s'%subscript)
         else:
           exec_line = './runAnalysis.py -d %s -o root/%s_Reduced.root -t ReducedTree'%(datname,rootname)
           if opts.firstEntry: exec_line += ' -f %d'%opts.firstEntry

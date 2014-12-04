@@ -6,6 +6,7 @@ import ROOT as r
 r.gROOT.ProcessLine(".x ~/Scratch/lhcb/lhcbStyle.C")
 r.gStyle.SetGridWidth(3)
 r.gStyle.SetGridStyle(1)
+r.gStyle.SetPalette(1)
 
 infiles = sys.argv[1:]
 canvs=[]
@@ -14,7 +15,7 @@ xlabels = []
 ylabels = []
 tidyLabels = []
 
-def fillDict(hName):
+def fillDict(hName, isEff=False):
   theDict = {}
   for f in infiles:
     tf = r.TFile.Open(f)
@@ -33,6 +34,20 @@ def fillDict(hName):
         else:
           print 'WARNING - clash - entry already exists for [', analyser_label, ',', dataset_label, ']'
     tf.Close()
+
+  theDict['Total'] = {}
+  if 'Total' in xlabels: xlabels.remove('Total')
+  for ylabel in ylabels:
+    totalval = 0
+    if isEff: totalval = 1.
+    for xlabel in xlabels:
+      val = theDict[xlabel][ylabel]
+      if isEff:
+        totalval *= val
+      else:
+        totalval = val
+    theDict['Total'][ylabel] = totalval
+  xlabels.append('Total')
   return theDict
 
 def convertDictToTH2(theDict, name):
@@ -78,18 +93,21 @@ def makeTidyLabels():
     new_label = new_label.replace('HighMass','(HM)')
     tidyLabels.append(new_label)
 
-def draw(th2f, name, textformat=''):
+def draw(th2f, name, textformat='', col=False):
 
-  canvs.append(r.TCanvas(name,name,1000,600))
-  canvs[-1].SetLeftMargin(0.25)
-  canvs[-1].SetRightMargin(0.12)
+  canvs.append(r.TCanvas(name,name,1100,600))
+  canvs[-1].SetLeftMargin(0.3)
+  if col: canvs[-1].SetRightMargin(0.15)
+  else: canvs[-1].SetRightMargin(0.05)
   canvs[-1].SetGridx()
   canvs[-1].SetGridy()
   canvs[-1].cd()
   r.gStyle.SetPaintTextFormat(textformat)
-  th2f.SetMarkerSize(1.5)
+  th2f.SetMarkerSize(2.0)
+  #if col: th2f.SetMarkerColor(r.kWhite)
   th2f.SetStats(0)
-  th2f.Draw("TEXT")
+  if col: th2f.Draw("TEXTcolz")
+  else: th2f.Draw("TEXT")
   canvs[-1].Update()
   canvs[-1].Modified()
   canvs[-1].Print("plots/eff_%s.pdf"%name)
@@ -97,7 +115,7 @@ def draw(th2f, name, textformat=''):
 # __main__
 passDict = fillDict('hPass')
 failDict = fillDict('hFail')
-effDict  = fillDict('hEff')
+effDict  = fillDict('hEff',True)
 
 makeTidyLabels()
 
@@ -108,4 +126,4 @@ effHist.Scale(100.)
 
 draw(passHist,'pass','g')
 draw(failHist,'fail','g')
-draw(effHist, 'eff','5.1f%%')
+draw(effHist, 'eff','5.1f%%',True)

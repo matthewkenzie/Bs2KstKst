@@ -14,16 +14,62 @@
 branchdef=ReductionBranches
 analysers=TriggerSelection,TruthMatching,PreSelection
 
-#itype=-71  	name=MC2011_HighMass_MagDown 	fname=nTuples/Bs2Kst0Kst01430_wide_MC2011_magnetDown_Job13.root              tname=Bs2Kst0Kst0/DecayTree
-#itype=-72  	name=MC2011_HighMass_MagUp   	fname=nTuples/Bs2Kst0Kst01430_wide_MC2011_magnetUp_Job12.root                tname=Bs2Kst0Kst0/DecayTree
-itype=-81  	name=MC2012_HighMass_MagDown 	fname=nTuples/Bs2Kst0Kst01430_wide_MC2012_magnetDown_Job15.root              tname=Bs2Kst0Kst0/DecayTree
-#itype=-82  	name=MC2012_HighMass_MagUp  	fname=nTuples/Bs2Kst0Kst01430_wide_MC2012_magnetUp_Job14.root                tname=Bs2Kst0Kst0/DecayTree
-#itype=-73  	name=MC2011_LowMass_MagDown 	fname=nTuples/Bs2Kst0Kst0_wide_MC2011_magnetDown_Job7.root                   tname=Bs2Kst0Kst0/DecayTree
-#itype=-74  	name=MC2011_LowMass_MagUp   	fname=nTuples/Bs2Kst0Kst0_wide_MC2011_magnetUp_Job6.root                     tname=Bs2Kst0Kst0/DecayTree
-itype=-83  	name=MC2012_LowMass_MagDown 	fname=nTuples/Bs2Kst0Kst0_wide_MC2012_magnetDown_Job11.root                  tname=Bs2Kst0Kst0/DecayTree
-#itype=-84  	name=MC2012_LowMass_MagUp   	fname=nTuples/Bs2Kst0Kst0_wide_MC2012_magnetUp_Job10.root                    tname=Bs2Kst0Kst0/DecayTree
-#itype=71  	name=Data2011_MagDown 				fname=nTuples/Bs2Kst0Kst0_wide_Real2011_magnetDown_Job25_v2.root             tname=Bs2Kst0Kst0/DecayTree
-#itype=72  	name=Data2011_MagUp 				 	fname=nTuples/Bs2Kst0Kst0_wide_Real2011_magnetUp_Job24_v2.root               tname=Bs2Kst0Kst0/DecayTree
-#itype=81  	name=Data2012_MagDown 				fname=nTuples/Bs2Kst0Kst0_wide_Real2012_magnetDown_Job3_v2.root              tname=Bs2Kst0Kst0/DecayTree
-#itype=82 		name=Data2012_MagUp 					fname=nTuples/Bs2Kst0Kst0_wide_Real2012_magnetUp_Job0_v2.root 							 tname=Bs2Kst0Kst0/DecayTree
+# Bs2Kst0Kst0
+itype=-71  name=Bs2Kst0Kst0_MC2011            fname=nTuples/Bs2Kst0Kst0/Bs2Kst0Kst0_wide_MC2011_magnetDown_Job7.root                        tname=Bs2Kst0Kst0/DecayTree
+itype=-71  name=Bs2Kst0Kst0_MC2011            fname=nTuples/Bs2Kst0Kst0/Bs2Kst0Kst0_wide_MC2011_magnetUp_Job6.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=-81  name=Bs2Kst0Kst0_MC2012            fname=nTuples/Bs2Kst0Kst0/Bs2Kst0Kst0_wide_MC2012_magnetDown_Job11.root                       tname=Bs2Kst0Kst0/DecayTree
+itype=-81  name=Bs2Kst0Kst0_MC2012            fname=nTuples/Bs2Kst0Kst0/Bs2Kst0Kst0_wide_MC2012_magnetUp_Job10.root                         tname=Bs2Kst0Kst0/DecayTree
 
+# Bs2Kst0Kst01430
+itype=-72  name=Bs2Kst0Kst01430_MC2011        fname=nTuples/Bs2Kst0Kst01430/Bs2Kst0Kst01430_wide_MC2011_magnetDown_Job13.root               tname=Bs2Kst0Kst0/DecayTree
+itype=-72  name=Bs2Kst0Kst01430_MC2011        fname=nTuples/Bs2Kst0Kst01430/Bs2Kst0Kst01430_wide_MC2011_magnetUp_Job12.root                 tname=Bs2Kst0Kst0/DecayTree
+itype=-82  name=Bs2Kst0Kst01430_MC2012        fname=nTuples/Bs2Kst0Kst01430/Bs2Kst0Kst01430_wide_MC2012_magnetDown_Job15.root               tname=Bs2Kst0Kst0/DecayTree
+itype=-82  name=Bs2Kst0Kst01430_MC2012        fname=nTuples/Bs2Kst0Kst01430/Bs2Kst0Kst01430_wide_MC2012_magnetUp_Job14.root                 tname=Bs2Kst0Kst0/DecayTree
+
+# Bs2Kst01430Kst01430
+itype=-73  name=Bs2Kst01430Kst01430_MC2011    fname=nTuples/Bs2Kst01430Kst01430/Bs2Kst01430Kst01430b_MC2011_magDown_Job209.root             tname=Bs2Kst0Kst0/DecayTree
+itype=-73  name=Bs2Kst01430Kst01430_MC2011    fname=nTuples/Bs2Kst01430Kst01430/Bs2Kst01430Kst01430b_MC2011_magUp_Job208.root               tname=Bs2Kst0Kst0/DecayTree
+itype=-83  name=Bs2Kst01430Kst01430_MC2012    fname=nTuples/Bs2Kst01430Kst01430/Bs2Kst01430Kst01430b_MC2012_magDown_Job204.root             tname=Bs2Kst0Kst0/DecayTree
+itype=-83  name=Bs2Kst01430Kst01430_MC2012    fname=nTuples/Bs2Kst01430Kst01430/Bs2Kst01430Kst01430b_MC2012_magUp_Job203.root               tname=Bs2Kst0Kst0/DecayTree
+
+# Bs2KpiKpi_PhaseSpace
+itype=-74  name=Bs2KpiKpi_PhaseSpace_MC2011   fname=nTuples/Bs2KpiKpi_PhaseSpace/Bs2KpiKpi_PhaseSpace_MC2011_magDown_Job207.root            tname=Bs2Kst0Kst0/DecayTree
+itype=-74  name=Bs2KpiKpi_PhaseSpace_MC2011   fname=nTuples/Bs2KpiKpi_PhaseSpace/Bs2KpiKpi_PhaseSpace_MC2011_magUp_Job206.root              tname=Bs2Kst0Kst0/DecayTree
+itype=-84  name=Bs2KpiKpi_PhaseSpace_MC2012   fname=nTuples/Bs2KpiKpi_PhaseSpace/Bs2KpiKpi_PhaseSpace_MC2012_magDown_Job202.root            tname=Bs2Kst0Kst0/DecayTree
+itype=-84  name=Bs2KpiKpi_PhaseSpace_MC2012   fname=nTuples/Bs2KpiKpi_PhaseSpace/Bs2KpiKpi_PhaseSpace_MC2012_magUp_Job201.root              tname=Bs2Kst0Kst0/DecayTree
+
+# Bd2Kst0Kst0
+itype=-75  name=Bd2Kst0Kst0_MC2011            fname=nTuples/Bd2Kst0Kst0/Bd2Kst0Kst0b_wide_MC2011_magDown_Job222.root                        tname=Bs2Kst0Kst0/DecayTree
+itype=-75  name=Bd2Kst0Kst0_MC2011            fname=nTuples/Bd2Kst0Kst0/Bd2Kst0Kst0b_wide_MC2011_magUp_Job221.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=-85  name=Bd2Kst0Kst0_MC2012            fname=nTuples/Bd2Kst0Kst0/Bd2Kst0Kst0b_wide_MC2012_magDown_Job211.root                        tname=Bs2Kst0Kst0/DecayTree
+itype=-85  name=Bd2Kst0Kst0_MC2012            fname=nTuples/Bd2Kst0Kst0/Bd2Kst0Kst0b_wide_MC2012_magUp_Job2132.root                         tname=Bs2Kst0Kst0/DecayTree
+
+# Bd2PhiKst0
+itype=-76  name=Bd2PhiKst0_MC2011             fname=nTuples/Bd2PhiKst0/Bd2phiKst0_wide_MC2011_magDown_Job224.root                           tname=Bs2Kst0Kst0/DecayTree
+itype=-76  name=Bd2PhiKst0_MC2011             fname=nTuples/Bd2PhiKst0/Bd2phiKst0_wide_MC2011_magUp_Job223.root                             tname=Bs2Kst0Kst0/DecayTree
+itype=-86  name=Bd2PhiKst0_MC2012             fname=nTuples/Bd2PhiKst0/Bd2phiKst0_wide_MC2012_magDown_Job213.root                           tname=Bs2Kst0Kst0/DecayTree
+itype=-86  name=Bd2PhiKst0_MC2012             fname=nTuples/Bd2PhiKst0/Bd2phiKst0_wide_MC2012_magUp_Job212.root                             tname=Bs2Kst0Kst0/DecayTree
+
+# Bd2RhoKst0
+itype=-77  name=Bd2RhoKst0_MC2011             fname=nTuples/Bd2RhoKst0/Bd2rho0Kst0_wide_MC2011_magDown_Job226.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=-77  name=Bd2RhoKst0_MC2011             fname=nTuples/Bd2RhoKst0/Bd2rho0Kst0_wide_MC2011_magUp_Job225.root                            tname=Bs2Kst0Kst0/DecayTree
+itype=-87  name=Bd2RhoKst0_MC2012             fname=nTuples/Bd2RhoKst0/Bd2rho0Kst0_wide_MC2012_magDown_Job216.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=-87  name=Bd2RhoKst0_MC2012             fname=nTuples/Bd2RhoKst0/Bd2rho0Kst0_wide_MC2012_magUp_Job214.root                            tname=Bs2Kst0Kst0/DecayTree
+
+# Lb2pKpipi
+itype=-78  name=Lb2pKpipi_MC2011              fname=nTuples/Lb2pKpipi/Lb2pKpipi_Bs2Kst0Kst0strippingWide_MC2011_magnetDown_Job230.root      tname=Bs2Kst0Kst0/DecayTree
+itype=-78  name=Lb2pKpipi_MC2011              fname=nTuples/Lb2pKpipi/Lb2pKpipi_Bs2Kst0Kst0strippingWide_MC2011_magnetUp_Job229.root        tname=Bs2Kst0Kst0/DecayTree
+itype=-88  name=Lb2pKpipi_MC2012              fname=nTuples/Lb2pKpipi/Lb2pKpipi_Bs2Kst0Kst0strippingWide_MC2012_magnetDown_Job220.root      tname=Bs2Kst0Kst0/DecayTree
+itype=-88  name=Lb2pKpipi_MC2012              fname=nTuples/Lb2pKpipi/Lb2pKpipi_Bs2Kst0Kst0strippingWide_MC2012_magnetUp_Job219.root        tname=Bs2Kst0Kst0/DecayTree
+
+# Lb2ppipipi
+itype=-79  name=Lb2ppipipi_MC2011             fname=nTuples/Lb2ppipipi/Lb2ppipipi_wide_MC2011_magnetDown_Job228.root                        tname=Bs2Kst0Kst0/DecayTree
+itype=-79  name=Lb2ppipipi_MC2011             fname=nTuples/Lb2ppipipi/Lb2ppipipi_wide_MC2011_magnetUp_Job227.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=-89  name=Lb2ppipipi_MC2012             fname=nTuples/Lb2ppipipi/Lb2ppipipi_wide_MC2012_magnetDown_Job218.root                        tname=Bs2Kst0Kst0/DecayTree
+itype=-89  name=Lb2ppipipi_MC2012             fname=nTuples/Lb2ppipipi/Lb2ppipipi_wide_MC2012_magnetUp_Job217.root                          tname=Bs2Kst0Kst0/DecayTree
+
+# Data
+itype=71  	name=Data2011         				     fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2011_magnetDown_Job25_v2.root                         tname=Bs2Kst0Kst0/DecayTree
+itype=71  	name=Data2011			 	               fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2011_magnetUp_Job24_v2.root                           tname=Bs2Kst0Kst0/DecayTree
+itype=81  	name=Data2012				               fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2012_magnetDown_Job3_v2.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=81 		name=Data2012				               fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2012_magnetUp_Job0_v2.root 							             tname=Bs2Kst0Kst0/DecayTree

@@ -14,11 +14,38 @@
 branchdef=PIDCalibBranches
 analysers=ApplyPIDCorrection
 
-itype=-71  	name=MC2011_HighMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2011_HighMass_MagDown_Reduced_j0.root             tname=ReducedTree
-itype=-72  	name=MC2011_HighMass_MagUp_PIDcorr   	fname=file_store/reduced/MC2011_HighMass_MagUp_Reduced_j0.root               tname=ReducedTree
-itype=-81  	name=MC2012_HighMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2012_HighMass_MagDown_Reduced_j0.root             tname=ReducedTree
-itype=-82  	name=MC2012_HighMass_MagUp_PIDcorr  	fname=file_store/reduced/MC2012_HighMass_MagUp_Reduced_j0.root               tname=ReducedTree
-itype=-73  	name=MC2011_LowMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2011_LowMass_MagDown_Reduced_j0.root              tname=ReducedTree
-itype=-74  	name=MC2011_LowMass_MagUp_PIDcorr   	fname=file_store/reduced/MC2011_LowMass_MagUp_Reduced_j0.root                tname=ReducedTree
-itype=-83  	name=MC2012_LowMass_MagDown_PIDcorr 	fname=file_store/reduced/MC2012_LowMass_MagDown_Reduced_j0.root              tname=ReducedTree
-itype=-84  	name=MC2012_LowMass_MagUp_PIDcorr   	fname=file_store/reduced/MC2012_LowMass_MagUp_Reduced_j0.root                tname=ReducedTree
+# Bs2Kst0Kst0
+itype=-71  name=Bs2Kst0Kst0_MC2011            fname=file_store/reduced/Bs2Kst0Kst0_MC2011_Reduced_j0.root              tname=ReducedTree
+itype=-81  name=Bs2Kst0Kst0_MC2012            fname=file_store/reduced/Bs2Kst0Kst0_MC2012_Reduced_j0.root              tname=ReducedTree
+
+# Bs2Kst0Kst01430
+itype=-72  name=Bs2Kst0Kst01430_MC2011        fname=file_store/reduced/Bs2Kst0Kst01430_MC2011_Reduced_j0.root          tname=ReducedTree
+itype=-82  name=Bs2Kst0Kst01430_MC2012        fname=file_store/reduced/Bs2Kst0Kst01430_MC2012_Reduced_j0.root          tname=ReducedTree
+
+# Bs2Kst01430Kst01430
+itype=-73  name=Bs2Kst01430Kst01430_MC2011    fname=file_store/reduced/Bs2Kst01430Kst01430_MC2011_Reduced_j0.root      tname=ReducedTree
+itype=-83  name=Bs2Kst01430Kst01430_MC2012    fname=file_store/reduced/Bs2Kst01430Kst01430_MC2012_Reduced_j0.root      tname=ReducedTree
+
+# Bs2KpiKpi_PhaseSpace
+itype=-74  name=Bs2KpiKpi_PhaseSpace_MC2011   fname=file_store/reduced/Bs2KpiKpi_PhaseSpace_MC2011_Reduced_j0.root     tname=ReducedTree
+itype=-84  name=Bs2KpiKpi_PhaseSpace_MC2012   fname=file_store/reduced/Bs2KpiKpi_PhaseSpace_MC2012_Reduced_j0.root     tname=ReducedTree
+
+# Bd2Kst0Kst0
+itype=-75  name=Bd2Kst0Kst0_MC2011            fname=file_store/reduced/Bd2Kst0Kst0_MC2011_Reduced_j0.root              tname=ReducedTree
+itype=-85  name=Bd2Kst0Kst0_MC2012            fname=file_store/reduced/Bd2Kst0Kst0_MC2012_Reduced_j0.root              tname=ReducedTree
+
+# Bd2PhiKst0
+itype=-76  name=Bd2PhiKst0_MC2011             fname=file_store/reduced/Bd2PhiKst0_MC2011_Reduced_j0.root               tname=ReducedTree
+itype=-86  name=Bd2PhiKst0_MC2012             fname=file_store/reduced/Bd2PhiKst0_MC2012_Reduced_j0.root               tname=ReducedTree
+
+# Bd2RhoKst0
+itype=-77  name=Bd2RhoKst0_MC2011             fname=file_store/reduced/Bd2RhoKst0_MC2011_Reduced_j0.root               tname=ReducedTree
+itype=-87  name=Bd2RhoKst0_MC2012             fname=file_store/reduced/Bd2RhoKst0_MC2012_Reduced_j0.root               tname=ReducedTree
+
+# Lb2pKpipi
+itype=-78  name=Lb2pKpipi_MC2011              fname=file_store/reduced/Lb2pKpipi_MC2011_Reduced_j0.root                tname=ReducedTree
+itype=-88  name=Lb2pKpipi_MC2012              fname=file_store/reduced/Lb2pKpipi_MC2012_Reduced_j0.root                tname=ReducedTree
+
+# Lb2ppipipi
+itype=-79  name=Lb2ppipipi_MC2011             fname=file_store/reduced/Lb2ppipipi_MC2011_Reduced_j0.root               tname=ReducedTree
+itype=-89  name=Lb2ppipipi_MC2012             fname=file_store/reduced/Lb2ppipipi_MC2012_Reduced_j0.root               tname=ReducedTree

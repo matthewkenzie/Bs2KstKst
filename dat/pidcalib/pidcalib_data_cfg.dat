@@ -14,8 +14,7 @@
 branchdef=PIDCalibBranches
 analysers=ApplyPIDCorrection
 
-itype=71  	name=Data2011_MagDown_PIDcorr 				fname=file_store/reduced/Data2011_MagDown_Reduced_j0.root       tname=ReducedTree
-itype=72  	name=Data2011_MagUp_PIDcorr 				 	fname=file_store/reduced/Data2011_MagUp_Reduced_j0.root         tname=ReducedTree
-itype=81  	name=Data2012_MagDown_PIDcorr 				fname=file_store/reduced/Data2012_MagDown_Reduced_j0.root       tname=ReducedTree
-itype=82 		name=Data2012_MagUp_PIDcorr 					fname=file_store/reduced/Data2012_MagUp_Reduced_j0.root         tname=ReducedTree
+# Data
+itype=71  	name=Data2011 				fname=file_store/reduced/Data2011_Reduced_j0.root       tname=ReducedTree
+itype=81  	name=Data2012 				fname=file_store/reduced/Data2012_Reduced_j0.root       tname=ReducedTree
 

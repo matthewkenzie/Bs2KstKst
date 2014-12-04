@@ -33,6 +33,7 @@ class configProducer:
 		for line in f.readlines():
 			if line.startswith('#'): continue
 			if line=='\n': continue
+			if line==' ': continue
 			if len(line.strip())==0: continue
 			if len(line.split())==0 and not (line.startswith('analysers') or line.startswith('branchdef')): continue
 			itype = -999
@@ -72,6 +73,7 @@ class configProducer:
 			sys.exit('ERROR in datfile - Cannot run with no analysers!')
 		if not self.branchdef:
 			sys.exit('ERROR in datfile - Must specify a branchdef class!')
+		f.close()
 
 	def printCfg(self):
 
