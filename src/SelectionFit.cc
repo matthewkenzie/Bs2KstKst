@@ -1,40 +1,29 @@
-#include "../interface/CutBasedFit.h"
+#include "../interface/SelectionFit.h"
 
 using namespace std;
 using namespace RooFit;
 
-CutBasedFit::CutBasedFit(TString wsname):
+SelectionFit::SelectionFit(TString wsname):
   FitterBase(wsname)
 {}
 
-CutBasedFit::~CutBasedFit(){}
+SelectionFit::~SelectionFit(){}
 
-void CutBasedFit::addObsVars(){
-
+void SelectionFit::addObsVars(){
   addObsVar("B_s0_MM", "m(K^{+}#pi^{-}K^{-}#pi^{+})", "MeV",5000,5800);
-  addObsVar("max_track_chi2","Max Track #chi^{2}", "", 0,3);
-  addObsVar("B_s0_PT","B_{s} p_{T}", "MeV",0,40000);
-  addObsVar("Kplus_ProbNNkcorr",   "Kplus_ProbNNkcorr",   "", 0, 1);
-  addObsVar("Kminus_ProbNNkcorr",  "Kminus_ProbNNkcorr",  "", 0, 1);
-  addObsVar("Piplus_ProbNNkcorr",  "Piplus_ProbNNkcorr",  "", 0, 1);
-  addObsVar("Piminus_ProbNNkcorr", "Piminus_ProbNNkcorr", "", 0, 1);
-  addObsVar("Kplus_ProbNNpicorr",   "Kplus_ProbNNpicorr",   "", 0, 1);
-  addObsVar("Kminus_ProbNNpicorr",  "Kminus_ProbNNpicorr",  "", 0, 1);
-  addObsVar("Piplus_ProbNNpicorr",  "Piplus_ProbNNpicorr",  "", 0, 1);
-  addObsVar("Piminus_ProbNNpicorr", "Piminus_ProbNNpicorr", "", 0, 1);
-
 }
 
-void CutBasedFit::addCuts(){
-
-  //addCut("cut_based_pid",bool(true));
-  //addCut("Kst_MM",double(792.),double(992.));
-  //addCut("Kstb_MM",double(792.),double(992.));
-
+void SelectionFit::addCuts(){
+  addCut("bdtoutput",float(0.),float(1.));
+  addCut("Kplus_ProbNNkcorr",0.2,1.);
+  addCut("Kminus_ProbNNkcorr",0.2,1.);
+  addCut("Kplus_ProbNNp",0.,0.6);
+  addCut("Kminus_ProbNNp",0.,0.6);
+  addCut("Piplus_ProbNNpicorr",0.2,1.);
+  addCut("Piminus_ProbNNpicorr",0.2,1.);
 }
 
-void CutBasedFit::addDatasets(){
-
+void SelectionFit::addDatasets(){
   addDataset("Data2011",            "Data (2011)",         71);
   addDataset("Data2012",            "Data (2012)",         81);
   addDataset("Data",                "Data",                71, 81);
@@ -49,7 +38,7 @@ void CutBasedFit::addDatasets(){
   addDataset("Lb2ppipipi",          "Lb2ppipipi",          -79, -89);
 }
 
-void CutBasedFit::constructPdfs(){
+void SelectionFit::constructPdfs(){
 
   // Bs2KstKst pdf
   w->factory("bs2kstkst_mean[5350,5400]");
@@ -124,7 +113,7 @@ void CutBasedFit::constructPdfs(){
   defineYieldSet("pdf");
 }
 
-void CutBasedFit::run(){
+void SelectionFit::run(){
 
   // fit Bs2KstKst
   //fit("bs2kstkst_pdf","Bs2KstKst");
@@ -194,52 +183,8 @@ void CutBasedFit::run(){
   fit("pdf","Data");
   // plot the data
   plot("B_s0_MM","Data","pdf");
-
-  makeDataPlot();
-
-  sfit("pdf","Data");
-  sproject("Data","bs2kpikpi_y");
-
-  plot("B_s0_MM",        "Data_sweight_bs2kpikpi_y");
-  plot("max_track_chi2", "Data_sweight_bs2kpikpi_y");
-
-  w->var("B_s0_MM")->setRange("Window",5325,5425);
-  RooAbsReal *bkg_integral = w->pdf("bkg_pdf")->createIntegral(RooArgSet(*w->var("B_s0_MM")),NormSet(RooArgSet(*w->var("B_s0_MM"))),Range("Window"));
-  RooAbsReal *sig_integral = w->pdf("bs2kpikpi_pdf")->createIntegral(RooArgSet(*w->var("B_s0_MM")),NormSet(RooArgSet(*w->var("B_s0_MM"))),Range("Window"));
-
-  cout << "=========================================" << endl;
-  cout << "Expected Background Events: " << w->var("bkg_y")->getVal() << endl;
-  cout << "   -- in window:            " << w->var("bkg_y")->getVal()*bkg_integral->getVal() << endl;
-  cout << "Expected Signal Events:     " << w->var("bs2kpikpi_y")->getVal() << endl;
-  cout << "   -- in window:            " << w->var("bs2kpikpi_y")->getVal()*sig_integral->getVal() << endl;
-  cout << "=========================================" << endl;
 }
 
-void CutBasedFit::makeDataPlot(){
-
-  vector<PlotComponent> plotComps;
-
-  PlotComponent pc_data( "Data", "Data" );
-  pc_data.setDefaultDataStyle();
-
-  PlotComponent pc_pdf( "pdf", "Total PDF" );
-  pc_pdf.setSolidLine(kBlue);
-
-  PlotComponent pc_pdf_bkg( "pdf:bkg_pdf", "Background (Exp+Pol2)" );
-  pc_pdf_bkg.setDashedLine(kGreen+1);
-
-  PlotComponent pc_pdf_sig( "pdf:bs2kpikpi_pdf", "B_{s} #rightarrow (K^{+}#pi^{-})(K^{-}#pi^{+})" );
-  pc_pdf_sig.setDashedLine(kRed);
-
-  PlotComponent pc_pdf_sig_bd( "pdf:bd2kstkst_pdf", "B_{d} #rightarrow (K^{+}#pi^{-})(K^{-}#pi^{+})" );
-  pc_pdf_sig_bd.setDashedLine(kMagenta);
-
-  plotComps.push_back(pc_data);
-  plotComps.push_back(pc_pdf_bkg);
-  plotComps.push_back(pc_pdf_sig_bd);
-  plotComps.push_back(pc_pdf_sig);
-  plotComps.push_back(pc_pdf);
-
-  plot("B_s0_MM", plotComps, "fullfit");
-
+void SelectionFit::makeDataPlot(){
+  w->Print();
 }

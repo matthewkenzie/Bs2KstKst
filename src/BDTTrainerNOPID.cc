@@ -1,6 +1,6 @@
 /////////////////////////////////////
 //                                 //
-// BDTTrainer.h            			   //
+// BDTTrainerNoPID.h            			   //
 // Author: Matthew Kenzie          //
 // Will train BDTs   					     //
 //                                 //
@@ -9,14 +9,14 @@
 #include "TMath.h"
 #include "TLorentzVector.h"
 
-#include "../interface/BDTTrainer.h"
+#include "../interface/BDTTrainerNoPID.h"
 
 using namespace std;
 using namespace TMVA;
 
-BDTTrainer::BDTTrainer(TString _name):
+BDTTrainerNoPID::BDTTrainerNoPID(TString _name):
 	BaseAnalyser(_name),
-	outfilename("MVATrainingOutput.root"),
+	outfilename("MVATrainingNoPIDOutput.root"),
 	evCount(0),
 	numberOfBDTs(2),
   doBDTCycling(true)
@@ -24,10 +24,10 @@ BDTTrainer::BDTTrainer(TString _name):
   if (!doBDTCycling) numberOfBDTs=1;
 }
 
-BDTTrainer::~BDTTrainer(){}
+BDTTrainerNoPID::~BDTTrainerNoPID(){}
 
-void BDTTrainer::Init(Looper *l){
-	cout << Form("%-30s","BDTTrainer::Init()") << " " << "Initialising Analyser (" << name << ")." << endl;
+void BDTTrainerNoPID::Init(Looper *l){
+	cout << Form("%-30s","BDTTrainerNoPID::Init()") << " " << "Initialising Analyser (" << name << ")." << endl;
 
   reweightFile = TFile::Open("input/track_chi2_weights.root");
   reweightHist = (TH1F*)reweightFile->Get("track_chi2_weights");
@@ -70,12 +70,6 @@ void BDTTrainer::Init(Looper *l){
 	// Max track chi2
 	varNames.push_back("max_track_CHI2");
 
-	// PID
-  varNames.push_back("Kplus_ProbVar");
-  varNames.push_back("Kminus_ProbVar");
-  varNames.push_back("Piplus_ProbVar");
-  varNames.push_back("Piminus_ProbVar");
-
 	// add variables to factories and inialise map
 	for (vector<TString>::iterator var=varNames.begin(); var!=varNames.end(); var++){
 		for (int b=0; b<numberOfBDTs; b++){
@@ -86,21 +80,21 @@ void BDTTrainer::Init(Looper *l){
 
 }
 
-void BDTTrainer::Term(Looper *l){
+void BDTTrainerNoPID::Term(Looper *l){
 
   reweightFile->Close();
 
 	for (int b=0; b<numberOfBDTs; b++) {
 
-		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Preparing training and test trees" << endl;
+		cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Preparing training and test trees" << endl;
 		factoryContainer[b]->PrepareTrainingAndTestTree("","!V");
 
 		// TMVA methods here
-		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Booking TMVA methods" << endl;
+		cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Booking TMVA methods" << endl;
 		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
 
 		// Train, Test and Evaluate
-		cout << Form("%-30s","BDTTrainer::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
+		cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
 		factoryContainer[b]->TrainAllMethods();
 		factoryContainer[b]->TestAllMethods();
 		factoryContainer[b]->EvaluateAllMethods();
@@ -108,13 +102,13 @@ void BDTTrainer::Term(Looper *l){
 
 	outFile->Close();
 
-	cout << Form("%-30s","BDTTrainer::Term()") << " " << "Training output written to: " << outFile->GetName() << endl;
+	cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Training output written to: " << outFile->GetName() << endl;
   delete outFile;
 
-	cout << Form("%-30s","BDTTrainer::Term()") << " " << "Terminating Analyser (" << name << ")." << endl;
+	cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Terminating Analyser (" << name << ")." << endl;
 }
 
-bool BDTTrainer::AnalyseEvent(Looper *l){
+bool BDTTrainerNoPID::AnalyseEvent(Looper *l){
 
   // PT
 	varMap["ln_B_s0_PT"]   		  = TMath::Log(*l->B_s0_PT);
@@ -142,13 +136,6 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
   if ( l->itype < 0 ){
     *l->weight *= reweightHist->GetBinContent(reweightHist->FindBin(*l->max_track_chi2));
   }
-
-	// PID
-  varMap["Kplus_ProbVar"]    = *l->Kplus_ProbNNkcorr * ( 1. - *l->Kplus_ProbNNpicorr);
-  varMap["Kminus_ProbVar"]   = *l->Kminus_ProbNNkcorr * ( 1. - *l->Kminus_ProbNNpicorr);
-  varMap["Piplus_ProbVar"]   = *l->Piplus_ProbNNpicorr * ( 1. - *l->Piplus_ProbNNkcorr);
-  varMap["Piminus_ProbVar"]  = *l->Piminus_ProbNNpicorr * ( 1. - *l->Piminus_ProbNNkcorr);
-
 
 	// now put the variable values in a nice vector (in the right order!!)
 	assert(varNames.size()==varMap.size());
@@ -224,3 +211,4 @@ bool BDTTrainer::AnalyseEvent(Looper *l){
 
 	return true;
 }
+

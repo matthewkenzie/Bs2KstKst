@@ -1,3 +1,4 @@
+#!vim noexpandtab
 import ROOT as r
 import os
 import sys
@@ -108,6 +109,9 @@ class configProducer:
 			for f in flist:
 				self.checkFile(f.fname,f.tname)
 				tree.AddFile(f.fname+'/'+f.tname)
+				if self.verbose:
+					print '%-30s'%'configProducer::parseDatfile()', 'Appended file', f.fname
+
 				if name != f.name:
 					sys.exit('ERROR -- If the itype is the same for two lines in the datfile, the name must be the same also')
 

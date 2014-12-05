@@ -32,10 +32,13 @@ Runner::~Runner(){}
 void Runner::save(){
 	cout << Form("%-30s","Runner::run()") << " " << "Saving tree (" << outTree->GetName() << ") to file (" << outFile->GetName() << ")." << endl;
   outFile->cd();
-  hPass->Write();
-  hFail->Write();
-  hEff->Write();
 	outFile->Write();
+  hPass->SetDirectory(outFile);
+  hPass->Write();
+  hFail->SetDirectory(outFile);
+  hFail->Write();
+  hEff->SetDirectory(outFile);
+  hEff->Write();
   outFile->Close();
   //delete looper;
   //delete outTree;

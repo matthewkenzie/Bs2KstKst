@@ -13,7 +13,7 @@
 ####################################################################################################
 
 branchdef=AnalysisBranches
-analysers=BDTTrainer
+analysers=BDTTrainerNoPID
 
 # train on phase space MC
 itype=-74  name=Bs2KpiKpi_PhaseSpace_MC2011   fname=file_store/pid_corr/Bs2KpiKpi_PhaseSpace_MC2011_Reduced.root       tname=ReducedTree

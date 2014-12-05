@@ -105,18 +105,20 @@ def getBranchDef():
 	else:
 		sys.exit('No valid branchdef found in datfile %s'%f.name)
 
-def configureJobSplitting(fname,tname):
+def configureJobSplitting(fnames,tnames):
 
   if not opts.splitJobs:
     return { 0: (None,None) }
 
-  tf = r.TFile.Open(fname)
-  tree = tf.Get(tname)
-  if not tree:
-    sys.exit('Tree %s does not exist in file %s'%(tname,fname))
+  nentries = 0
+  for f, fname in enumerate(fnames):
+    tf = r.TFile.Open(fname)
+    tree = tf.Get(tnames[f])
+    if not tree:
+      sys.exit('Tree %s does not exist in file %s'%(tname,fname))
 
-  nentries = tree.GetEntries()
-  tf.Close()
+    nentries += tree.GetEntries()
+    tf.Close()
 
   splittingOpts = {}
 
@@ -144,12 +146,19 @@ if opts.runAsReduction:
   os.system('mkdir -p tmp')
   os.system('mkdir -p root')
   preambe = []
+  # split up the datfile into individual jobs based on the itype
+  jobs_cfg = {}
   file_lines = []
 
   f = open(opts.datfile)
   for line in f.readlines():
     if line.startswith('itype'):
       file_lines.append(line)
+      itype = int(line.split()[0].split('=')[1])
+      if itype in jobs_cfg.keys():
+        jobs_cfg[itype].append(line)
+      else:
+        jobs_cfg[itype] = [line]
     else:
       preambe.append(line)
 
@@ -157,34 +166,52 @@ if opts.runAsReduction:
 
   print '%-30s'%'runAnalysis.py', 'Running reduction jobs'
   stripped_name = os.path.splitext(os.path.basename(opts.datfile))[0]
-  for i, line in enumerate(file_lines):
+
+  for i, itype in enumerate(jobs_cfg.keys()):
+    job_lines = jobs_cfg[itype]
     newdat = open('tmp/%s_%d.dat'%(stripped_name,i),'w')
     for l in preambe:
       newdat.write(l)
-    newdat.write(line)
+    for l in job_lines:
+      newdat.write(l)
     newdat.close()
 
-  for i, line in enumerate(file_lines):
+  for i, itype in enumerate(jobs_cfg.keys()):
+
+    job_lines = jobs_cfg[itype]
+
+    ####################################
+    ## configure job splitting
+    jobname  = ''
+    fnames = []
+    tnames = []
+    for l in job_lines:
+      for el in l.split():
+        if el.startswith('name'):
+          if jobname == '': jobname = el.split('=')[1]
+          assert(jobname == el.split('=')[1])
+        if el.startswith('fname'):
+          fname = el.split('=')[1]
+          fnames.append(fname)
+        if el.startswith('tname'):
+          tname = el.split('=')[1]
+          tnames.append(tname)
+
+    subjobSplittingOpts = configureJobSplitting(fnames,tnames)
+    ####################################
+
     datname = 'tmp/%s_%d.dat'%(stripped_name,i)
-    rootname = ''
-    fname = ''
-    treename = ''
-    for el in line.split():
-      if el.startswith('name'):
-        rootname = el.split('=')[1]
-      if el.startswith('fname'):
-        fname = el.split('=')[1]
-      if el.startswith('tname'):
-        treename = el.split('=')[1]
 
-    jobSplittingOpts = configureJobSplitting(fname,treename)
+    # loop subjobs
+    for subjobN, subjobRange in subjobSplittingOpts.items():
 
-    for jobN, jobRange in jobSplittingOpts.items():
+      opts.firstEntry = subjobRange[0]
+      opts.lastEntry = subjobRange[1]
 
-      opts.firstEntry = jobRange[0]
-      opts.lastEntry = jobRange[1]
-      subscript = writeSubScript(rootname,datname,jobN)
+      # write sub script
+      subscript = writeSubScript(jobname,datname,subjobN)
 
+      # execute action on sub script (dryrun, localrun, batchrun)
       if opts.submitToQueue:
         if not opts.dryRun:
           bsub_line = 'bsub -q %s -o %s.log'%(opts.submitToQueue,subscript)
@@ -198,10 +225,10 @@ if opts.runAsReduction:
         if opts.runLocal and not opts.dryRun:
           os.system('./%s'%subscript)
         else:
-          exec_line = './runAnalysis.py -d %s -o root/%s_Reduced.root -t ReducedTree'%(datname,rootname)
+          exec_line = './runAnalysis.py -d %s -o root/%s_Reduced.root -t ReducedTree'%(datname,jobname)
           if opts.firstEntry: exec_line += ' -f %d'%opts.firstEntry
           if opts.lastEntry: exec_line += ' -l %d'%opts.lastEntry
-          exec_line += ' 2>&1 | tee root/%s_reduction_out.log'%(rootname)
+          exec_line += ' 2>&1 | tee root/%s_reduction_out.log'%(jobname)
           if not opts.dryRun:
             os.system(exec_line)
 

@@ -323,6 +323,7 @@ void FitterBase::sproject(TString data_name, TString var_name) {
     exit(1);
   }
 
+  //RooDataSet *swdata = new RooDataSet(Form("%s_sweight_%s",data->GetName(),var_name.Data()),Form("%s sweight proj %s",data->GetTitle(),var_name.Data()), data, *data->get(),0,var_name+"_sw");
   RooDataSet *swdata = new RooDataSet(Form("%s_sweight_%s",data->GetName(),var_name.Data()),Form("%s sweight proj %s",data->GetTitle(),var_name.Data()), data, *data->get(),0,var_name+"_sw");
   w->import(*swdata);
   delete swdata;

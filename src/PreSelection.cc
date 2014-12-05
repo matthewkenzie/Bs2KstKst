@@ -86,13 +86,13 @@ bool PreSelection::AnalyseEvent(Looper *l){
 	if ( *l->Kminus_PT            < 500 ) return false;                            // in stripping
 	if ( *l->Piplus_PT            < 500 ) return false;                            // in stripping
 	if ( *l->Piminus_PT           < 500 ) return false;                            // in stripping
-  //// PID       ( 90% eff )
-  if ( *l->Kplus_ProbNNk        < 0.1 ) return false;                            // not in stripping
-  if ( *l->Kminus_ProbNNk       < 0.1 ) return false;                            // not in stripping
-  if ( *l->Kplus_ProbNNp        > 0.6 ) return false;                            // not in stripping
-  if ( *l->Kminus_ProbNNp       > 0.6 ) return false;                            // not in stripping
-  if ( *l->Piplus_ProbNNpi      < 0.2 ) return false;                            // not in stripping
-  if ( *l->Piminus_ProbNNpi     < 0.2 ) return false;                            // not in stripping
+  //// PID       ( 98% eff )
+  if ( *l->Kplus_ProbNNk        < 0.0 ) return false;                            // not in stripping
+  if ( *l->Kminus_ProbNNk       < 0.0 ) return false;                            // not in stripping
+  if ( *l->Kplus_ProbNNp        < 0.0 ) return false;                            // not in stripping
+  if ( *l->Kminus_ProbNNp       < 0.0 ) return false;                            // not in stripping
+  if ( *l->Piplus_ProbNNpi      < 0.0 ) return false;                            // not in stripping
+  if ( *l->Piminus_ProbNNpi     < 0.0 ) return false;                            // not in stripping
   if ( *l->Kplus_isMuon               ) return false;                            // not in stripping
   if ( *l->Kminus_isMuon              ) return false;                            // not in stripping
   if ( *l->Piplus_isMuon              ) return false;                            // not in stripping
