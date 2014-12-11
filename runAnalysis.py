@@ -167,6 +167,8 @@ if opts.runAsReduction:
   print '%-30s'%'runAnalysis.py', 'Running reduction jobs'
   stripped_name = os.path.splitext(os.path.basename(opts.datfile))[0]
 
+  njobs=0
+
   for i, itype in enumerate(jobs_cfg.keys()):
     job_lines = jobs_cfg[itype]
     newdat = open('tmp/%s_%d.dat'%(stripped_name,i),'w')
@@ -211,6 +213,8 @@ if opts.runAsReduction:
       # write sub script
       subscript = writeSubScript(jobname,datname,subjobN)
 
+      njobs += 1
+
       # execute action on sub script (dryrun, localrun, batchrun)
       if opts.submitToQueue:
         if not opts.dryRun:
@@ -231,6 +235,8 @@ if opts.runAsReduction:
           exec_line += ' 2>&1 | tee root/%s_reduction_out.log'%(jobname)
           if not opts.dryRun:
             os.system(exec_line)
+
+  print 'TOTAL --', njobs,' jobs'
 
   # normal analysis below here (will merge all input files into a single output)
 else:
