@@ -17,7 +17,7 @@ class FitterBase {
 
   public:
 
-    FitterBase(TString wsname="w");
+    FitterBase(TString wsname="w", bool _verbose=false, bool _debug=false);
     virtual ~FitterBase() = 0;
 
     void addObsVar(TString name, double min, double max);
@@ -39,6 +39,10 @@ class FitterBase {
     void fillDatasets(TString fname, TString tname);
 
     void save(TString fname);
+    void print(TString line, bool blank=false);
+
+    void setVerbose(bool val=true){ verbose=val; }
+    void setDebug(bool val=true){ debug=val; }
 
     RooWorkspace *w;
 
@@ -77,6 +81,9 @@ class FitterBase {
 
     void storeSPlotProjection(RooHist *rh, TString name);
     void storeSPlotRatio(RooHist *dh, RooHist *sh, TString name);
+
+    bool verbose;
+    bool debug;
 
   private:
 

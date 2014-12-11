@@ -7,7 +7,7 @@ class CutBasedFit : public FitterBase {
 
   public:
 
-    CutBasedFit(TString wsname="w");
+    CutBasedFit(TString wsname="w", bool verbose=false, bool debug=false);
     ~CutBasedFit();
 
     void addObsVars();

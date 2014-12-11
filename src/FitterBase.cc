@@ -17,6 +17,8 @@
 #include "RooCBShape.h"
 #include "RooAddPdf.h"
 
+#include "RooMsgService.h"
+
 #include "RooStats/SPlot.h"
 
 #include "../interface/FitterBase.h"
@@ -25,8 +27,14 @@ using namespace std;
 using namespace RooFit;
 using namespace TMath;
 
-FitterBase::FitterBase(TString wsname)
+FitterBase::FitterBase(TString wsname, bool _verbose, bool _debug):
+  verbose(_verbose),
+  debug(_debug)
 {
+  if ( !debug ) {
+    RooMsgService::instance().setGlobalKillBelow(FATAL);
+    RooMsgService::instance().setSilentMode(true);
+  }
   gROOT->ProcessLine(".x /Users/matt/Scratch/lhcb/lhcbStyle.C");
 	w = new RooWorkspace(wsname);
 	RooArgSet *observables = new RooArgSet();
@@ -48,6 +56,9 @@ void FitterBase::addObsVar(TString name, TString title, TString unit, double min
 	((RooArgSet*)w->set("observables"))->add(*w->var(name));
   w->var(name)->SetTitle(title);
   w->var(name)->setUnit(unit);
+  if ( verbose || debug ) {
+    print("Added observable "+name);
+  }
 }
 
 void FitterBase::setUnit(TString var, TString unit){
@@ -62,38 +73,46 @@ void FitterBase::setBins(TString var, int bins){
 
 void FitterBase::addDataset(TString name, TString title, int itype) {
   dataSets.push_back(DataSet(name,title,w,itype));
+  if ( verbose || debug ) print("Added dataset "+name);
 }
 
 void FitterBase::addDataset(TString name, TString title, int itype1, int itype2) {
   dataSets.push_back(DataSet(name,title,w,itype1,itype2));
+  if ( verbose || debug ) print("Added dataset "+name);
 }
 
 void FitterBase::addDataset(TString name, TString title, int itype1, int itype2, int itype3) {
   dataSets.push_back(DataSet(name,title,w,itype1,itype2,itype3));
+  if ( verbose || debug ) print("Added dataset "+name);
 }
 
 void FitterBase::addDataset(TString name, TString title, int itype1, int itype2, int itype3, int itype4) {
   dataSets.push_back(DataSet(name,title,w,itype1,itype2,itype3,itype4));
+  if ( verbose || debug ) print("Added dataset "+name);
 }
 
 void FitterBase::addCut(TString name, double low, double high){
   cut_value_d[name] = make_pair(low,high);
   values_d[name] = -999.;
+  if ( verbose || debug ) print(Form("Added cut %s in range (%f,%f)",name.Data(),low,high));
 }
 
 void FitterBase::addCut(TString name, float low, float high){
   cut_value_f[name] = make_pair(low,high);
   values_f[name] = -999.;
+  if ( verbose || debug ) print(Form("Added cut %s in range (%f,%f)",name.Data(),low,high));
 }
 
 void FitterBase::addCut(TString name, int low, int high){
   cut_value_i[name] = make_pair(low,high);
   values_i[name] = -999;
+  if ( verbose || debug ) print(Form("Added cut %s in range (%d,%d)",name.Data(),low,high));
 }
 
 void FitterBase::addCut(TString name, bool val){
   cut_value_b[name] = val;
   values_b[name] = false;
+  if ( verbose || debug ) val ? print("Added cut "+name+" is true") : print("Added cut "+name+" is false");
 }
 
 void FitterBase::makeDatasets() {
@@ -106,6 +125,8 @@ void FitterBase::makeDatasets() {
 }
 
 void FitterBase::fillDatasets(TString fname, TString tname){
+
+  print("Filling datasets....");
 
 	TFile *tf = TFile::Open(fname);
 	TTree *tree = (TTree*)tf->Get(tname);
@@ -179,6 +200,13 @@ void FitterBase::save(TString fname){
   cout << "Written output to file: " << fname << endl;
 }
 
+void FitterBase::print(TString line, bool blank){
+  TString lead = TString(Form("%-30s ","FitterBase()"));
+  if (blank) lead = TString(Form("%-30s "," "));
+  line = lead + line;
+  cout << line << endl;
+}
+
 void FitterBase::defineParamSet(TString pdf){
   RooArgSet *argset = w->pdf(pdf)->getParameters(*w->set("observables"));
   w->defineSet(Form("%s_params",pdf.Data()),*argset);
@@ -216,6 +244,9 @@ void FitterBase::saveSnapshot(TString name, TString pdf){
   RooArgSet *observables = (RooArgSet*)w->set("observables");
   RooArgSet *parameters = w->pdf(pdf)->getParameters(observables);
   w->saveSnapshot(name,*parameters);
+  if ( verbose || debug ){
+    print("Saved snapshot of pdf: "+pdf+" fit parameters to "+name);
+  }
 }
 
 void FitterBase::loadSnapshot(TString name){
@@ -237,6 +268,10 @@ TCanvas* FitterBase::createCanvas(){
 
 void FitterBase::plot(TString var, TString data, TString pdf){
 
+  w->pdf(pdf) ?
+    print("Plotting data: "+data+" and pdf: "+pdf+" in variable: "+var) :
+    print("Plotting data: "+data+" in variable: "+var) ;
+
   RooPlot *plot = w->var(var)->frame(Title(data));
   plot->GetXaxis()->SetTitleOffset(0.8);
   if (w->data(data)) w->data(data)->plotOn(plot);
@@ -251,6 +286,11 @@ void FitterBase::plot(TString var, TString data, TString pdf){
 }
 
 void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fname) {
+
+  print("Plotting following components in variable: "+var);
+  for (unsigned int i=0; i<plotComps.size(); i++){
+    print("\t "+plotComps[i].name,true);
+  }
 
   TCanvas *canv = createCanvas();
   RooPlot *plot = w->var(var)->frame();
@@ -277,6 +317,7 @@ void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fnam
 
 void FitterBase::fit(TString pdf, TString data) {
 
+  print("Fitting pdf: "+pdf+" to dataset: "+data);
   if (w->pdf(pdf) && w->data(data)) {
     w->pdf(pdf)->fitTo(*w->data(data));
   }
@@ -306,31 +347,54 @@ void FitterBase::sfit(TString pdf_name, TString data_name) {
     exit(1);
   }
 
+  print("Performing sfit of pdf: "+pdf_name+" to data: "+data_name);
+
   pdf->fitTo(*data, Extended());
   nonyields->setAttribAll("Constant");
+
+  if ( verbose || debug ) {
+    print("Will use these yields in splot:");
+    debug ?
+      yields->Print("v") :
+      yields->Print()    ;
+    print("Will not float these in splot:");
+    debug ?
+      nonyields->Print("v") :
+      nonyields->Print()    ;
+  }
+
   RooStats::SPlot *sData = new RooStats::SPlot(Form("%s_sfit",data->GetName()),Form("%s sfit",data->GetTitle()), *data, pdf, RooArgList(*yields));
   w->import(*sData);
-  //w->import(*data,Rename(Form("%s_sweight",data->GetName())));
+  w->import(*data,Rename(Form("%s_wsweights",data->GetName())));
+  print("Created SPlot with name "+TString(sData->GetName()));
+  print("Renamed data with sweights to: "+data_name+"_wsweights");
   delete sData;
 }
 
 void FitterBase::sproject(TString data_name, TString var_name) {
 
-  //RooDataSet *data = (RooDataSet*)w->data(data_name+"_sweight");
+  data_name = data_name+"_wsweights";
   RooDataSet *data = (RooDataSet*)w->data(data_name);
   if ( !data ) {
     cerr << "ERROR -- FitterBase::sproject() -- data name \'" << data_name << "\' is NULL" << endl;
     exit(1);
   }
 
-  //RooDataSet *swdata = new RooDataSet(Form("%s_sweight_%s",data->GetName(),var_name.Data()),Form("%s sweight proj %s",data->GetTitle(),var_name.Data()), data, *data->get(),0,var_name+"_sw");
-  RooDataSet *swdata = new RooDataSet(Form("%s_sweight_%s",data->GetName(),var_name.Data()),Form("%s sweight proj %s",data->GetTitle(),var_name.Data()), data, *data->get(),0,var_name+"_sw");
+  print("Projecting sweighted data with weight: "+var_name);
+
+  RooDataSet *swdata = new RooDataSet(Form("%s_proj_%s",data->GetName(),var_name.Data()),Form("%s sweight proj %s",data->GetTitle(),var_name.Data()), data, *data->get(),0,var_name+"_sw");
   w->import(*swdata);
   delete swdata;
 }
 
 void FitterBase::freeze(TString pdf){
 	((RooArgSet*)w->set(Form("%s_params",pdf.Data())))->setAttribAll("Constant");
+  if ( verbose || debug ) {
+    print("Frozen parameter values of pdf: "+pdf);
+    if ( debug ) {
+      w->set(Form("%s_params",pdf.Data()))->Print("v");
+    }
+  }
 }
 
 void FitterBase::splot(TString var, TString data){
