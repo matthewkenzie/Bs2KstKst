@@ -2,55 +2,70 @@
 
 from optparse import OptionParser
 parser = OptionParser()
-parser.add_option("-i","--infile",default="AnalysisOut.root",help="Name of input root file. Default=%default")
-parser.add_option("-t","--treename",default="AnalysisTree",help="Name of input tree. Default=%default")
-parser.add_option("-o","--outfile",default="FitterOut.root",help="Name of output file. Default=%default")
-parser.add_option("-a","--assessBDTCut",default=False,action="store_true",help="Run to assess the values for the BDT")
-parser.add_option("-s","--sweightFitter",default=False,action="store_true",help="Run sweights fitting")
-parser.add_option("-b","--bdtcut",default=0.0,type="float",help="Cut on this BDT value")
+parser.add_option("-T","--type",help="Which fitter to run")
+parser.add_option("-i","--infile",help="Name of input root file. Default will get picked up from fit type")
+parser.add_option("-t","--treename",help="Name of input tree. Default will get picked up from fit type")
+parser.add_option("-o","--outfile",help="Name of output file. Default will get picked up from fit type")
+parser.add_option("-I","--interactive",default=False,action="store_true",help="Run in interactive mode")
+parser.add_option("-v","--verbose",default=False,action="store_true",help="Run with verbose output")
+parser.add_option("-d","--debug",default=False,action="store_true",help="Run in debug mode")
 (opts,args) = parser.parse_args()
 
+# check a fit type has been passed
+import sys
+if not opts.type:
+  sys.exit('You must define the fit type to run')
+
+# check the fit type asked for is a valid class in the root library
 import ROOT as r
 r.gSystem.Load("lib/libAnalysis")
-r.gROOT.SetBatch()
+if not getattr(r,opts.type):
+  sys.exit('%s is not a valid fit type'%opts.type)
 
+##################################################################
+# set up some default options for the various fit types available
+if opts.type == 'CutBasedFit':
+  if not opts.infile:     opts.infile   = 'CutBasedOut.root'
+  if not opts.treename:   opts.treename = 'ReducedTree'
+  if not opts.outfile:    opts.outfile  = 'CutBasedFitOut.root'
+
+elif opts.type == 'AssessBDTCutFit':
+  if not opts.infile:     opts.infile   = 'CutBasedOut.root'
+  if not opts.treename:   opts.treename = 'ReducedTree'
+  if not opts.outfile:    opts.outfile  = 'AssessBDTCutFitOut.root'
+
+elif opts.type == 'AnalysisFit':
+  if not opts.infile:     opts.infile   = 'AnalysisOut.root'
+  if not opts.treename:   opts.treename = 'AnalysisTree'
+  if not opts.outfile:    opts.outfile  = 'AnalysisFitOut.root'
+
+else:
+  if not opts.infile:     opts.infile   = 'AnalysisOut.root'
+  if not opts.treename:   opts.treename = 'AnalysisTree'
+  if not opts.outfile:    opts.outfile  = 'AnalysisFitOut.root'
+##################################################################
+
+# set batch settings
+if not opts.interactive: r.gROOT.SetBatch()
+
+# start timer
 sw = r.TStopwatch()
 sw.Start()
 
-print 'Starting Fitter'
+# instantiate fit class and call standard set of functions
+# write a new class which implements these and inhertis from FitterBase
+fitter = getattr(r,opts.type)("w",opts.verbose,opts.debug)
+fitter.addObsVars()
+fitter.addCuts()
+fitter.addDatasets()
+fitter.makeDatasets()
+fitter.fillDatasets(opts.infile, opts.treename)
+fitter.constructPdfs()
+fitter.run()
+fitter.save(opts.outfile)
 
-if opts.assessBDTCut:
-	fitter = r.AssessBDTCut()
-	fitter.setup(opts.infile,opts.treename)
-	fitter.fit()
-	fitter.plot()
-	fitter.save(opts.outfile)
+# stop timer and finish
+sw.Stop()
+print 'Took:', sw.Print()
 
-elif opts.sweightFitter:
-
-	fitter = r.SWeightFitter()
-	fitter.setBDTCut(opts.bdtcut)
-	fitter.setDiscrimVar("B_s0_MM",5000,5795)
-	fitter.setup(opts.infile,opts.treename)
-	fitter.plot()
-	fitter.save(opts.outfile)
-
-else:
-	fitter = r.Fitter()
-	fitter.addObsVar("B_s0_MM",5200,5600)
-	fitter.addObsVar("B_s0_Phi",-1.*r.TMath.Pi(),1.*r.TMath.Pi())
-	fitter.addObsVar("Kst_CosTheta",-1.,1.)
-	fitter.addObsVar("Kstb_CosTheta",-1.,1.)
-	fitter.addObsVar("Kst_MM",750,1700)
-	fitter.addObsVar("Kstb_MM",750,1700)
-	fitter.w.Print('v')
-	fitter.setBDTCut(-0.2)
-	fitter.setup(opts.infile,opts.treename)
-	fitter.fit()
-	fitter.plot('B_s0_MM',True,5300,5450)
-	fitter.plot('B_s0_Phi',False)
-	fitter.plot('Kst_CosTheta',False)
-	fitter.plot('Kst_CosTheta',False)
-	fitter.plot('Kst_MM',False)
-	fitter.plot('Kstb_MM',False)
-	fitter.save(opts.outfile)
+if opts.interactive: raw_input("Done\n")

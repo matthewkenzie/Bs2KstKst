@@ -13,6 +13,8 @@
 
 #include "../interface/FitterUtils.h"
 
+class DataSet;
+
 class FitterBase {
 
   public:
@@ -34,6 +36,12 @@ class FitterBase {
     void addCut(TString name, float low, float high);
     void addCut(TString name, int low, int high);
     void addCut(TString name, bool val);
+
+    void addRequirement(TString dset, TString name, double low, double high);
+    void addRequirement(TString dset, TString name, float low, float high);
+    void addRequirement(TString dset, TString name, int low, int high);
+    void addRequirement(TString dset, TString name, int val);
+    void addRequirement(TString dset, TString name, bool val);
 
     void makeDatasets();
     void fillDatasets(TString fname, TString tname);
@@ -68,16 +76,18 @@ class FitterBase {
 		void fit(TString pdf, TString data);
     void freeze(TString pdf);
 
+    double integral(TString pdf, TString var, TString scale="", double low=-999, double high=-999);
+
     void sfit(TString pdf, TString data);
     void sproject(TString data_name, TString var_name);
 
-    TCanvas* createCanvas();
+    TCanvas* createCanvas(int canv_w=800, int canv_h=600);
 
-    void plot(TString var, TString data, TString pdf="");
+    void plot(TString var, TString data, TString pdf="", TString title="");
     void plot(TString var, std::vector<PlotComponent> plotComps, TString fname);
 
-    void splot(TString var, TString data);
-    void splot(TString var, TString data, std::vector<TString> compDsets);
+    void splot(TString var, TString data, int bins=-1);
+    void splot(TString var, TString data, std::vector<TString> compDsets, int bins=-1);
 
     void storeSPlotProjection(RooHist *rh, TString name);
     void storeSPlotRatio(RooHist *dh, RooHist *sh, TString name);
@@ -86,6 +96,8 @@ class FitterBase {
     bool debug;
 
   private:
+
+    std::map<TString,double> obs_values;
 
     std::map<TString,std::pair<double,double> > cut_value_d;
     std::map<TString,std::pair<float,float> >  cut_value_f;
@@ -97,8 +109,11 @@ class FitterBase {
     std::map<TString,int>    values_i;
     std::map<TString,bool>   values_b;
 
-    void setCutBranchAddresses(TTree* tree);
+    void setBranchAddresses(TTree* tree);
     bool passesCuts();
+    bool passesRequirements(DataSet &dset);
+
+    void printEntry(int entry);
 };
 
 #endif

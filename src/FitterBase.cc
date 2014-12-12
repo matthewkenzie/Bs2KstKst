@@ -9,6 +9,7 @@
 #include "TLine.h"
 #include "TGraphAsymmErrors.h"
 #include "TMath.h"
+#include "TPaveText.h"
 
 #include "RooDataSet.h"
 #include "RooArgSet.h"
@@ -115,6 +116,36 @@ void FitterBase::addCut(TString name, bool val){
   if ( verbose || debug ) val ? print("Added cut "+name+" is true") : print("Added cut "+name+" is false");
 }
 
+void FitterBase::addRequirement(TString dset, TString name, double low, double high){
+  dataSets[dataSets.size()-1].addRequirement(name, low, high);
+  values_d[name] = -999.;
+  if ( verbose || debug ) print(Form("Added requirement %s in range (%f,%f) for dataset %s",name.Data(),low,high,dset.Data()));
+}
+
+void FitterBase::addRequirement(TString dset, TString name, float low, float high){
+  dataSets[dataSets.size()-1].addRequirement(name, low, high);
+  values_f[name] = -999.;
+  if ( verbose || debug ) print(Form("Added requirement %s in range (%f,%f) for dataset %s",name.Data(),low,high,dset.Data()));
+}
+
+void FitterBase::addRequirement(TString dset, TString name, int low, int high){
+  dataSets[dataSets.size()-1].addRequirement(name, low, high);
+  values_i[name] = -999;
+  if ( verbose || debug ) print(Form("Added requirement %s in range (%d,%d) for dataset %s",name.Data(),low,high,dset.Data()));
+}
+
+void FitterBase::addRequirement(TString dset, TString name, int val){
+  dataSets[dataSets.size()-1].addRequirement(name, val, val);
+  values_i[name] = -999;
+  if ( verbose || debug ) print(Form("Added requirement %s == %d for dataset %s",name.Data(),val,dset.Data()));
+}
+
+void FitterBase::addRequirement(TString dset, TString name, bool val){
+  dataSets[dataSets.size()-1].addRequirement(name, val);
+  values_i[name] = false;
+  if ( verbose || debug ) val ? print("Added requirement "+name+" is true for dataset "+dset) : print("Added cut "+name+" is false for dataset "+dset);
+}
+
 void FitterBase::makeDatasets() {
 
   for (vector<DataSet>::iterator dataIt=dataSets.begin(); dataIt!=dataSets.end(); dataIt++){
@@ -137,24 +168,26 @@ void FitterBase::fillDatasets(TString fname, TString tname){
 	int itype;
 	tree->SetBranchAddress("itype",&itype);
 
-  // container for observable values
-  map<TString,double> values;
-
   // set branch addresses from tree into container for observables
   RooRealVar *parg;
 	TIterator *iter = observables->createIterator();
 	while ((parg = (RooRealVar*)iter->Next())){
-		values[parg->GetName()] = -999.;
-		tree->SetBranchAddress(parg->GetName(),&values[parg->GetName()]);
+		obs_values[parg->GetName()] = -999.;
+		tree->SetBranchAddress(parg->GetName(),&obs_values[parg->GetName()]);
 	}
   delete iter;
 
-  // set branch address for cut values
-  setCutBranchAddresses(tree);
+  // set branch address for cut values and requirements
+  setBranchAddresses(tree);
 
   // now loop entries
 	for (int e=0; e<tree->GetEntries(); e++){
 		tree->GetEntry(e);
+
+    // print occasional entries in debug mode
+    if ( debug && e%100==0 ) {
+      printEntry(e);
+    }
 
     bool passes = true;
 
@@ -166,16 +199,18 @@ void FitterBase::fillDatasets(TString fname, TString tname){
     // the observable range cuts
 		iter = observables->createIterator();
 		while ((parg = (RooRealVar*)iter->Next())) {
-			if (values[parg->GetName()] < w->var(parg->GetName())->getMin() || values[parg->GetName()] > w->var(parg->GetName())->getMax()) {
+			if (obs_values[parg->GetName()] < w->var(parg->GetName())->getMin() || obs_values[parg->GetName()] > w->var(parg->GetName())->getMax()) {
 				passes=false;
 			}
-			w->var(parg->GetName())->setVal(values[parg->GetName()]);
+			w->var(parg->GetName())->setVal(obs_values[parg->GetName()]);
 		}
 
 		if (!passes) continue;
 
     // dataset filling
     for (vector<DataSet>::iterator dataIt=dataSets.begin(); dataIt!=dataSets.end(); dataIt++){
+      // check requirements
+      if ( !passesRequirements(*dataIt) ) continue;
       // check itype
       for (vector<int>::iterator typIt=dataIt->itypes.begin(); typIt!=dataIt->itypes.end(); typIt++){
         if (itype==*typIt){
@@ -253,10 +288,8 @@ void FitterBase::loadSnapshot(TString name){
   w->loadSnapshot(name);
 }
 
-TCanvas* FitterBase::createCanvas(){
+TCanvas* FitterBase::createCanvas(int canv_w, int canv_h){
 
-  int canv_w = 800;
-  int canv_h = 600;
   int top_x = canvs.size()*20;
   int top_y = canvs.size()*20;
   TString canvName = Form("c%d",int(canvs.size()));
@@ -266,7 +299,7 @@ TCanvas* FitterBase::createCanvas(){
   return c;
 }
 
-void FitterBase::plot(TString var, TString data, TString pdf){
+void FitterBase::plot(TString var, TString data, TString pdf, TString title){
 
   w->pdf(pdf) ?
     print("Plotting data: "+data+" and pdf: "+pdf+" in variable: "+var) :
@@ -274,15 +307,39 @@ void FitterBase::plot(TString var, TString data, TString pdf){
 
   RooPlot *plot = w->var(var)->frame(Title(data));
   plot->GetXaxis()->SetTitleOffset(0.8);
-  if (w->data(data)) w->data(data)->plotOn(plot);
-  if (w->pdf(pdf)) w->pdf(pdf)->plotOn(plot);
+  plot->GetYaxis()->SetTitleOffset(0.75);
+
+  TPaveText *text = new TPaveText(0.15,0.8,0.4,0.9,"ndc");
+  text->SetFillColor(0);
+  text->SetShadowColor(0);
+  text->SetLineColor(0);
+  text->AddText(title);
+
+  TLegend *leg = new TLegend(0.65,0.7,0.89,0.89);
+  leg->SetFillColor(0);
+
+  if (w->data(data)) {
+    w->data(data)->plotOn(plot);
+    TObject *obj = plot->getObject(plot->numItems()-1);
+    leg->AddEntry(obj,w->data(data)->GetTitle(),"LEP");
+  }
+  if (w->pdf(pdf)) {
+    w->pdf(pdf)->plotOn(plot);
+    TObject *obj = plot->getObject(plot->numItems()-1);
+    leg->AddEntry(obj,w->pdf(pdf)->GetTitle(),"L");
+  }
   TCanvas *canv = createCanvas();
   canv->SetBottomMargin(0.2);
   plot->Draw();
+  leg->Draw("same");
+  text->Draw("same");
   canv->Update();
   canv->Modified();
   canv->Print(Form("plots/v%s_d%s_p%s.pdf",var.Data(),data.Data(),pdf.Data()));
   canv->Print(Form("plots/v%s_d%s_p%s.png",var.Data(),data.Data(),pdf.Data()));
+
+  delete text;
+  delete leg;
 }
 
 void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fname) {
@@ -322,6 +379,10 @@ void FitterBase::fit(TString pdf, TString data) {
     w->pdf(pdf)->fitTo(*w->data(data));
   }
   saveSnapshot(Form("%s_fit",pdf.Data()),pdf);
+  if ( verbose ) {
+    print("Fitted values: ");
+    w->set(Form("%s_params",pdf.Data()))->Print("v");
+  }
 }
 
 void FitterBase::sfit(TString pdf_name, TString data_name) {
@@ -397,16 +458,53 @@ void FitterBase::freeze(TString pdf){
   }
 }
 
-void FitterBase::splot(TString var, TString data){
-  vector<TString> temp;
-  splot(var, data, temp);
+double FitterBase::integral(TString pdf, TString var, TString scale, double low, double high){
+
+  double scaleValue = 1.;
+  if ( w->var(scale) ) {
+    scaleValue = w->var(scale)->getVal();
+  }
+  else if ( w->data(scale) ) {
+    scaleValue = w->data(scale)->sumEntries();
+  }
+  else if ( scale=="") {
+    scaleValue = 1.;
+  }
+  else {
+    cout << "ERROR -- FitterBase::integral() -- nothing called " << scaleValue << " in workspace" << endl;
+    exit(1);
+  }
+
+  bool hasRange = (low<-998 && high<-998) ? false : true ;
+  if (hasRange){
+    w->var(var)->setRange("IntegralRange",low,high);
+  }
+
+  RooAbsReal *integral;
+  if (hasRange) {
+    integral = w->pdf(pdf)->createIntegral(RooArgSet(*w->var(var)),NormSet(RooArgSet(*w->var(var))),Range("IntegralRange"));
+  }
+  else {
+    integral = w->pdf(pdf)->createIntegral(RooArgSet(*w->var(var)),NormSet(RooArgSet(*w->var(var))));
+  }
+  double value = scaleValue*integral->getVal();
+  delete integral;
+  return value;
 }
 
-void FitterBase::splot(TString var, TString data, vector<TString> compDsets) {
+void FitterBase::splot(TString var, TString data, int bins){
+  vector<TString> temp;
+  splot(var, data, temp, bins);
+}
+
+void FitterBase::splot(TString var, TString data, vector<TString> compDsets, int bins) {
 
   if (!w->data(data)) {
     cerr << "ERROR -- FitterBase::splot() -- no sweighted data exists" << endl;
     exit(1);
+  }
+  if ( bins==-1 ){
+    bins = w->var(var)->getBins();
   }
   TCanvas *canv = createCanvas();
 
@@ -420,7 +518,7 @@ void FitterBase::splot(TString var, TString data, vector<TString> compDsets) {
   if (TString(w->var(var)->getUnit())!=TString("")) xtitle = Form("%s (%s)",w->var(var)->GetTitle(),w->var(var)->getUnit());
   splot->GetXaxis()->SetTitle(w->var(var)->GetTitle());
 
-  w->data(data)->plotOn(splot);
+  w->data(data)->plotOn(splot,Binning(bins));
   RooHist *dh = (RooHist*)splot->getObject(splot->numItems()-1);
   leg->AddEntry(dh,w->data(data)->GetTitle(),"LEP");
   storeSPlotProjection(dh,Form("%s_v%s",data.Data(),var.Data()));
@@ -428,7 +526,7 @@ void FitterBase::splot(TString var, TString data, vector<TString> compDsets) {
   vector<RooHist*> compHists;
   for (unsigned int i=0; i<compDsets.size(); i++){
     TString dset = compDsets[i];
-    w->data(dset)->plotOn(splot,MarkerColor(colors[i]),LineColor(colors[i]),Rescale(w->data(data)->sumEntries()/w->data(dset)->sumEntries()));
+    w->data(dset)->plotOn(splot,Binning(bins),MarkerColor(colors[i]),LineColor(colors[i]),Rescale(w->data(data)->sumEntries()/w->data(dset)->sumEntries()));
     RooHist *sh = (RooHist*)splot->getObject(splot->numItems()-1);
     leg->AddEntry(sh,w->data(dset)->GetTitle(),"LEP");
     compHists.push_back(sh);
@@ -521,48 +619,100 @@ void FitterBase::storeSPlotRatio(RooHist *h1, RooHist *h2, TString name){
   saveObjsStore.push_back(gr);
 }
 
-void FitterBase::setCutBranchAddresses(TTree *tree) {
+void FitterBase::setBranchAddresses(TTree *tree) {
   // doubles
   for (map<TString,double>::iterator it = values_d.begin(); it != values_d.end(); it++){
-    it->second = -999.;
+    //it->second = -999.;
     tree->SetBranchAddress(it->first, &it->second);
+    if ( verbose || debug ) print("Added cut branch "+it->first);
   }
   // floats
   for (map<TString,float>::iterator it = values_f.begin(); it != values_f.end(); it++){
-    it->second = -999.;
+    //it->second = -999.;
     tree->SetBranchAddress(it->first, &it->second);
+    if ( verbose || debug ) print("Added cut branch "+it->first);
   }
   // ints
   for (map<TString,int>::iterator it = values_i.begin(); it != values_i.end(); it++){
-    it->second = -999;
+    //it->second = -999;
     tree->SetBranchAddress(it->first, &it->second);
+    if ( verbose || debug ) print("Added cut branch "+it->first);
   }
   // bools
   for (map<TString,bool>::iterator it = values_b.begin(); it != values_b.end(); it++){
-    it->second = 0;
+    //it->second = 0;
     tree->SetBranchAddress(it->first, &it->second);
+    if ( verbose || debug ) print("Added cut branch "+it->first);
   }
 }
 
 bool FitterBase::passesCuts() {
   // doubles
-  for (map<TString,double>::iterator it = values_d.begin(); it != values_d.end(); it++){
-    if (it->second < cut_value_d[it->first].first ) return false;
-    if (it->second > cut_value_d[it->first].second ) return false;
+  for (map<TString,pair<double,double> >::iterator it = cut_value_d.begin(); it != cut_value_d.end(); it++){
+    if ( values_d[it->first] < it->second.first)  return false;
+    if ( values_d[it->first] > it->second.second) return false;
   }
   // floats
-  for (map<TString,float>::iterator it = values_f.begin(); it != values_f.end(); it++){
-    if (it->second < cut_value_f[it->first].first ) return false;
-    if (it->second > cut_value_f[it->first].second ) return false;
+  for (map<TString,pair<float,float> >::iterator it = cut_value_f.begin(); it != cut_value_f.end(); it++){
+    if ( values_f[it->first] < it->second.first)  return false;
+    if ( values_f[it->first] > it->second.second) return false;
   }
   // ints
-  for (map<TString,int>::iterator it = values_i.begin(); it != values_i.end(); it++){
-    if (it->second < cut_value_i[it->first].first ) return false;
-    if (it->second > cut_value_i[it->first].second ) return false;
+  for (map<TString,pair<int,int> >::iterator it = cut_value_i.begin(); it != cut_value_i.end(); it++){
+    if ( values_i[it->first] < it->second.first)  return false;
+    if ( values_i[it->first] > it->second.second) return false;
   }
   // bools
-  for (map<TString,bool>::iterator it = values_b.begin(); it != values_b.end(); it++){
-    if (it->second != cut_value_b[it->first] ) return false;
+  for (map<TString,bool>::iterator it = cut_value_b.begin(); it != cut_value_b.end(); it++){
+    if ( values_b[it->first] != it->second)  return false;
   }
   return true;
+}
+
+bool FitterBase::passesRequirements(DataSet &dset){
+  // doubles
+  for (map<TString,pair<double,double> >::iterator it = dset.requirements_d.begin(); it != dset.requirements_d.end(); it++){
+    if ( values_d[it->first] < it->second.first)  return false;
+    if ( values_d[it->first] > it->second.second) return false;
+  }
+  // floats
+  for (map<TString,pair<float,float> >::iterator it = dset.requirements_f.begin(); it != dset.requirements_f.end(); it++){
+    if ( values_f[it->first] < it->second.first)  return false;
+    if ( values_f[it->first] > it->second.second) return false;
+  }
+  // ints
+  for (map<TString,pair<int,int> >::iterator it = dset.requirements_i.begin(); it != dset.requirements_i.end(); it++){
+    if ( values_i[it->first] < it->second.first)  return false;
+    if ( values_i[it->first] > it->second.second) return false;
+  }
+  // bools
+  for (map<TString,bool>::iterator it = dset.requirements_b.begin(); it != dset.requirements_b.end(); it++){
+    if ( values_b[it->first] != it->second)  return false;
+  }
+  return true;
+}
+
+void FitterBase::printEntry(int entry){
+
+  print(Form("----- Printing contents of entry %-6d: -----",entry));
+  print("   OBSERVABLES:",true);
+  for (map<TString,double>::iterator val = obs_values.begin(); val != obs_values.end(); val++){
+    print(Form(" \t %-20s %f",val->first.Data(),val->second),true);
+  }
+  print("   CUTS/REQUIREMENTS:",true);
+  for (map<TString,double>::iterator val = values_d.begin(); val != values_d.end(); val++){
+    print(Form(" \t %-20s %f",val->first.Data(),val->second),true);
+  }
+  for (map<TString,float>::iterator val = values_f.begin(); val != values_f.end(); val++){
+    print(Form(" \t %-20s %f",val->first.Data(),val->second),true);
+  }
+  for (map<TString,int>::iterator val = values_i.begin(); val != values_i.end(); val++){
+    print(Form(" \t %-20s %d",val->first.Data(),val->second),true);
+  }
+  for (map<TString,bool>::iterator val = values_b.begin(); val != values_b.end(); val++){
+    print(Form(" \t %-20s %d",val->first.Data(),val->second),true);
+  }
+  print(Form("----- Printing contents of entry %-6d: -----",entry),true);
+  print("----------------------------------------------",true);
+
 }
