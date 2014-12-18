@@ -1,10 +1,12 @@
+#include <fstream>
+
 #include "../interface/AssessBDTCutFit.h"
 
 using namespace std;
 using namespace RooFit;
 
-AssessBDTCutFit::AssessBDTCutFit(TString wsname, bool verbose, bool debug):
-  FitterBase(wsname,verbose,debug)
+AssessBDTCutFit::AssessBDTCutFit(TString wsname, TString name, bool verbose, bool debug):
+  FitterBase(wsname,name,verbose,debug)
 {}
 
 AssessBDTCutFit::~AssessBDTCutFit(){}
@@ -88,12 +90,19 @@ void AssessBDTCutFit::run(){
   double bkgEvs = integral("bkg_pdf","B_s0_MM","bkg_y",5325,5425);
   double sigEvs = integral("bs2kpikpi_pdf","B_s0_MM","bs2kpikpi_y",5325,5425);
 
-  cout << "=========================================" << endl;
-  cout << "Expected Background Events: " << w->var("bkg_y")->getVal() << endl;
-  cout << "   -- in window:            " << bkgEvs << endl;
-  cout << "Expected Signal Events:     " << w->var("bs2kpikpi_y")->getVal() << endl;
-  cout << "   -- in window:            " << sigEvs << endl;
-  cout << "=========================================" << endl;
+  system(Form("mkdir -p plots/%s",fitterName.Data()));
+  ofstream outf;
+  outf.open(Form("plots/%s/exp_events.log",fitterName.Data()));
+
+  outf << "=========================================" << endl;
+  outf << "Expected Background Events:   " << w->var("bkg_y")->getVal() << endl;
+  outf << "   -- in window [5325,5425]:  " << bkgEvs << endl;
+  outf << "Expected Signal Events:       " << w->var("bs2kpikpi_y")->getVal() << endl;
+  outf << "   -- in window [5325,5425]:  " << sigEvs << endl;
+  outf << "=========================================" << endl;
+
+  outf.close();
+  system(Form("cat plots/%s/exp_events.log",fitterName.Data()));
 }
 
 void AssessBDTCutFit::makeDataPlot(){
@@ -121,5 +130,11 @@ void AssessBDTCutFit::makeDataPlot(){
   plotComps.push_back(pc_pdf_sig);
   plotComps.push_back(pc_pdf);
 
-  plot("B_s0_MM", plotComps, "assessbdtfit");
+  w->var("bs2kpikpi_y")->SetTitle("N_{B_{s}}");
+  w->var("bd2kstkst_y")->SetTitle("N_{B_{d}}");
+  w->var("bkg_y")->SetTitle("N_{bkg}");
+
+  setTitle("Pre-selection Fit");
+  plot("B_s0_MM", plotComps, "assessbdtfit", w->set("pdf_yield_params"));
+
 }

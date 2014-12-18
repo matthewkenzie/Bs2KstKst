@@ -6,7 +6,7 @@ r.gROOT.ProcessLine('.x ~/Scratch/lhcb/lhcbStyle.C')
 
 r.TH1.SetDefaultSumw2()
 
-tf = r.TFile('CutBasedFitterOut.root')
+tf = r.TFile('CutBasedFitOut.root')
 w = tf.Get('w')
 
 canvs = []
@@ -33,7 +33,7 @@ def dsetToHist(name,w,data,var, bins=-1,low=-1.,high=-1., reweightVar=None, rewe
 def plotDataMCDiff(var,bins=-1,low=-1.,high=-1., reweightVar=None, withReweight=False, reweightHist=None):
   canvs.append(r.TCanvas())
   leg = r.TLegend(0.6,0.6,0.89,0.89)
-  dataH = dsetToHist('th1f_data_'+var,w,'Data_sweight_bs2kpikpi_y',var,bins,low,high)
+  dataH = dsetToHist('th1f_data_'+var,w,'Data_wsweights_proj_bs2kpikpi_y',var,bins,low,high)
   mcH   = dsetToHist('th1f_mc_'+var,  w,'Bs2KpiKpiPhaseSpace',var,bins,low,high)
   dataH.Scale(1./dataH.Integral())
   mcH.Scale(1./mcH.Integral())
@@ -58,7 +58,7 @@ def plotDataMCDiff(var,bins=-1,low=-1.,high=-1., reweightVar=None, withReweight=
     mcrwH.Draw("HISTsame")
     leg.AddEntry(mcrwH,'MC Reweight','L')
 
-  leg.AddEntry(dataH,'Data','LEP')
+  leg.AddEntry(dataH,'Data (sweighted)','LEP')
   leg.Draw("same")
   dataH.Draw("LEPsame")
   canvs[-1].Update()
@@ -71,14 +71,14 @@ plotDataMCDiff('B_s0_MM',150,5300,5450)
 plotDataMCDiff('B_s0_PT')
 rwH = plotDataMCDiff('max_track_chi2',30,0,3, 'max_track_chi2', True)
 
-plotDataMCDiff('Kplus_ProbNNkcorr',25,0,1, 'max_track_chi2', True, rwH)
-plotDataMCDiff('Kminus_ProbNNkcorr',25,0,1, 'max_track_chi2', True, rwH)
-plotDataMCDiff('Piplus_ProbNNkcorr',25,0,1, 'max_track_chi2', True, rwH)
-plotDataMCDiff('Piminus_ProbNNkcorr',25,0,1,'max_track_chi2', True, rwH)
-plotDataMCDiff('Kplus_ProbNNpicorr',25,0,1, 'max_track_chi2', True, rwH)
-plotDataMCDiff('Kminus_ProbNNpicorr',25,0,1, 'max_track_chi2', True, rwH)
-plotDataMCDiff('Piplus_ProbNNpicorr',25,0,1, 'max_track_chi2', True, rwH)
-plotDataMCDiff('Piminus_ProbNNpicorr',25,0,1,'max_track_chi2', True, rwH)
+#plotDataMCDiff('Kplus_ProbNNkcorr',25,0,1, 'max_track_chi2', True, rwH)
+#plotDataMCDiff('Kminus_ProbNNkcorr',25,0,1, 'max_track_chi2', True, rwH)
+#plotDataMCDiff('Piplus_ProbNNkcorr',25,0,1, 'max_track_chi2', True, rwH)
+#plotDataMCDiff('Piminus_ProbNNkcorr',25,0,1,'max_track_chi2', True, rwH)
+#plotDataMCDiff('Kplus_ProbNNpicorr',25,0,1, 'max_track_chi2', True, rwH)
+#plotDataMCDiff('Kminus_ProbNNpicorr',25,0,1, 'max_track_chi2', True, rwH)
+#plotDataMCDiff('Piplus_ProbNNpicorr',25,0,1, 'max_track_chi2', True, rwH)
+#plotDataMCDiff('Piminus_ProbNNpicorr',25,0,1,'max_track_chi2', True, rwH)
 
 outf = r.TFile('input/track_chi2_weights.root','RECREATE')
 rwH.SetName('track_chi2_weights')

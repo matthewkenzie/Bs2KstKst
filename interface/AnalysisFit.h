@@ -1,14 +1,14 @@
-#ifndef CutBasedFit_h
-#define CutBasedFit_h
+#ifndef AnalysisFit_h
+#define AnalysisFit_h
 
 #include "../interface/FitterBase.h"
 
-class CutBasedFit : public FitterBase {
+class AnalysisFit : public FitterBase {
 
   public:
 
-    CutBasedFit(TString wsname="w", TString name="CutBasedFit", bool verbose=false, bool debug=false);
-    ~CutBasedFit();
+    AnalysisFit(TString wsname="w", TString name="AnalysisFit", bool verbose=false, bool debug=false);
+    ~AnalysisFit();
 
     void addObsVars();
     void addCuts();
@@ -24,3 +24,4 @@ class CutBasedFit : public FitterBase {
 
 };
 #endif
+

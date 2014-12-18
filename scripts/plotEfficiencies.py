@@ -13,7 +13,6 @@ canvs=[]
 
 xlabels = []
 ylabels = []
-tidyLabels = []
 
 def fillDict(hName, isEff=False):
   theDict = {}
@@ -31,6 +30,11 @@ def fillDict(hName, isEff=False):
           bin2d = hist.FindBin(xbin-1,ybin-1)
           theDict[analyser_label][dataset_label] = hist.GetBinContent(bin2d)
           if dataset_label not in ylabels: ylabels.append(dataset_label)
+        elif analyser_label == 'Start':
+          bin2d = hist.FindBin(xbin-1,ybin-1)
+          new_val = hist.GetBinContent(bin2d)
+          old_val = theDict[analyser_label][dataset_label]
+          theDict[analyser_label][dataset_label] = max(new_val,old_val)
         else:
           print 'WARNING - clash - entry already exists for [', analyser_label, ',', dataset_label, ']'
     tf.Close()
@@ -69,10 +73,7 @@ def convertDictToTH2(theDict, name):
     yDict = theDict[xlabel]
     th2f.GetXaxis().SetBinLabel(xbin+1,xlabel)
     for ybin, ylabel in enumerate(ylabels):
-      label = ylabel
-      if len(tidyLabels)==len(ylabels):
-        label = tidyLabels[ybin]
-      th2f.GetYaxis().SetBinLabel(ybin+1,label)
+      th2f.GetYaxis().SetBinLabel(ybin+1,tidyLabel(ylabel))
       bin2d = th2f.FindBin(xbin,ybin)
       th2f.SetBinContent(bin2d, theDict[xlabel][ylabel])
 
@@ -83,15 +84,13 @@ def printDict(theDict):
     for ylabel, value in yDict.items():
       print '%20s  %20s'%(xlabel,ylabel), ' = ', value
 
-def makeTidyLabels():
-
-  for label in ylabels:
-    new_label = label.replace('_',' ')
-    new_label = new_label.replace('MagDown','MD')
-    new_label = new_label.replace('MagUp','MU')
-    new_label = new_label.replace('LowMass','(LM)')
-    new_label = new_label.replace('HighMass','(HM)')
-    tidyLabels.append(new_label)
+def tidyLabel(label):
+  new_label = label.replace('_',' ')
+  new_label = new_label.replace('MagDown','MD')
+  new_label = new_label.replace('MagUp','MU')
+  new_label = new_label.replace('LowMass','(LM)')
+  new_label = new_label.replace('HighMass','(HM)')
+  return new_label
 
 def draw(th2f, name, textformat='', col=False):
 
@@ -117,8 +116,6 @@ passDict = fillDict('hPass')
 failDict = fillDict('hFail')
 effDict  = fillDict('hEff',True)
 
-makeTidyLabels()
-
 passHist = convertDictToTH2(passDict,'hPass')
 failHist = convertDictToTH2(failDict,'hFail')
 effHist  = convertDictToTH2(effDict,'hEff')
@@ -127,3 +124,5 @@ effHist.Scale(100.)
 draw(passHist,'pass','g')
 draw(failHist,'fail','g')
 draw(effHist, 'eff','5.1f%%',True)
+
+raw_input('Done\n')

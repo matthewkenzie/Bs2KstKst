@@ -45,7 +45,7 @@ void BDTTrainerNoPID::Init(Looper *l){
 
 	// make factories
 	for (int b=0; b<numberOfBDTs; b++){
-		factoryContainer.push_back(new Factory(Form("%sFactory%d",name.Data(),b),outFile,factoryOptions));
+		factoryContainer.push_back(new Factory(Form("%sFactoryNoPID%d",name.Data(),b),outFile,factoryOptions));
 	}
 
 	// add variables

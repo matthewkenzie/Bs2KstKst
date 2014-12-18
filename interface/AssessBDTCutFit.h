@@ -7,7 +7,7 @@ class AssessBDTCutFit : public FitterBase {
 
   public:
 
-    AssessBDTCutFit(TString wsname="w", bool verbose=false, bool debug=false);
+    AssessBDTCutFit(TString wsname="w", TString name="AssessBDTCutFit", bool verbose=false, bool debug=false);
     ~AssessBDTCutFit();
 
     void addObsVars();

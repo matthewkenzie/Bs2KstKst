@@ -7,6 +7,9 @@
 //                                 //
 /////////////////////////////////////
 
+#include <fstream>
+#include "TTimeStamp.h"
+
 #include "../interface/Runner.h"
 
 using namespace std;
@@ -153,6 +156,9 @@ void Runner::run(){
 		analysers[a]->Term(looper);
 	}
 
+  // Print cutflow to logfile
+  ofstream outf("cutflow.log");
+  TTimeStamp s;
   // Configure efficiency historam summary
   hPass = new TH2F("hPass","nEvents pass",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
   hFail = new TH2F("hFail","nEvents fail",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
@@ -161,8 +167,11 @@ void Runner::run(){
 
 	// Summarise results
 	cout << Form("%-30s","Runner::run()") << " " << "Analysers cut flow summary:" << endl;
+  outf << "Timestamp = " << s.AsString() << endl;
+  outf << "Analysers cut flow summary:" << endl;
 	for (unsigned int t=0; t<looper->treeContainers.size(); t++){
 		cout << Form("%-30s","Runner::run()") << " " << "   " << looper->treeContainers[t].name << " : " << endl;
+    outf << "   " << looper->treeContainers[t].name << " : " << endl;
     // set histogram labels
     setYLabel(t+1,looper->treeContainers[t].name);
     // start counters
@@ -184,6 +193,7 @@ void Runner::run(){
 			// print efficiency of each analyser on each looper
 			double eff = double(nPassFail[t][a].first)/double(nPassFail[t][a].first + nPassFail[t][a].second) * 100.;
 			cout << Form("%-30s","Runner::run()") << " " << "      " << a+1 << ".) " << Form("%-15s",(analysers[a]->name+":").Data()) << "  " <<	nPassFail[t][a].first << "/" << nPassFail[t][a].first + nPassFail[t][a].second << " of events passed -- " << Form("%6.2f%%",eff) << " efficient" << endl;
+      outf << "      " << a+1 << ".) " << Form("%-15s",(analysers[a]->name+":").Data()) << "  " <<	nPassFail[t][a].first << "/" << nPassFail[t][a].first + nPassFail[t][a].second << " of events passed -- " << Form("%6.2f%%",eff) << " efficient" << endl;
 
       // set values in histograms
       setHistogramValues(a+1,t,nPassFail[t][a].first,nPassFail[t][a].second);
@@ -194,6 +204,9 @@ void Runner::run(){
 	}
 
 	cout << Form("%-30s","Runner::run()") << " " << "Processing complete. Accepted " << naccepted << " / " << nprocessed << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(nprocessed)) << " efficient" << endl;
+  outf << "Processing complete. Accepted " << naccepted << " / " << nentries << " events -- " << Form("%6.2f%%",100.*double(naccepted)/double(nentries)) << " efficient" << endl;
+
+  outf.close();
 }
 
 void Runner::setXLabel(int bin, TString label){

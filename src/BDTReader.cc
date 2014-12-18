@@ -96,7 +96,7 @@ bool BDTReader::AnalyseEvent(Looper *l){
 
 	*l->bdtoutput = readerContainer[relBDT]->EvaluateMVA( Form("BDT%dmethod",relBDT) );
 	// bdt cut?
-	//if ( l->bdtoutput < 0.08 ) return false;
+	//if ( *l->bdtoutput < 0.01 ) return false;
 	//
 
 	// step up counter
