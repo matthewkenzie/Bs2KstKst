@@ -15,7 +15,10 @@ void AnalysisFit::addObsVars(){
 
   addObsVar("B_s0_MM", "m(K^{+}#pi^{-}K^{-}#pi^{+})", "MeV",5000,5800);
   addObsVar("max_track_chi2","Max Track #chi^{2}", "", 0,3);
+  addObsVar("B_s0_P","B_{s} p}", "MeV",0,400000);
   addObsVar("B_s0_PT","B_{s} p_{T}", "MeV",0,40000);
+  addObsVar("Kst_PT", "K*{0} p_{T}", "MeV",0,20000);
+  addObsVar("Kstb_PT","#bar{K*}^{0} p_{T}", "MeV",0,20000);
   addObsVar("Kplus_ProbNNkcorr",   "Kplus_ProbNNkcorr",   "", 0, 1);
   addObsVar("Kminus_ProbNNkcorr",  "Kminus_ProbNNkcorr",  "", 0, 1);
   addObsVar("Piplus_ProbNNkcorr",  "Piplus_ProbNNkcorr",  "", 0, 1);
@@ -194,6 +197,11 @@ void AnalysisFit::run(){
   vector<TString> compDsets;
   compDsets.push_back("Bs2KpiKpiPhaseSpace");
 
+  splot("B_s0_P",               "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
+  splot("B_s0_PT",              "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
+  splot("Kst_PT",               "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
+  splot("Kstb_PT",              "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
+  splot("max_track_chi2",       "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Kplus_ProbNNkcorr",    "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Kplus_ProbNNpicorr",   "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Kminus_ProbNNkcorr",   "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
@@ -262,6 +270,7 @@ void AnalysisFit::makeDataPlot(){
   w->var("lb2ppipipi_y")->SetTitle("N_{p#pi#pi#pi}");
 
   setTitle("AnalysisFit");
+  setDrawLog(true);
 
   plot("B_s0_MM", plotComps, "fullfit", w->set("pdf_yield_params"));
 

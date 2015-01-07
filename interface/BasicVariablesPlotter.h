@@ -19,13 +19,7 @@
 
 #include "../interface/BaseAnalyser.h"
 #include "../interface/Looper.h"
-
-struct HistContainer{
-  TString name;
-  int nbins;
-  float xlow;
-  float xhigh;
-};
+#include "../interface/PlotterUtils.h"
 
 class BasicVariablesPlotter : public BaseAnalyser {
 

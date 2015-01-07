@@ -217,3 +217,11 @@ Double_t        Piminus_ProbNNkcorr                          0
 Double_t        Piminus_ProbNNpicorr                         0
 Double_t        Piplus_ProbNNpicorr                          0
 Double_t        Piplus_ProbNNkcorr                           0
+Double_t        Kminus_PIDKcorr                              0
+Double_t        Kminus_PIDpcorr                              0
+Double_t        Kplus_PIDKcorr                               0
+Double_t        Kplus_PIDpcorr                               0
+Double_t        Piminus_PIDKcorr                             0
+Double_t        Piminus_PIDpcorr                             0
+Double_t        Piplus_PIDKcorr                              0
+Double_t        Piplus_PIDpcorr                              0

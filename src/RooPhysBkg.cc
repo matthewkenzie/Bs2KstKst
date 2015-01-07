@@ -82,6 +82,8 @@ Double_t RooPhysBkg::evaluate() const {
   Double_t up = 0.5*s * ( part_1 + part_2*
 			  TMath::Erf((c*ssq - m0 + m)/(sqrt(2)*s)));
 
+  // because I don't like compile warnings
+  up *= 1.;
 
   Double_t rat1 = (msq)/(2.*ssq); //Adim
   Double_t exp_arg_1 = -m0sq + csq*sfth + msq + ssq*(2 + 2*c*m); //Mass^2
@@ -98,6 +100,8 @@ Double_t RooPhysBkg::evaluate() const {
 			   term_2 *
 			   TMath::Erf((c*ssq + m)/(sqrt(2)*s)));
 
+  // because I don't like compile warnings
+  down *= 1.;
   //  return (up-down)<=0?0:(m-m0)>15*s?0:(up-down);
   //  return (up-down)<=0?0:(up-down);
 

@@ -1,6 +1,6 @@
 /////////////////////////////////////
 //                                 //
-// BDTTrainerNoPID.h            			   //
+// BDTTrainerNoPIDSplitYears.h            			   //
 // Author: Matthew Kenzie          //
 // Will train BDTs   					     //
 //                                 //
@@ -9,14 +9,14 @@
 #include "TMath.h"
 #include "TLorentzVector.h"
 
-#include "../interface/BDTTrainerNoPID.h"
+#include "../interface/BDTTrainerNoPIDSplitYears.h"
 
 using namespace std;
 using namespace TMVA;
 
-BDTTrainerNoPID::BDTTrainerNoPID(TString _name):
+BDTTrainerNoPIDSplitYears::BDTTrainerNoPIDSplitYears(TString _name):
 	BaseAnalyser(_name),
-	outfilename("MVATrainingNoPIDOutput.root"),
+	outfilename("MVATrainingNoPIDSplitYearsOutput.root"),
 	evCount(0),
 	numberOfBDTs(2),
   doBDTCycling(true)
@@ -24,10 +24,10 @@ BDTTrainerNoPID::BDTTrainerNoPID(TString _name):
   if (!doBDTCycling) numberOfBDTs=1;
 }
 
-BDTTrainerNoPID::~BDTTrainerNoPID(){}
+BDTTrainerNoPIDSplitYears::~BDTTrainerNoPIDSplitYears(){}
 
-void BDTTrainerNoPID::Init(Looper *l){
-	cout << Form("%-30s","BDTTrainerNoPID::Init()") << " " << "Initialising Analyser (" << name << ")." << endl;
+void BDTTrainerNoPIDSplitYears::Init(Looper *l){
+	cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Init()") << " " << "Initialising Analyser (" << name << ")." << endl;
 
   reweightFile = TFile::Open("input/track_chi2_weights.root");
   reweightHist = (TH1F*)reweightFile->Get("track_chi2_weights");
@@ -44,8 +44,11 @@ void BDTTrainerNoPID::Init(Looper *l){
 	factoryOptions += "AnalysisType=Classification";
 
 	// make factories
+  factoryContainer["2011"] = vector<TMVA::Factory*>();
+  factoryContainer["2012"] = vector<TMVA::Factory*>();
 	for (int b=0; b<numberOfBDTs; b++){
-		factoryContainer.push_back(new Factory(Form("%sFactory%d",name.Data(),b),outFile,factoryOptions));
+		factoryContainer["2011"].push_back(new Factory(Form("%sFactory2011%d",name.Data(),b),outFile,factoryOptions));
+		factoryContainer["2012"].push_back(new Factory(Form("%sFactory2012%d",name.Data(),b),outFile,factoryOptions));
 	}
 
 	// add variables
@@ -73,42 +76,48 @@ void BDTTrainerNoPID::Init(Looper *l){
 	// add variables to factories and inialise map
 	for (vector<TString>::iterator var=varNames.begin(); var!=varNames.end(); var++){
 		for (int b=0; b<numberOfBDTs; b++){
-			factoryContainer[b]->AddVariable(*var);
+			factoryContainer["2011"][b]->AddVariable(*var);
+			factoryContainer["2012"][b]->AddVariable(*var);
 		}
 		varMap.insert(make_pair(*var,-9999999.));
 	}
 
 }
 
-void BDTTrainerNoPID::Term(Looper *l){
+void BDTTrainerNoPIDSplitYears::Term(Looper *l){
 
   reweightFile->Close();
 
 	for (int b=0; b<numberOfBDTs; b++) {
 
-		cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Preparing training and test trees" << endl;
-		factoryContainer[b]->PrepareTrainingAndTestTree("","!V");
+		cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Preparing training and test trees" << endl;
+		factoryContainer["2011"][b]->PrepareTrainingAndTestTree("","!V");
+		factoryContainer["2012"][b]->PrepareTrainingAndTestTree("","!V");
 
 		// TMVA methods here
-		cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Booking TMVA methods" << endl;
-		factoryContainer[b]->BookMethod( Types::kBDT, Form("BDT%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Booking TMVA methods" << endl;
+		factoryContainer["2011"][b]->BookMethod( Types::kBDT, Form("2011_BDT_%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		factoryContainer["2012"][b]->BookMethod( Types::kBDT, Form("2012_BDT_%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
 
 		// Train, Test and Evaluate
-		cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
-		factoryContainer[b]->TrainAllMethods();
-		factoryContainer[b]->TestAllMethods();
-		factoryContainer[b]->EvaluateAllMethods();
+		cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;
+		factoryContainer["2011"][b]->TrainAllMethods();
+		factoryContainer["2011"][b]->TestAllMethods();
+		factoryContainer["2011"][b]->EvaluateAllMethods();
+		factoryContainer["2012"][b]->TrainAllMethods();
+		factoryContainer["2012"][b]->TestAllMethods();
+		factoryContainer["2012"][b]->EvaluateAllMethods();
 	}
 
 	outFile->Close();
 
-	cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Training output written to: " << outFile->GetName() << endl;
+	cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Training output written to: " << outFile->GetName() << endl;
   delete outFile;
 
-	cout << Form("%-30s","BDTTrainerNoPID::Term()") << " " << "Terminating Analyser (" << name << ")." << endl;
+	cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Terminating Analyser (" << name << ")." << endl;
 }
 
-bool BDTTrainerNoPID::AnalyseEvent(Looper *l){
+bool BDTTrainerNoPIDSplitYears::AnalyseEvent(Looper *l){
 
   // PT
 	varMap["ln_B_s0_PT"]   		  = TMath::Log(*l->B_s0_PT);
@@ -144,8 +153,20 @@ bool BDTTrainerNoPID::AnalyseEvent(Looper *l){
 		values.push_back(varMap[*it]);
 	}
 
+  // find the relevant BDT
 	int lastDigit = *l->eventNumber%10;
 	int relBDT = int(floor(lastDigit/2))%numberOfBDTs;
+  TString year = "";
+  if ( l->sqrts == 7 ) {
+    year = "2011";
+  }
+  else if ( l->sqrts == 8 ) {
+    year = "2012";
+  }
+  else {
+    // not a valid event type
+    return false;
+  }
 
 	// MC only
 	if ( l->itype < 0 ) {
@@ -154,19 +175,19 @@ bool BDTTrainerNoPID::AnalyseEvent(Looper *l){
     if (doBDTCycling) {
       for (int b=0; b<numberOfBDTs; b++){
         if (b==relBDT){
-          factoryContainer[b]->AddSignalTestEvent(values, *l->weight);
+          factoryContainer[year][b]->AddSignalTestEvent(values, *l->weight);
         }
         else {
-          factoryContainer[b]->AddSignalTrainingEvent(values, *l->weight);
+          factoryContainer[year][b]->AddSignalTrainingEvent(values, *l->weight);
         }
       }
     }
     else {
       if (lastDigit%2==0) {
-        factoryContainer[0]->AddSignalTrainingEvent(values);
+        factoryContainer[year][0]->AddSignalTrainingEvent(values);
       }
       else {
-        factoryContainer[0]->AddSignalTestEvent(values);
+        factoryContainer[year][0]->AddSignalTestEvent(values);
       }
     }
 
@@ -178,27 +199,25 @@ bool BDTTrainerNoPID::AnalyseEvent(Looper *l){
 	if ( l->itype > 0 ) {
 
 		// cut out signal region
-		//if (*l->B_s0_MM > 5250 && *l->B_s0_MM < 5500) return false;
-		//if (*l->B_s0_MM > 5250) return false;
-		if (*l->B_s0_MM < 5500) return false;
+		if (*l->B_s0_MM < 5600) return false;
 
 		// now put event in relevant BDT
     if (doBDTCycling) {
       for (int b=0; b<numberOfBDTs; b++){
         if (b==relBDT){
-          factoryContainer[b]->AddBackgroundTestEvent(values);
+          factoryContainer[year][b]->AddBackgroundTestEvent(values);
         }
         else {
-          factoryContainer[b]->AddBackgroundTrainingEvent(values);
+          factoryContainer[year][b]->AddBackgroundTrainingEvent(values);
         }
       }
     }
     else {
       if (lastDigit%2==0) {
-        factoryContainer[0]->AddBackgroundTrainingEvent(values);
+        factoryContainer[year][0]->AddBackgroundTrainingEvent(values);
       }
       else {
-        factoryContainer[0]->AddBackgroundTestEvent(values);
+        factoryContainer[year][0]->AddBackgroundTestEvent(values);
       }
     }
 

@@ -38,9 +38,11 @@ Double_t        Kminus_M                                     0
 Double_t        Kminus_P                                     0
 Double_t        Kminus_PE                                    0
 Double_t        Kminus_PIDK                                  0
+Double_t        Kminus_PIDKcorr                              0
 Double_t        Kminus_PIDe                                  0
 Double_t        Kminus_PIDmu                                 0
 Double_t        Kminus_PIDp                                  0
+Double_t        Kminus_PIDpcorr                              0
 Double_t        Kminus_PT                                    0
 Double_t        Kminus_PX                                    0
 Double_t        Kminus_PY                                    0
@@ -60,9 +62,11 @@ Double_t        Kplus_M                                      0
 Double_t        Kplus_P                                      0
 Double_t        Kplus_PE                                     0
 Double_t        Kplus_PIDK                                   0
+Double_t        Kplus_PIDKcorr                               0
 Double_t        Kplus_PIDe                                   0
 Double_t        Kplus_PIDmu                                  0
 Double_t        Kplus_PIDp                                   0
+Double_t        Kplus_PIDpcorr                               0
 Double_t        Kplus_PT                                     0
 Double_t        Kplus_PX                                     0
 Double_t        Kplus_PY                                     0
@@ -82,9 +86,11 @@ Double_t        Piminus_M                                    0
 Double_t        Piminus_P                                    0
 Double_t        Piminus_PE                                   0
 Double_t        Piminus_PIDK                                 0
+Double_t        Piminus_PIDKcorr                             0
 Double_t        Piminus_PIDe                                 0
 Double_t        Piminus_PIDmu                                0
 Double_t        Piminus_PIDp                                 0
+Double_t        Piminus_PIDpcorr                             0
 Double_t        Piminus_PT                                   0
 Double_t        Piminus_PX                                   0
 Double_t        Piminus_PY                                   0
@@ -104,9 +110,11 @@ Double_t        Piplus_M                                     0
 Double_t        Piplus_P                                     0
 Double_t        Piplus_PE                                    0
 Double_t        Piplus_PIDK                                  0
+Double_t        Piplus_PIDKcorr                              0
 Double_t        Piplus_PIDe                                  0
 Double_t        Piplus_PIDmu                                 0
 Double_t        Piplus_PIDp                                  0
+Double_t        Piplus_PIDpcorr                              0
 Double_t        Piplus_PT                                    0
 Double_t        Piplus_PX                                    0
 Double_t        Piplus_PY                                    0
