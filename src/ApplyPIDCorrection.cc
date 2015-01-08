@@ -60,10 +60,10 @@ void ApplyPIDCorrection::Init(Looper *l){
 	particles.push_back("K");
 	particles.push_back("Pi");
 
-	pids.push_back("ProbNNK");
-	pids.push_back("ProbNNpi");
-  pids.push_back("PIDK");
-  pids.push_back("PIDp");
+	pids.push_back("V2ProbNNK");
+	pids.push_back("V2ProbNNpi");
+  pids.push_back("DLLK");
+  pids.push_back("DLLp");
 
 	pidFiles.push_back("input/PIDHists_Strip20r1_MagDown.root");
 	pidFiles.push_back("input/PIDHists_Strip20r1_MagUp.root");
@@ -99,25 +99,25 @@ bool ApplyPIDCorrection::AnalyseEvent(Looper *l){
 
 		int fInd = getFileIndexFromType(l->itype);
 
-    *l->Kplus_ProbNNkcorr    = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "ProbNNK",  *l->Kplus_ProbNNk);
-		*l->Kminus_ProbNNkcorr   = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "ProbNNK",  *l->Kminus_ProbNNk);
-		*l->Piplus_ProbNNkcorr   = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","ProbNNK",  *l->Piplus_ProbNNk);
-		*l->Piminus_ProbNNkcorr  = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","ProbNNK",  *l->Piminus_ProbNNk);
+    *l->Kplus_ProbNNkcorr    = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "V2ProbNNK",  *l->Kplus_ProbNNk);
+		*l->Kminus_ProbNNkcorr   = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "V2ProbNNK",  *l->Kminus_ProbNNk);
+		*l->Piplus_ProbNNkcorr   = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","V2ProbNNK",  *l->Piplus_ProbNNk);
+		*l->Piminus_ProbNNkcorr  = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","V2ProbNNK",  *l->Piminus_ProbNNk);
 
-		*l->Kplus_ProbNNpicorr   = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "ProbNNpi", *l->Kplus_ProbNNpi);
-		*l->Kminus_ProbNNpicorr  = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "ProbNNpi", *l->Kminus_ProbNNpi);
-		*l->Piplus_ProbNNpicorr  = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","ProbNNpi", *l->Piplus_ProbNNpi);
-		*l->Piminus_ProbNNpicorr = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","ProbNNpi", *l->Piminus_ProbNNpi);
+		*l->Kplus_ProbNNpicorr   = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "V2ProbNNpi", *l->Kplus_ProbNNpi);
+		*l->Kminus_ProbNNpicorr  = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "V2ProbNNpi", *l->Kminus_ProbNNpi);
+		*l->Piplus_ProbNNpicorr  = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","V2ProbNNpi", *l->Piplus_ProbNNpi);
+		*l->Piminus_ProbNNpicorr = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","V2ProbNNpi", *l->Piminus_ProbNNpi);
 
-		*l->Kplus_PIDKcorr       = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "PIDK",     *l->Kplus_PIDK);
-		*l->Kminus_PIDKcorr      = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "PIDK",     *l->Kminus_PIDK);
-		*l->Piplus_PIDKcorr      = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","PIDK",     *l->Piplus_PIDK);
-		*l->Piminus_PIDKcorr     = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","PIDK",     *l->Piminus_PIDK);
+		*l->Kplus_PIDKcorr       = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "DLLK",     *l->Kplus_PIDK);
+		*l->Kminus_PIDKcorr      = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "DLLK",     *l->Kminus_PIDK);
+		*l->Piplus_PIDKcorr      = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","DLLK",     *l->Piplus_PIDK);
+		*l->Piminus_PIDKcorr     = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","DLLK",     *l->Piminus_PIDK);
 
-		*l->Kplus_PIDpcorr       = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "PIDp",     *l->Kplus_PIDp);
-		*l->Kminus_PIDpcorr      = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "PIDp",     *l->Kminus_PIDp);
-		*l->Piplus_PIDpcorr      = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","PIDp",     *l->Piplus_PIDp);
-		*l->Piminus_PIDpcorr     = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","PIDp",     *l->Piminus_PIDp);
+		*l->Kplus_PIDpcorr       = getResampledPID(*l->Kplus_P  , Kplus_p4.Eta(),  *l->nTracks, fInd,"K", "DLLp",     *l->Kplus_PIDp);
+		*l->Kminus_PIDpcorr      = getResampledPID(*l->Kminus_P , Kminus_p4.Eta(), *l->nTracks, fInd,"K", "DLLp",     *l->Kminus_PIDp);
+		*l->Piplus_PIDpcorr      = getResampledPID(*l->Piplus_P , Piplus_p4.Eta(), *l->nTracks, fInd,"Pi","DLLp",     *l->Piplus_PIDp);
+		*l->Piminus_PIDpcorr     = getResampledPID(*l->Piminus_P, Piminus_p4.Eta(),*l->nTracks, fInd,"Pi","DLLp",     *l->Piminus_PIDp);
 
 	}
 	// Data only
@@ -167,11 +167,11 @@ void ApplyPIDCorrection::loadHistograms(){
 			for (unsigned int v=0; v<reweightVars.size(); v++){
 				//reweightVarHists[f][particles[p]][reweightVars[v]] = (TH1D*)(tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),reweightVars[v].Data()))->Clone());
 				reweightVarHists[f][particles[p]][reweightVars[v]] = (TH1D*)tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),reweightVars[v].Data()));
-				reweightVarHists[f][particles[p]][reweightVars[v]]->SetName(Form("f%d_p%s_%s",f,particles[p].Data(),reweightVars[v].Data()));
+        reweightVarHists[f][particles[p]][reweightVars[v]]->SetName(Form("f%d_p%s_%s",f,particles[p].Data(),reweightVars[v].Data()));
 				//reweightVarHists[f][particles[p]][reweightVars[v]]->SetDirectory(0);
 			}
 
-			// loop over the pid vars (ProbNNK, ProbNNpi)
+			// loop over the pid vars (ProbNNK, ProbNNpi etc.)
 			for (unsigned int pid=0; pid<pids.size(); pid++){
 				//pidVarHists[f][particles[p]][pids[pid]] = (TH1D*)(tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),pids[pid].Data()))->Clone());
 				pidVarHists[f][particles[p]][pids[pid]] = (TH1D*)tf->Get(Form("DEFAULT/%s/H1D_%s",particles[p].Data(),pids[pid].Data()));
