@@ -4,7 +4,7 @@
 from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-d","--datfile",default="dat/config.dat",help="Configuration datfile. Default=%default")
-parser.add_option("-o","--outfile",default="AnalysisOut.root",help="Name of output root file. Default=%default")
+parser.add_option("-o","--outfile",default="root/AnalysisOut.root",help="Name of output root file. Default=%default")
 parser.add_option("-t","--treename",default="AnalysisTree",help="Name of output tree. Default=%default")
 parser.add_option("-r","--runAsReduction",default=False,action="store_true")
 parser.add_option("-q","--submitToQueue",help="Submit jobs to batch queue")

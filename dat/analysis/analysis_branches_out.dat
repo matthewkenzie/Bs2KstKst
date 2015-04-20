@@ -239,3 +239,6 @@ Double_t        max_kaon_ProbNNpiKp                          0
 Double_t        B_s0_MMERRoMM                                0
 Bool_t          pass_bdt                                     0
 Bool_t          pass_pid                                     0
+Double_t        B_s0_CosTheta1                               0
+Double_t        B_s0_CosTheta2                               0
+Double_t        B_s0_Phi1                                    0

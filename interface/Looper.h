@@ -62,6 +62,8 @@ class Looper {
                                                                                 
   	// branch variables
     Int_t           *B_s0_BKGCAT;                           
+    Double_t        *B_s0_CosTheta1;                        
+    Double_t        *B_s0_CosTheta2;                        
     Double_t        *B_s0_DIRA_OWNPV;                       
     Double_t        *B_s0_ENDVERTEX_CHI2;                   
     Int_t           *B_s0_ENDVERTEX_NDOF;                   
@@ -102,6 +104,7 @@ class Looper {
     Double_t        *B_s0_PY;                               
     Double_t        *B_s0_PZ;                               
     Double_t        *B_s0_Phi;                              
+    Double_t        *B_s0_Phi1;                             
     Int_t           *B_s0_TAGCAT;                           
     Int_t           *B_s0_TAGCAT_OS;                        
     Int_t           *B_s0_TAGDECISION;                      
@@ -325,6 +328,8 @@ class Looper {
 
  	// branch definitions
     TBranch *b_B_s0_BKGCAT;                            
+    TBranch *b_B_s0_CosTheta1;                         
+    TBranch *b_B_s0_CosTheta2;                         
     TBranch *b_B_s0_DIRA_OWNPV;                        
     TBranch *b_B_s0_ENDVERTEX_CHI2;                    
     TBranch *b_B_s0_ENDVERTEX_NDOF;                    
@@ -365,6 +370,7 @@ class Looper {
     TBranch *b_B_s0_PY;                                
     TBranch *b_B_s0_PZ;                                
     TBranch *b_B_s0_Phi;                               
+    TBranch *b_B_s0_Phi1;                              
     TBranch *b_B_s0_TAGCAT;                            
     TBranch *b_B_s0_TAGCAT_OS;                         
     TBranch *b_B_s0_TAGDECISION;                       

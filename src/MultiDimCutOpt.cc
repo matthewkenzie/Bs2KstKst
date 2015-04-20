@@ -35,12 +35,13 @@ MultiDimCutOpt::MultiDimCutOpt():
 {
 }
 
-void MultiDimCutOpt::setup() {
+void MultiDimCutOpt::setup(TString _infilename, TString _outfilename, TString _cachefilename) {
 
-  TString outfile = "MultiDimCutOptOut_all.root";
-  if ( run2011 && !run2012 ) outfile = "MultiDimCutOptOut_2011.root";
-  if ( run2012 && !run2011 ) outfile = "MultiDimCutOptOut_2012.root";
-  outFile = TFile::Open(outfile,"RECREATE");
+  infilename    = _infilename;
+  outfilename   = _outfilename;
+  cachefilename = _cachefilename;
+
+  outFile = TFile::Open(outfilename,"RECREATE");
   w = new RooWorkspace("w","w");
 
   gROOT->ProcessLine(".x ~/Scratch/lhcb/lhcbStyle.C");
@@ -75,7 +76,7 @@ void MultiDimCutOpt::makeInitialDatasets(){
   observables->add(*w->var("itype"));
   w->defineSet("observables",*observables);
 
-  TFile *tempFile = TFile::Open("AnalysisOutNewBranches.root");
+  TFile *tempFile = TFile::Open(infilename);
   TTree *inTree = (TTree*)tempFile->Get("AnalysisTree");
 
   TString data_cut;
@@ -137,17 +138,14 @@ void MultiDimCutOpt::makeInitialDatasets(){
   TString ext="";
   if ( run2011 && !run2012 ) ext="2011";
   if ( run2012 && !run2011 ) ext="2012";
-  w->writeToFile(Form("MultiDimCutOptIn%s.root",ext.Data()));
+  w->writeToFile(cachefilename);
 
   w->Print();
 }
 
 void MultiDimCutOpt::loadWorkspace(){
-  TString ext="";
-  if ( run2011 && !run2012 ) ext="2011";
-  if ( run2012 && !run2011 ) ext="2012";
 
-  TFile *inFile = TFile::Open(Form("MultiDimCutOptIn%s.root",ext.Data()));
+  TFile *inFile = TFile::Open(cachefilename);
   w = (RooWorkspace*)( (RooWorkspace*)inFile->Get("w") )->Clone();
   inFile->Close();
 }
@@ -256,7 +254,7 @@ void MultiDimCutOpt::makePDFs(){
   if ( run2011 && !run2012 ) ext="2011";
   if ( run2012 && !run2011 ) ext="2012";
 
-    w->writeToFile(Form("MultiDimCutOptIn%s.root",ext.Data()));
+    w->writeToFile(cachefilename);
 
 }
 
@@ -691,7 +689,7 @@ void MultiDimCutOpt::runSimple(int type) {
   // // 3 = S/sqrt(S+B+sigma*M)
   fomType = type;
 
-  TFile *inFile = TFile::Open("AnalysisOutNewBranches.root");
+  TFile *inFile = TFile::Open(infilename);
   tree = (TTree*)inFile->Get("AnalysisTree");
   TCanvas *canv = new TCanvas("opt","opt",1200,600);
   canv->Divide(2,1);

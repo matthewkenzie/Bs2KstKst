@@ -39,7 +39,7 @@ class MultiDimCutOpt {
     MultiDimCutOpt();
     ~MultiDimCutOpt();
 
-    void setup();
+    void setup(TString inf, TString outf, TString cachef);
 
     void makeInitialDatasets();
     void makePDFs();
@@ -68,6 +68,10 @@ class MultiDimCutOpt {
     bool run2011;
     bool run2012;
 
+    TString infilename;
+    TString outfilename;
+    TString cachefilename;
+
     RooWorkspace *w;
     TTree *tree;
     TFile *outFile;
@@ -92,9 +96,11 @@ class MultiDimCutOpt {
 
     // ----- //
     // figure of merit type:
-    // // 1 = S/sqrt(S+B) (DEFAULT)
-    // // 2 = S/sqrt(S+B+M)
-    // // 3 = S/sqrt(S+B+sigma*M)
+    // // 0 = S/sqrt(S+B) (DEFAULT)
+    // // 1 = S/sqrt(S+B+M)
+    // // 2 = S/sqrt(S+B+sigma*M)
+    // // 3 = S/sqrt(S+B+2sigma*M)
+    // // 4 = S/sqrt(S+B+M) * purity
     int fomType;
     void getEventEstimates(TTree *tree);
 

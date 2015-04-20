@@ -209,6 +209,8 @@ void AnalysisBranches::setInputBranches(Looper *l, TTree *tree){
 }
 
 void AnalysisBranches::initialiseVariables(Looper *l) {
+	l->B_s0_CosTheta1                        = new Double_t(0);
+	l->B_s0_CosTheta2                        = new Double_t(0);
 	l->B_s0_DIRA_OWNPV                       = new Double_t(0);
 	l->B_s0_ENDVERTEX_CHI2                   = new Double_t(0);
 	l->B_s0_ETA                              = new Double_t(0);
@@ -234,6 +236,7 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 	l->B_s0_PY                               = new Double_t(0);
 	l->B_s0_PZ                               = new Double_t(0);
 	l->B_s0_Phi                              = new Double_t(0);
+	l->B_s0_Phi1                             = new Double_t(0);
 	l->B_s0_TAGCAT                           = new Int_t(0);
 	l->B_s0_TAGCAT_OS                        = new Int_t(0);
 	l->B_s0_TAGDECISION                      = new Int_t(0);
@@ -436,6 +439,8 @@ void AnalysisBranches::initialiseVariables(Looper *l) {
 }
 
 void AnalysisBranches::cleanVariables(Looper *l) {
+	delete l->B_s0_CosTheta1;
+	delete l->B_s0_CosTheta2;
 	delete l->B_s0_DIRA_OWNPV;
 	delete l->B_s0_ENDVERTEX_CHI2;
 	delete l->B_s0_ETA;
@@ -461,6 +466,7 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 	delete l->B_s0_PY;
 	delete l->B_s0_PZ;
 	delete l->B_s0_Phi;
+	delete l->B_s0_Phi1;
 	delete l->B_s0_TAGCAT;
 	delete l->B_s0_TAGCAT_OS;
 	delete l->B_s0_TAGDECISION;
@@ -664,6 +670,8 @@ void AnalysisBranches::cleanVariables(Looper *l) {
 void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){ 
 	tree->Branch("itype",&(l->itype));
 	tree->Branch("sqrts",&(l->sqrts));
+	tree->Branch("B_s0_CosTheta1",l->B_s0_CosTheta1);
+	tree->Branch("B_s0_CosTheta2",l->B_s0_CosTheta2);
 	tree->Branch("B_s0_DIRA_OWNPV",l->B_s0_DIRA_OWNPV);
 	tree->Branch("B_s0_ENDVERTEX_CHI2",l->B_s0_ENDVERTEX_CHI2);
 	tree->Branch("B_s0_ETA",l->B_s0_ETA);
@@ -689,6 +697,7 @@ void AnalysisBranches::setOutputBranches(Looper *l, TTree *tree){
 	tree->Branch("B_s0_PY",l->B_s0_PY);
 	tree->Branch("B_s0_PZ",l->B_s0_PZ);
 	tree->Branch("B_s0_Phi",l->B_s0_Phi);
+	tree->Branch("B_s0_Phi1",l->B_s0_Phi1);
 	tree->Branch("B_s0_TAGCAT",l->B_s0_TAGCAT);
 	tree->Branch("B_s0_TAGCAT_OS",l->B_s0_TAGCAT_OS);
 	tree->Branch("B_s0_TAGDECISION",l->B_s0_TAGDECISION);

@@ -12,7 +12,7 @@
 ####################################################################################################
 
 branchdef=AnalysisBranches
-analysers=BDTReaderNoPIDSplitYearsMassRes
+analysers=BDTReaderNoPIDSplitYearsMassRes,AddAngles
 
 # Bs2Kst0Kst0
 itype=-71  name=Bs2Kst0Kst0_MC2011            fname=file_store/presel/Bs2Kst0Kst0_MC2011_Reduced_j0.root              tname=ReducedTree

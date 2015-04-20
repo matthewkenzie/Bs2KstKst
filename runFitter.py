@@ -26,24 +26,29 @@ if not getattr(r,opts.type):
 ##################################################################
 # set up some default options for the various fit types available
 if opts.type == 'CutBasedFit':
-  if not opts.infile:     opts.infile   = 'CutBasedOut.root'
+  if not opts.infile:     opts.infile   = 'root/CutBasedOut.root'
   if not opts.treename:   opts.treename = 'ReducedTree'
-  if not opts.outfile:    opts.outfile  = 'CutBasedFitOut.root'
+  if not opts.outfile:    opts.outfile  = 'root/CutBasedFitOut.root'
 
 elif opts.type == 'AssessBDTCutFit':
-  if not opts.infile:     opts.infile   = 'CutBasedOut.root'
+  if not opts.infile:     opts.infile   = 'root/CutBasedOut.root'
   if not opts.treename:   opts.treename = 'ReducedTree'
-  if not opts.outfile:    opts.outfile  = 'AssessBDTCutFitOut.root'
+  if not opts.outfile:    opts.outfile  = 'root/AssessBDTCutFitOut.root'
 
 elif opts.type == 'AnalysisFit':
-  if not opts.infile:     opts.infile   = 'AnalysisOut.root'
+  if not opts.infile:     opts.infile   = 'root/AnalysisOut.root'
   if not opts.treename:   opts.treename = 'AnalysisTree'
-  if not opts.outfile:    opts.outfile  = 'AnalysisFitOut.root'
+  if not opts.outfile:    opts.outfile  = 'root/AnalysisFitOut.root'
+
+elif opts.type == 'InvariantMassFit':
+  if not opts.infile:     opts.infile   = 'root/AnalysisOut.root'
+  if not opts.treename:   opts.treename = 'AnalysisTree'
+  if not opts.outfile:    opts.outfile  = 'root/InvariantMassFitOut.root'
 
 else:
-  if not opts.infile:     opts.infile   = 'AnalysisOut.root'
+  if not opts.infile:     opts.infile   = 'root/AnalysisOut.root'
   if not opts.treename:   opts.treename = 'AnalysisTree'
-  if not opts.outfile:    opts.outfile  = 'AnalysisFitOut.root'
+  if not opts.outfile:    opts.outfile  = 'root/AnalysisFitOut.root'
 ##################################################################
 
 # set batch settings

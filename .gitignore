@@ -11,3 +11,4 @@ tmp*
 scratch
 obj
 lib
+root/*.root
