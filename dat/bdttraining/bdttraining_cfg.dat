@@ -16,9 +16,9 @@ branchdef=AnalysisBranches
 analysers=BDTTrainer
 
 # train on phase space MC
-itype=-74  name=Bs2KpiKpi_PhaseSpace_MC2011   fname=file_store/pid_corr/Bs2KpiKpi_PhaseSpace_MC2011_Reduced.root       tname=ReducedTree
-itype=-84  name=Bs2KpiKpi_PhaseSpace_MC2012   fname=file_store/pid_corr/Bs2KpiKpi_PhaseSpace_MC2012_Reduced.root       tname=ReducedTree
+itype=-74  name=Bs2KpiKpi_PhaseSpace_MC2011   fname=file_store/presel/Bs2KpiKpi_PhaseSpace_MC2011_Reduced.root       tname=ReducedTree
+itype=-84  name=Bs2KpiKpi_PhaseSpace_MC2012   fname=file_store/presel/Bs2KpiKpi_PhaseSpace_MC2012_Reduced.root       tname=ReducedTree
 
 # and data in sidebands
-itype=71   name=Data2011                      fname=file_store/pid_corr/Data2011_Reduced.root                          tname=ReducedTree
-itype=81   name=Data2012                      fname=file_store/pid_corr/Data2012_Reduced.root                          tname=ReducedTree
+itype=71   name=Data2011                      fname=file_store/presel/Data2011_Reduced.root                          tname=ReducedTree
+itype=81   name=Data2012                      fname=file_store/presel/Data2012_Reduced.root                          tname=ReducedTree

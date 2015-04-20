@@ -3,3 +3,11 @@
 temp*
 tmp*
 .DS_Store
+*.root
+!*/*.root
+*_C.d
+*_C.so
+*.log
+scratch
+obj
+lib

@@ -14,6 +14,7 @@ AnalysisFit::~AnalysisFit(){}
 void AnalysisFit::addObsVars(){
 
   addObsVar("B_s0_MM", "m(K^{+}#pi^{-}K^{-}#pi^{+})", "MeV",5000,5800);
+  /*
   addObsVar("max_track_chi2","Max Track #chi^{2}", "", 0,3);
   addObsVar("B_s0_P","B_{s} p}", "MeV",0,400000);
   addObsVar("B_s0_PT","B_{s} p_{T}", "MeV",0,40000);
@@ -27,11 +28,19 @@ void AnalysisFit::addObsVars(){
   addObsVar("Kminus_ProbNNpicorr",  "Kminus_ProbNNpicorr",  "", 0, 1);
   addObsVar("Piplus_ProbNNpicorr",  "Piplus_ProbNNpicorr",  "", 0, 1);
   addObsVar("Piminus_ProbNNpicorr", "Piminus_ProbNNpicorr", "", 0, 1);
+  */
 }
 
 void AnalysisFit::addCuts(){
 
-  addCut("bdtoutput",float(0.01),float(1.));
+  // DONE AS REQUIREMENTS INSTEAD
+  //addCut("bdtoutput",float(0.),float(1.));
+  //addCut("min_kaon_ProbNNk",double(0.5),double(1.));
+  //addCut("min_pion_ProbNNpiKp",double(0.),double(1.));
+
+  //addCut("bdtoutput",float(0.05),float(1.));
+  //addCut("max_pion_PIDK",double(-999.),double(-0));
+  //addCut("min_kaon_PIDK",double(15.3),double(999.));
 
 }
 
@@ -40,6 +49,31 @@ void AnalysisFit::addDatasets(){
   addDataset("Data2011",            "Data (2011)",         71);
   addDataset("Data2012",            "Data (2012)",         81);
   addDataset("Data",                "Data",                71, 81);
+  addRequirement("Data2011", "bdtoutput",float(0.),float(1.));
+  addRequirement("Data2011", "min_kaon_ProbNNk",double(0.5),double(1.));
+  addRequirement("Data2011", "min_pion_ProbNNpiKp",double(0.),double(1.));
+  addRequirement("Data2011", "B_s0_MMERRoMM",double(0.),double(0.0035));
+  addRequirement("Data2012", "bdtoutput",float(0.),float(1.));
+  addRequirement("Data2012", "min_kaon_ProbNNk",double(0.5),double(1.));
+  addRequirement("Data2012", "min_pion_ProbNNpiKp",double(0.),double(1.));
+  addRequirement("Data2012", "B_s0_MMERRoMM",double(0.),double(0.0035));
+  addRequirement("Data",     "bdtoutput",float(0.),float(1.));
+  addRequirement("Data",     "min_kaon_ProbNNk",double(0.5),double(1.));
+  addRequirement("Data",     "min_pion_ProbNNpiKp",double(0.),double(1.));
+  addRequirement("Data",     "B_s0_MMERRoMM",double(0.),double(0.0035));
+  /*
+  addRequirement("Data2011", "bdtoutput", float(0.08), float(1.) );
+  addRequirement("Data2012", "bdtoutput", float(0.08), float(1.) );
+  addRequirement("Data",     "bdtoutput", float(0.08), float(1.) );
+  addRequirement("Data2011", "min_kaon_PIDK", double(11.93), double(999.) );
+  addRequirement("Data2012", "min_kaon_PIDK", double(11.93), double(999.) );
+  addRequirement("Data",     "min_kaon_PIDK", double(11.93), double(999.) );
+  addRequirement("Data2011", "max_pion_PIDK", double(-999.), double(0.19) );
+  addRequirement("Data2012", "max_pion_PIDK", double(-999.), double(0.19) );
+  addRequirement("Data",     "max_pion_PIDK", double(-999.), double(0.19) );
+  */
+
+  // MC (have no BDT cut to increase stats)
   addDataset("Bs2KstKst",           "Bs2KstKst",           -71, -81);
   addDataset("Bs2KstKst1430",       "Bs2KstKst1430",       -72, -82);
   addDataset("Bs2Kst1430Kst1430",   "Bs2Kst1430Kst1430",   -73, -83);
@@ -93,8 +127,8 @@ void AnalysisFit::constructPdfs(){
 
   // Bd2PhiKst0 pdf
   w->factory("bd2phikst_mean[5100,5350]");
-  w->factory("CBShape::bd2phikst_cb1( B_s0_MM, bd2phikst_mean, bd2phikst_sigma1[100,0,400], bd2phikst_alpha1[0.5,0.,5.], bd2phikst_n1[0.01,0.,10.])");
-  w->factory("CBShape::bd2phikst_cb2( B_s0_MM, bd2phikst_mean, bd2phikst_sigma2[100,0,400], bd2phikst_alpha2[0.5,0.,5.], bd2phikst_n2[0.1,0.,10.])");
+  w->factory("CBShape::bd2phikst_cb1( B_s0_MM, bd2phikst_mean, bd2phikst_sigma1[100,0,400], bd2phikst_alpha1[0.5,0.,10..], bd2phikst_n1[0.01,0.,10.])");
+  w->factory("CBShape::bd2phikst_cb2( B_s0_MM, bd2phikst_mean, bd2phikst_sigma2[100,0,400], bd2phikst_alpha2[-0.5,-10.,0.], bd2phikst_n2[0.1,0.,10.])");
   w->factory("SUM::bd2phikst_pdf( bd2phikst_f1[0.6,0.,1.]*bd2phikst_cb1, bd2phikst_cb2 )");
   defineParamSet("bd2phikst_pdf");
 
@@ -107,8 +141,8 @@ void AnalysisFit::constructPdfs(){
 
   // Lb2pKpipi pdf
   w->factory("lb2pkpipi_mean[5450,5550]");
-  w->factory("Gaussian::lb2pkpipi_g1( B_s0_MM, lb2pkpipi_mean, lb2pkpipi_sigma1[10,0,200] )");
-  w->factory("CBShape::lb2pkpipi_cb1( B_s0_MM, lb2pkpipi_mean, lb2pkpipi_sigma2[10,0,200], lb2pkpipi_alpha[0.04,0.,10.], lb2pkpipi_n[0.1,0.,100.])");
+  w->factory("Gaussian::lb2pkpipi_g1( B_s0_MM, lb2pkpipi_mean, lb2pkpipi_sigma1[10,0,50] )");
+  w->factory("CBShape::lb2pkpipi_cb1( B_s0_MM, lb2pkpipi_mean, lb2pkpipi_sigma2[10,0,50], lb2pkpipi_alpha[0.04,0.,10.], lb2pkpipi_n[0.1,0.,100.])");
   w->factory("SUM::lb2pkpipi_pdf( lb2pkpipi_f1[0.4,0.,1.]*lb2pkpipi_g1, lb2pkpipi_cb1 )");
   defineParamSet("lb2pkpipi_pdf");
 
@@ -120,7 +154,7 @@ void AnalysisFit::constructPdfs(){
   // partial reco bkg
   //w->factory("Bernstein::part_reco_pdf( B_s0_MM, { bkg_bern_p0[1.], bkg_bern_p1[0.5,-1.,1.], bkg_bern_p2[0.5,-1.,1.] } )");
   //w->factory("ExpAndGaus::part_reco_pdf( B_s0_MM, part_reco_mbar(-0.05,0.05),
-  w->factory("ArgusBG::part_reco_pdf( B_s0_MM, part_reco_m0[5000,5400], part_reco_c[-20.0,-100.,-1.], part_reco_p[0.4,0.,1.] )");
+  w->factory("ArgusBG::part_reco_pdf( B_s0_MM, part_reco_m0[5250,5000,5140], part_reco_c[-10.0,-50.,-10.], part_reco_p[0.4,0.,1.] )");
   //w->importClassCode(RooPhysBkg::Class(),kTRUE);
   //w->factory("PhysBkg::part_reco_pdf( B_s0_MM, part_reco_m0[5200,5000,5400], part_reco_c[-20.,-50.,-10.], part_reco_s[20,1,100] )");
   defineParamSet("part_reco_pdf");
@@ -134,7 +168,7 @@ void AnalysisFit::constructPdfs(){
 
   // TOTAL
   //w->factory("SUM::pdf ( bkg_y[0,200e3]*bkg_pdf , bs2kpikpi_y[0,20e3]*bs2kpikpi_pdf , bd2kstkst_y[0,1000]*bd2kstkst_pdf )");
-  w->factory("SUM::pdf ( bkg_y[0,200e3]*bkg_pdf , part_reco_y[0,200e3]*part_reco_pdf , bs2kpikpi_y[0,20e3]*bs2kpikpi_pdf , bd2kstkst_y[0,3000]*bd2kstkst_pdf , bd2phikst_y[1500,5000]*bd2phikst_pdf , bd2rhokst_y[0,10000]*bd2rhokst_pdf , lb2pkpipi_y[0,4000]*lb2pkpipi_pdf, lb2ppipipi_y[0,4000]*lb2ppipipi_pdf)");
+  w->factory("SUM::pdf ( bkg_y[0,200e3]*bkg_pdf , part_reco_y[0,200e3]*part_reco_pdf , bs2kstst_y[0,20e3]*bs2kstkst_pdf , bd2kstkst_y[0,3000]*bd2kstkst_pdf , bd2phikst_y[0,1000]*bd2phikst_pdf , bd2rhokst_y[0,10000]*bd2rhokst_pdf , lb2pkpipi_y[0,4000]*lb2pkpipi_pdf, lb2ppipipi_y[0,4000]*lb2ppipipi_pdf)");
   defineParamSet("pdf");
   defineYieldSet("pdf");
 }
@@ -147,7 +181,9 @@ void AnalysisFit::run(){
   plot("B_s0_MM","Bs2KpiKpiPhaseSpace","bs2kpikpi_pdf");
   // freeze Bs2KpiKpi params
   freeze("bs2kpikpi_pdf");
-  w->var("bs2kpikpi_mean")->setConstant(false);
+  //w->var("bs2kpikpi_sigma1")->setConstant(false);
+  //w->var("bs2kpikpi_sigma2")->setConstant(false);
+  //w->var("bs2kpikpi_mean")->setConstant(false);
 
   // fit Bd2KstKst
   fit("bd2kstkst_pdf","Bd2KstKst");
@@ -191,6 +227,7 @@ void AnalysisFit::run(){
 
   makeDataPlot();
 
+  /*
   sfit("pdf","Data");
   sproject("Data","bs2kpikpi_y");
 
@@ -202,6 +239,8 @@ void AnalysisFit::run(){
   splot("Kst_PT",               "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Kstb_PT",              "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("max_track_chi2",       "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
+  */
+  /*
   splot("Kplus_ProbNNkcorr",    "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Kplus_ProbNNpicorr",   "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Kminus_ProbNNkcorr",   "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
@@ -210,6 +249,7 @@ void AnalysisFit::run(){
   splot("Piplus_ProbNNpicorr",  "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Piminus_ProbNNkcorr",  "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
   splot("Piminus_ProbNNpicorr", "Data_wsweights_proj_bs2kpikpi_y", compDsets, "sWeights", 20);
+  */
 
   w->set("pdf_yield_params")->Print("v");
 

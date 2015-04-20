@@ -58,13 +58,13 @@ bool PreSelection::AnalyseEvent(Looper *l){
   // do physics cuts here:
   //
   // B_s0 Cuts   ( 97% eff )
-	if ( *l->B_s0_DIRA_OWNPV < 0.9995 ) return false;                              // stripping is 0.99
+	if ( *l->B_s0_DIRA_OWNPV < 0.99 ) return false;                               // stripping is 0.99
   if ( (*l->B_s0_ENDVERTEX_CHI2 / *l->B_s0_ENDVERTEX_NDOF ) > 12 ) return false; // in stripping
 	if ( *l->B_s0_TAU < 0 ) return false;                                          // sanity
-	//// mass window
+	////// mass window
   if ( *l->B_s0_MM < 5000 || *l->B_s0_MM > 5800 ) return false;                  // mass window
 
-  // Kst cuts    ( 99% eff )
+  //// Kst cuts    ( 99% eff )
   if ( (*l->Kst_ENDVERTEX_CHI2  / *l->Kst_ENDVERTEX_NDOF  )  > 12 ) return false; // in stripping
   if ( (*l->Kstb_ENDVERTEX_CHI2 / *l->Kstb_ENDVERTEX_NDOF ) > 12 )  return false; // in stripping
 	if ( *l->Kst_PT  < 900 ) return false;                                         // in stripping
@@ -72,31 +72,31 @@ bool PreSelection::AnalyseEvent(Looper *l){
   if ( *l->Kst_MM  < 750 || *l->Kst_MM  > 1700 ) return false;                   // stripping in range (740,2100)
   if ( *l->Kstb_MM < 750 || *l->Kstb_MM > 1700 ) return false;                   // stripping in range (740,2100)
 
-  // 3-body mass ( 99% eff )
-  if ( *l->M_KKPiPlus < 2100 || *l->M_KKPiMinus < 2100 ) return false;           // not in stripping
+  //// 3-body mass ( 99% eff )
+  //if ( *l->M_KKPiPlus < 2200 || *l->M_KKPiMinus < 2200 ) return false;           // not in stripping
 
-  // Track cuts
-  //// chi2/dof  ( 100% eff )
+  //// Track cuts
+  ////// chi2/dof  ( 100% eff )
   if ( *l->Kplus_TRACK_CHI2NDOF   > 4 ) return false;                            // in stripping
   if ( *l->Kminus_TRACK_CHI2NDOF  > 4 ) return false;                            // in stripping
   if ( *l->Piplus_TRACK_CHI2NDOF  > 4 ) return false;                            // in stripping
   if ( *l->Piminus_TRACK_CHI2NDOF > 4 ) return false;                            // in stripping
-  //// PT        ( 100% eff )
+  ////// PT        ( 100% eff )
 	if ( *l->Kplus_PT             < 500 ) return false;                            // in stripping
 	if ( *l->Kminus_PT            < 500 ) return false;                            // in stripping
 	if ( *l->Piplus_PT            < 500 ) return false;                            // in stripping
 	if ( *l->Piminus_PT           < 500 ) return false;                            // in stripping
-  //// PID       ( 98% eff )
-  if ( *l->Kplus_ProbNNk        < 0.0 ) return false;                            // not in stripping
-  if ( *l->Kminus_ProbNNk       < 0.0 ) return false;                            // not in stripping
-  if ( *l->Kplus_ProbNNp        < 0.0 ) return false;                            // not in stripping
-  if ( *l->Kminus_ProbNNp       < 0.0 ) return false;                            // not in stripping
-  if ( *l->Piplus_ProbNNpi      < 0.0 ) return false;                            // not in stripping
-  if ( *l->Piminus_ProbNNpi     < 0.0 ) return false;                            // not in stripping
-  if ( *l->Kplus_isMuon               ) return false;                            // not in stripping
-  if ( *l->Kminus_isMuon              ) return false;                            // not in stripping
-  if ( *l->Piplus_isMuon              ) return false;                            // not in stripping
-  if ( *l->Piminus_isMuon             ) return false;                            // not in stripping
+  ////// PID       ( 98% eff )
+  //if ( *l->Kplus_ProbNNk        < 0.0 ) return false;                            // not in stripping
+  //if ( *l->Kminus_ProbNNk       < 0.0 ) return false;                            // not in stripping
+  //if ( *l->Kplus_ProbNNp        < 0.0 ) return false;                            // not in stripping
+  //if ( *l->Kminus_ProbNNp       < 0.0 ) return false;                            // not in stripping
+  //if ( *l->Piplus_ProbNNpi      < 0.0 ) return false;                            // not in stripping
+  //if ( *l->Piminus_ProbNNpi     < 0.0 ) return false;                            // not in stripping
+  //if ( *l->Kplus_isMuon               ) return false;                            // not in stripping
+  //if ( *l->Kminus_isMuon              ) return false;                            // not in stripping
+  //if ( *l->Piplus_isMuon              ) return false;                            // not in stripping
+  //if ( *l->Piminus_isMuon             ) return false;                            // not in stripping
   // -----------------------------------------------------------------------
 
 	// MC only

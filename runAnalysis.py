@@ -270,5 +270,7 @@ else:
 	sw.Stop()
 	print '%-30s'%'runAnalysis.py', 'Took: %4.2f secs (real) %4.2f secs (CPU)'%(sw.RealTime(),sw.CpuTime())
 
-	del runner
-	del branchdefclass
+	import sys
+	sys.exit()
+	#del branchdefclass
+	#del runner

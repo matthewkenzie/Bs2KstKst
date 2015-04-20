@@ -121,6 +121,45 @@ bool BDTReaderNoPIDSplitYears::AnalyseEvent(Looper *l){
 
 	*l->bdtoutput = readerContainer[year][relBDT]->EvaluateMVA( Form("BDT%dmethod",relBDT) );
 
+  // other variables
+
+  *l->Kplus_ProbNNpiKp   = *l->Kplus_ProbNNpi   * (1.-*l->Kplus_ProbNNk)   * (1.-*l->Kplus_ProbNNp);
+  *l->Kminus_ProbNNpiKp  = *l->Kminus_ProbNNpi  * (1.-*l->Kminus_ProbNNk)  * (1.-*l->Kminus_ProbNNp);
+  *l->Piplus_ProbNNpiKp  = *l->Piplus_ProbNNpi  * (1.-*l->Piplus_ProbNNk)  * (1.-*l->Piplus_ProbNNp);
+  *l->Piminus_ProbNNpiKp = *l->Piminus_ProbNNpi * (1.-*l->Piminus_ProbNNk) * (1.-*l->Piminus_ProbNNp);
+
+  *l->min_pion_PIDK = TMath::Min( *l->Piplus_PIDK, *l->Piminus_PIDK);
+  *l->max_pion_PIDK = TMath::Max( *l->Piplus_PIDK, *l->Piminus_PIDK);
+  *l->min_kaon_PIDK = TMath::Min( *l->Kplus_PIDK, *l->Kminus_PIDK);
+  *l->max_kaon_PIDK = TMath::Max( *l->Kplus_PIDK, *l->Kminus_PIDK);
+
+  *l->min_pion_ProbNNk = TMath::Min( *l->Piplus_ProbNNk, *l->Piminus_ProbNNk);
+  *l->max_pion_ProbNNk = TMath::Max( *l->Piplus_ProbNNk, *l->Piminus_ProbNNk);
+  *l->min_kaon_ProbNNk = TMath::Min( *l->Kplus_ProbNNk, *l->Kminus_ProbNNk);
+  *l->max_kaon_ProbNNk = TMath::Max( *l->Kplus_ProbNNk, *l->Kminus_ProbNNk);
+
+  *l->min_pion_ProbNNpi = TMath::Min( *l->Piplus_ProbNNpi, *l->Piminus_ProbNNpi);
+  *l->max_pion_ProbNNpi = TMath::Max( *l->Piplus_ProbNNpi, *l->Piminus_ProbNNpi);
+  *l->min_kaon_ProbNNpi = TMath::Min( *l->Kplus_ProbNNpi, *l->Kminus_ProbNNpi);
+  *l->max_kaon_ProbNNpi = TMath::Max( *l->Kplus_ProbNNpi, *l->Kminus_ProbNNpi);
+
+  *l->min_pion_ProbNNp = TMath::Min( *l->Piplus_ProbNNp, *l->Piminus_ProbNNp);
+  *l->max_pion_ProbNNp = TMath::Max( *l->Piplus_ProbNNp, *l->Piminus_ProbNNp);
+  *l->min_kaon_ProbNNp = TMath::Min( *l->Kplus_ProbNNp, *l->Kminus_ProbNNp);
+  *l->max_kaon_ProbNNp = TMath::Max( *l->Kplus_ProbNNp, *l->Kminus_ProbNNp);
+
+  *l->min_pion_ProbNNpiKp = TMath::Min( *l->Piplus_ProbNNpiKp, *l->Piminus_ProbNNpiKp);
+  *l->max_pion_ProbNNpiKp = TMath::Max( *l->Piplus_ProbNNpiKp, *l->Piminus_ProbNNpiKp);
+  *l->min_kaon_ProbNNpiKp = TMath::Min( *l->Kplus_ProbNNpiKp, *l->Kminus_ProbNNpiKp);
+  *l->max_kaon_ProbNNpiKp = TMath::Max( *l->Kplus_ProbNNpiKp, *l->Kminus_ProbNNpiKp);
+
+  *l->B_s0_MMERRoMM  = *l->B_s0_MMERR / *l->B_s0_MM;
+
+  // only for tests
+  if (*l->bdtoutput<0.) {
+    return false;
+  }
+
 	// step up counter
 	evCount++;
 

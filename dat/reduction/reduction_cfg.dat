@@ -69,7 +69,7 @@ itype=-89  name=Lb2ppipipi_MC2012             fname=nTuples/Lb2ppipipi/Lb2ppipip
 itype=-89  name=Lb2ppipipi_MC2012             fname=nTuples/Lb2ppipipi/Lb2ppipipi_wide_MC2012_magnetUp_Job217.root                          tname=Bs2Kst0Kst0/DecayTree
 
 # Data
-itype=71  	name=Data2011         				     fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2011_magnetDown_Job25_v2.root                         tname=Bs2Kst0Kst0/DecayTree
-itype=71  	name=Data2011			 	               fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2011_magnetUp_Job24_v2.root                           tname=Bs2Kst0Kst0/DecayTree
-itype=81  	name=Data2012				               fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2012_magnetDown_Job3_v2.root                          tname=Bs2Kst0Kst0/DecayTree
-itype=81 		name=Data2012				               fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2012_magnetUp_Job0_v2.root 							             tname=Bs2Kst0Kst0/DecayTree
+itype=71  	name=Data2011         				    fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2011_magnetDown_Job25_v2.root                         tname=Bs2Kst0Kst0/DecayTree
+itype=71  	name=Data2011			 	              fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2011_magnetUp_Job24_v2.root                           tname=Bs2Kst0Kst0/DecayTree
+itype=81  	name=Data2012				              fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2012_magnetDown_Job3_v2.root                          tname=Bs2Kst0Kst0/DecayTree
+itype=81 		name=Data2012				              fname=nTuples/Data/Bs2Kst0Kst0_wide_Real2012_magnetUp_Job0_v2.root 							              tname=Bs2Kst0Kst0/DecayTree

@@ -18,6 +18,7 @@
 #include "TTree.h"
 #include "TMath.h"
 #include "TH2F.h"
+#include "TH1I.h"
 #include "TStopwatch.h"
 
 #include "../interface/Looper.h"
@@ -53,6 +54,7 @@ class Runner {
     TH2F *hPass;
     TH2F *hFail;
     TH2F *hEff;
+    TH1I *hType;
 		Long64_t nentries;
 		Long64_t firstEntry;
 		Long64_t lastEntry;

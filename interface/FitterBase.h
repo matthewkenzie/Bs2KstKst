@@ -45,6 +45,19 @@ class FitterBase {
     void addRequirement(TString dset, TString name, int val);
     void addRequirement(TString dset, TString name, bool val);
 
+    void addParameter(TString name, double val);
+    void addParameter(TString name, double low, double high);
+    void addParameter(TString name, double val, double low, double high);
+    void addConstraint(TString var);
+    void addConstraint(TString var, double mean, double sigma);
+
+    void makeGaussConstrainedParameter(TString name, TString par, double mean, double sigma);
+    void makeGaussConstraintFromParameter(TString name, TString par);
+
+    void makeGaussianPDF(TString name, TString par);
+    void makeCBPDF(TString name, TString par);
+    void makeDoubleCBPDF(TString name, TString par);
+
     void makeDatasets();
     void fillDatasets(TString fname, TString tname);
 
@@ -76,7 +89,7 @@ class FitterBase {
     void saveSnapshot(TString name, TString pdf);
     void loadSnapshot(TString name);
 
-		void fit(TString pdf, TString data);
+		void fit(TString pdf, TString data, bool constrained=false);
     void freeze(TString pdf);
 
     double integral(TString pdf, TString var, TString scale="", double low=-999, double high=-999);
@@ -86,8 +99,9 @@ class FitterBase {
 
     TCanvas* createCanvas(int canv_w=800, int canv_h=600);
 
-    void plot(TString var, TString data, TString pdf="", TString title="");
+    void plot(TString var, TString data, TString pdf="", int resid=0, TString title=""); // resid==0 (no resid), ==1 (resid hist), ==2 (pull hist)
     void plot(TString var, std::vector<PlotComponent> plotComps, TString fname, const RooArgSet *params=NULL);
+    void plot2D(TString xvar, TString yvar, TString obj);
 
     void splot(TString var, TString data, TString title="", int bins=-1);
     void splot(TString var, TString data, std::vector<TString> compDsets, TString title="", int bins=-1);
@@ -100,6 +114,7 @@ class FitterBase {
     void   setPBoxX(double val) { pBoxX = val; }
     void   setDrawLog(bool val=true) { pDrawLog = val; }
     void   setTitle(TString title) { pTitle = title; }
+    void   setResidType(int type)  { pResidType = type; }
 
     bool verbose;
     bool debug;
@@ -128,6 +143,7 @@ class FitterBase {
     double  pBoxX;
     bool    pDrawLog;
     TString pTitle;
+    int     pResidType;
 };
 
 #endif

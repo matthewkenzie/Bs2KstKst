@@ -30,7 +30,11 @@ Runner::Runner(TString outFileName, TString outTreeName, BranchDef *_branchDef, 
   looper = new Looper(outTree,_branchDef,_name);
 }
 
-Runner::~Runner(){}
+Runner::~Runner(){
+
+  delete looper;
+  //delete outFile;
+}
 
 void Runner::save(){
 	cout << Form("%-30s","Runner::run()") << " " << "Saving tree (" << outTree->GetName() << ") to file (" << outFile->GetName() << ")." << endl;
@@ -42,10 +46,9 @@ void Runner::save(){
   hFail->Write();
   hEff->SetDirectory(outFile);
   hEff->Write();
+  hType->SetDirectory(outFile);
+  hType->Write();
   outFile->Close();
-  //delete looper;
-  //delete outTree;
-  //delete outFile;
 }
 
 void Runner::addLooperTree(TTree *tree, TString name, int itype, int sqrts) {
@@ -160,10 +163,13 @@ void Runner::run(){
   ofstream outf("cutflow.log");
   TTimeStamp s;
   // Configure efficiency historam summary
+  outFile->cd();
   hPass = new TH2F("hPass","nEvents pass",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
   hFail = new TH2F("hFail","nEvents fail",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
   hEff = new TH2F("hEff","Efficiencies",analysers.size()+1,0,analysers.size()+1,looper->treeContainers.size(),0,looper->treeContainers.size());
   setXLabel(1,"Start");
+  // Make histogram which maps the itype
+  hType = new TH1I("hType","itype of each data type",looper->treeContainers.size(),0,looper->treeContainers.size());
 
 	// Summarise results
 	cout << Form("%-30s","Runner::run()") << " " << "Analysers cut flow summary:" << endl;
@@ -174,6 +180,9 @@ void Runner::run(){
     outf << "   " << looper->treeContainers[t].name << " : " << endl;
     // set histogram labels
     setYLabel(t+1,looper->treeContainers[t].name);
+    // set type histogram labels and values
+    hType->GetXaxis()->SetBinLabel(t+1,looper->treeContainers[t].name);
+    hType->SetBinContent(t+1,looper->treeContainers[t].itype);
     // start counters
     int totalpass=0;
     int totaltried=0;

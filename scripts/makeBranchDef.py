@@ -98,10 +98,10 @@ def writeSrc():
 	f.write('\n')
 
 	# write contructor here
-	f.write('%s::%s(){} 																	 \n'%(opts.classname,opts.classname))
+	f.write('%s::%s(){} 																	 \n\n'%(opts.classname,opts.classname))
 
 	# write destructor here
-	f.write('%s::~%s(){} 																	 \n'%(opts.classname,opts.classname))
+	f.write('%s::~%s(){} 																	 \n\n'%(opts.classname,opts.classname))
 
 	# write setInputBranches() here
 	f.write('void %s::setInputBranches(Looper *l, TTree *tree){ \n'%opts.classname)
@@ -130,10 +130,6 @@ def writeSrc():
 	f.write('void %s::cleanVariables(Looper *l) {\n'%opts.classname)
 	for key in varKeys:
 		line = 'delete l->%s;\n'%key
-		f.write('\t'+line)
-	f.write('\n')
-	for key in varKeys:
-		line = 'delete l->b_%s;\n'%key
 		f.write('\t'+line)
 	f.write('}\n')
 	f.write('\n')

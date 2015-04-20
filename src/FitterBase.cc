@@ -6,6 +6,7 @@
 #include "TLegend.h"
 #include "TROOT.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TLine.h"
 #include "TGraphAsymmErrors.h"
 #include "TMath.h"
@@ -17,6 +18,10 @@
 #include "RooPlot.h"
 #include "RooCBShape.h"
 #include "RooAddPdf.h"
+#include "RooConstVar.h"
+
+#include "RooGaussian.h"
+#include "RooCBShape.h"
 
 #include "RooMsgService.h"
 
@@ -34,7 +39,8 @@ FitterBase::FitterBase(TString wsname, TString name, bool _verbose, bool _debug)
   debug(_debug),
   pBoxX(0.22),
   pDrawLog(false),
-  pTitle("")
+  pTitle(""),
+  pResidType(0)
 {
   if ( !debug ) {
     RooMsgService::instance().setGlobalKillBelow(FATAL);
@@ -45,6 +51,9 @@ FitterBase::FitterBase(TString wsname, TString name, bool _verbose, bool _debug)
 	RooArgSet *observables = new RooArgSet();
 	w->defineSet("observables",*observables);
 	delete observables;
+  RooArgSet *constraints = new RooArgSet();
+  w->defineSet("constraints",*constraints);
+  delete constraints;
   colors.push_back(kRed);
   colors.push_back(kBlue);
   colors.push_back(kGreen+1);
@@ -160,7 +169,7 @@ void FitterBase::addRequirement(TString dset, TString name, int val){
 
 void FitterBase::addRequirement(TString dset, TString name, bool val){
   dataSets[dataSets.size()-1].addRequirement(name, val);
-  values_i[name] = false;
+  values_b[name] = false;
   if ( verbose || debug ) val ? print("Added requirement "+name+" is true for dataset "+dset) : print("Added cut "+name+" is false for dataset "+dset);
 }
 
@@ -203,7 +212,7 @@ void FitterBase::fillDatasets(TString fname, TString tname){
 		tree->GetEntry(e);
 
     // print occasional entries in debug mode
-    if ( debug && e%10000==0 ) {
+    if ( debug && e%50000==0 ) {
       printEntry(e);
     }
 
@@ -244,6 +253,10 @@ void FitterBase::save(TString fname){
   TFile *outf = new TFile(fname,"RECREATE");
   outf->cd();
   w->Write();
+  if ( verbose || debug ) {
+    cout << "Printout of workspace: " << endl;
+    w->Print();
+  }
   TDirectory *dir = outf->mkdir("residuals");
   dir->cd();
   for (vector<TObject*>::iterator obj=saveObjsStore.begin(); obj!=saveObjsStore.end(); obj++){
@@ -321,7 +334,7 @@ TCanvas* FitterBase::createCanvas(int canv_w, int canv_h){
   return c;
 }
 
-void FitterBase::plot(TString var, TString data, TString pdf, TString title){
+void FitterBase::plot(TString var, TString data, TString pdf, int resid, TString title){
 
   w->pdf(pdf) ?
     print("Plotting data: "+data+" and pdf: "+pdf+" in variable: "+var) :
@@ -350,11 +363,55 @@ void FitterBase::plot(TString var, TString data, TString pdf, TString title){
     TObject *obj = plot->getObject(plot->numItems()-1);
     leg->AddEntry(obj,w->pdf(pdf)->GetTitle(),"L");
   }
-  TCanvas *canv = createCanvas();
-  canv->SetBottomMargin(0.2);
-  plot->Draw();
-  leg->Draw("same");
-  if ( title != "" ) text->Draw("same");
+  RooHist *underHist;
+  if (w->pdf(pdf) && w->data(data) && resid>0) {
+    if (resid==1) underHist = plot->residHist();
+    if (resid==2) underHist = plot->pullHist();
+  }
+  TCanvas *canv;
+  if (resid==0) {
+    canv = createCanvas();
+    canv->SetBottomMargin(0.2);
+    plot->Draw();
+    leg->Draw("same");
+    if ( title != "" ) text->Draw("same");
+  }
+  else {
+    canv = createCanvas(800,800);
+    TPad *upperPad = new TPad(Form("%s_upper",canv->GetName()),"",0.,0.33,1.,1.);
+    TPad *lowerPad = new TPad(Form("%s_lower",canv->GetName()),"",0.,0.,1.,0.33);
+    canv->cd();
+    upperPad->Draw();
+    lowerPad->Draw();
+    // under hist style
+    underHist->GetXaxis()->SetRangeUser(plot->GetXaxis()->GetXmin(), plot->GetXaxis()->GetXmax());
+    underHist->GetXaxis()->SetTitle(plot->GetXaxis()->GetTitle());
+    if (resid==1) underHist->GetYaxis()->SetTitle("Residual");
+    if (resid==2) underHist->GetYaxis()->SetTitle("Pull");
+    underHist->GetXaxis()->SetLabelSize(0.12);
+    underHist->GetYaxis()->SetLabelSize(0.12);
+    underHist->GetXaxis()->SetTitleSize(0.2);
+    underHist->GetXaxis()->SetTitleOffset(0.7);
+    underHist->GetYaxis()->SetTitleSize(0.18);
+    underHist->GetYaxis()->SetTitleOffset(0.38);
+    // canv style and plot
+    plot->GetXaxis()->SetTitle("");
+    upperPad->SetBottomMargin(0.1);
+    upperPad->cd();
+    plot->Draw();
+    leg->Draw("same");
+    if ( title != "" ) text->Draw("same");
+    canv->cd();
+    lowerPad->SetTopMargin(0.05);
+    lowerPad->SetBottomMargin(0.35);
+    lowerPad->cd();
+    underHist->Draw("AP");
+    TLine line;
+    line.SetLineWidth(3);
+    line.SetLineColor(kBlue);
+    line.DrawLine(plot->GetXaxis()->GetXmin(),0.,plot->GetXaxis()->GetXmax(),0.);
+    //underHist->Draw("APsame");
+  }
   canv->Update();
   canv->Modified();
   canv->Print(Form("plots/%s/pdf/v%s_d%s_p%s.pdf",fitterName.Data(),var.Data(),data.Data(),pdf.Data()));
@@ -372,8 +429,16 @@ void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fnam
     print("\t "+plotComps[i].name,true);
   }
 
-  TCanvas *canv = createCanvas();
-  canv->SetLeftMargin(0.18);
+  int ycanv         = pResidType ? 800 : 600 ;
+  double ypadchange = pResidType ? 0.33 : 0. ;
+  TCanvas *canv = createCanvas(800,ycanv);
+  TPad *upperPad = new TPad(Form("%s_upper",canv->GetName()),"",0.,ypadchange,1.,1.);
+  TPad *lowerPad = new TPad(Form("%s_lower",canv->GetName()),"",0.,0.,1.,ypadchange);
+  canv->cd();
+  upperPad->Draw();
+  lowerPad->Draw();
+  upperPad->SetLeftMargin(0.18);
+  lowerPad->SetLeftMargin(0.18);
   RooPlot *plot = w->var(var)->frame();
   TString xtitle = w->var(var)->GetTitle();
   if (TString(w->var(var)->getUnit())!=TString("")) xtitle = Form("%s (%s)",w->var(var)->GetTitle(),w->var(var)->getUnit());
@@ -383,10 +448,12 @@ void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fnam
 
   TLegend *leg;
   if ( plotComps.size()<7 ) {
-    leg = new TLegend(0.6,0.6,0.9,0.9);
+    double yleg = pResidType ? 0.5 : 0.6 ;
+    leg = new TLegend(0.6,yleg,0.9,0.9);
   }
   else {
-    leg = new TLegend(0.6,0.5,0.9,0.9);
+    double yleg = pResidType ? 0.4 : 0.5 ;
+    leg = new TLegend(0.6,yleg,0.9,0.9);
   }
   leg->SetFillColor(0);
 
@@ -394,6 +461,17 @@ void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fnam
     plotComps[i].plotOn(w,plot,leg);
   }
 
+  // set specifics for residuals
+  RooHist *underHist;
+  if ( pResidType>0 ) {
+    if (pResidType==1) underHist = plot->residHist();
+    if (pResidType==2) underHist = plot->pullHist();
+    underHist->GetXaxis()->SetTitle(plot->GetXaxis()->GetTitle());
+    plot->GetXaxis()->SetTitle("");
+    upperPad->SetBottomMargin(0.1);
+  }
+
+  upperPad->cd();
   plot->Draw();
   leg->Draw("same");
 
@@ -436,6 +514,38 @@ void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fnam
     pVals->Draw("same");
   }
 
+  // plot resid if required
+  if ( pResidType>0 ) {
+    underHist->GetXaxis()->SetRangeUser(plot->GetXaxis()->GetXmin(), plot->GetXaxis()->GetXmax());
+    if (pResidType==1) underHist->GetYaxis()->SetTitle("Residual");
+    if (pResidType==2) underHist->GetYaxis()->SetTitle("Pull");
+    underHist->GetXaxis()->SetLabelSize(0.12);
+    underHist->GetYaxis()->SetLabelSize(0.12);
+    underHist->GetXaxis()->SetTitleSize(0.2);
+    underHist->GetXaxis()->SetTitleOffset(0.7);
+    underHist->GetYaxis()->SetTitleSize(0.18);
+    underHist->GetYaxis()->SetTitleOffset(0.38);
+    lowerPad->SetTopMargin(0.05);
+    lowerPad->SetBottomMargin(0.35);
+    lowerPad->cd();
+    underHist->Draw("AP");
+    // line at zero
+    TLine line;
+    line.SetLineWidth(3);
+    line.SetLineColor(kBlue);
+    line.DrawLine(plot->GetXaxis()->GetXmin(),0.,plot->GetXaxis()->GetXmax(),0.);
+    // lines at 2 sigma
+    if (pResidType==2) {
+      TLine lineErr;
+      lineErr.SetLineWidth(2);
+      lineErr.SetLineColor(kBlack);
+      lineErr.SetLineStyle(2);
+      lineErr.DrawLine(plot->GetXaxis()->GetXmin(),2.,plot->GetXaxis()->GetXmax(),2.);
+      lineErr.DrawLine(plot->GetXaxis()->GetXmin(),-2.,plot->GetXaxis()->GetXmax(),-2.);
+    }
+    //underHist->Draw("APsame");
+  }
+
   canv->Update();
   canv->Modified();
   canv->Print(Form("plots/%s/pdf/%s.pdf",fitterName.Data(),fname.Data()));
@@ -443,27 +553,98 @@ void FitterBase::plot(TString var, vector<PlotComponent> plotComps, TString fnam
   canv->Print(Form("plots/%s/C/%s.C",    fitterName.Data(),fname.Data()));
 
   if ( pDrawLog ) {
-    TCanvas *canvLog = createCanvas();
-    canvLog->SetLeftMargin(0.18);
-    plot->GetYaxis()->SetRangeUser(1.,plot->GetMaximum()*2);
-    plot->Draw();
-    canvLog->SetLogy();
+    TCanvas *canvLog = createCanvas(800,ycanv);
+    TPad *upperPadLog = new TPad(Form("%s_upper",canv->GetName()),"",0.,ypadchange,1.,1.);
+    TPad *lowerPadLog = new TPad(Form("%s_lower",canv->GetName()),"",0.,0.,1.,ypadchange);
+    canvLog->cd();
+    upperPadLog->Draw();
+    lowerPadLog->Draw();
+    upperPadLog->SetLeftMargin(0.18);
+    lowerPadLog->SetLeftMargin(0.18);
+    RooPlot *logplot = (RooPlot*)plot->Clone();
+    logplot->GetYaxis()->SetRangeUser(1.,plot->GetMaximum()*2);
+    upperPadLog->cd();
+    logplot->Draw();
+    upperPadLog->SetLogy();
+    if ( pResidType>0 ) {
+      upperPadLog->SetBottomMargin(0.1);
+      lowerPadLog->SetTopMargin(0.05);
+      lowerPadLog->SetBottomMargin(0.35);
+      lowerPadLog->cd();
+      underHist->Draw("AP");
+      // line at zero
+      TLine line;
+      line.SetLineWidth(3);
+      line.SetLineColor(kBlue);
+      line.DrawLine(plot->GetXaxis()->GetXmin(),0.,plot->GetXaxis()->GetXmax(),0.);
+      // lines at 2 sigma
+      if (pResidType==2) {
+        TLine lineErr;
+        lineErr.SetLineWidth(2);
+        lineErr.SetLineColor(kBlack);
+        lineErr.SetLineStyle(2);
+        lineErr.DrawLine(plot->GetXaxis()->GetXmin(),2.,plot->GetXaxis()->GetXmax(),2.);
+        lineErr.DrawLine(plot->GetXaxis()->GetXmin(),-2.,plot->GetXaxis()->GetXmax(),-2.);
+      }
+    }
     canvLog->Update();
     canvLog->Modified();
     canvLog->Print(Form("plots/%s/pdf/%s_log.pdf",fitterName.Data(),fname.Data()));
     canvLog->Print(Form("plots/%s/png/%s_log.png",fitterName.Data(),fname.Data()));
     canvLog->Print(Form("plots/%s/C/%s_log.C",    fitterName.Data(),fname.Data()));
+
+    TCanvas *totCanv = createCanvas(1600,ycanv);
+    totCanv->Divide(2,1);
+    totCanv->cd(1);
+    canv->DrawClonePad();
+    totCanv->cd(2);
+    canvLog->DrawClonePad();
+    totCanv->Update();
+    totCanv->Modified();
+    totCanv->Print(Form("plots/%s/pdf/%s_tot.pdf",fitterName.Data(),fname.Data()));
+    totCanv->Print(Form("plots/%s/png/%s_tot.png",fitterName.Data(),fname.Data()));
+    totCanv->Print(Form("plots/%s/C/%s_tot.C",fitterName.Data(),fname.Data()));
   }
 }
 
-void FitterBase::fit(TString pdf, TString data) {
+void FitterBase::plot2D(TString xvar, TString yvar, TString obj) {
+
+  // create histogram
+  w->var(xvar)->setBins(50);
+  w->var(yvar)->setBins(50);
+  TH2F* th2 = w->var(xvar)->createHistogram(Form("th2_%s_vs_%s",xvar.Data(),yvar.Data()),*w->var(yvar));
+
+  TCanvas *canv = createCanvas();
+
+  // check for data first
+  if (w->data(obj)) {
+    w->data(obj)->fillHistogram(th2,RooArgSet(*w->var(xvar),*w->var(yvar)));
+    th2->Draw("LEGO2");
+  }
+  if (w->pdf(obj)) {
+    w->pdf(obj)->fillHistogram(th2,RooArgSet(*w->var(xvar),*w->var(yvar)));
+    th2->Draw("SURF2");
+  }
+  TString fname = Form("th2_%s_vs_%s",xvar.Data(),yvar.Data());
+  canv->Print(Form("plots/%s/C/%s.C",    fitterName.Data(),fname.Data()));
+  canv->Print(Form("plots/%s/pdf/%s.pdf",    fitterName.Data(),fname.Data()));
+  canv->Print(Form("plots/%s/png/%s.png",    fitterName.Data(),fname.Data()));
+
+}
+
+void FitterBase::fit(TString pdf, TString data, bool constrained) {
 
   print("Fitting pdf: "+pdf+" to dataset: "+data);
   if (w->pdf(pdf) && w->data(data)) {
-    w->pdf(pdf)->fitTo(*w->data(data));
+    if ( constrained ){
+      w->pdf(pdf)->fitTo(*w->data(data),Constrained());
+    }
+    else {
+      w->pdf(pdf)->fitTo(*w->data(data));
+    }
   }
   saveSnapshot(Form("%s_fit",pdf.Data()),pdf);
-  if ( verbose ) {
+  if ( verbose && w->set(Form("%s_params",pdf.Data())) ) {
     print("Fitted values: ");
     w->set(Form("%s_params",pdf.Data()))->Print("v");
   }
@@ -637,36 +818,38 @@ void FitterBase::splot(TString var, TString data, vector<TString> compDsets, TSt
   canv->Print(Form("plots/%s/png/splot_v%s.png",fitterName.Data(),var.Data()));
   canv->Print(Form("plots/%s/C/splot_v%s.C",    fitterName.Data(),var.Data()));
 
-  TCanvas *canvResid = createCanvas();
-  for (unsigned int i=0; i<compHists.size(); i++){
-    RooHist *residHist = new RooHist(*dh,*compHists[i],1.,-1.,RooAbsData::SumW2);
-    residHist->SetTitle("Residual");
-    residHist->GetYaxis()->SetTitle("Data-MC");
-    residHist->GetXaxis()->SetTitle(xtitle);
-    residHist->GetXaxis()->SetTitleOffset(0.8);
-    residHist->GetYaxis()->SetTitleOffset(0.7);
-    residHist->SetLineColor(colors[i]);
-    residHist->SetMarkerColor(colors[i]);
-    if (i==0) {
-      residHist->Draw();
+  if (compHists.size()>0) {
+    TCanvas *canvResid = createCanvas();
+    for (unsigned int i=0; i<compHists.size(); i++){
+      RooHist *residHist = new RooHist(*dh,*compHists[i],1.,-1.,RooAbsData::SumW2);
+      residHist->SetTitle("Residual");
+      residHist->GetYaxis()->SetTitle("Data-MC");
+      residHist->GetXaxis()->SetTitle(xtitle);
+      residHist->GetXaxis()->SetTitleOffset(0.8);
+      residHist->GetYaxis()->SetTitleOffset(0.7);
+      residHist->SetLineColor(colors[i]);
+      residHist->SetMarkerColor(colors[i]);
+      if (i==0) {
+        residHist->Draw();
+      }
+      else {
+        residHist->Draw("same");
+      }
+      residHist->SetDrawOption("AP");
+      canvResid->Update();
+      canvResid->Modified();
     }
-    else {
-      residHist->Draw("same");
-    }
-    residHist->SetDrawOption("AP");
+    TLine *l = new TLine();
+    l->SetLineColor(kBlack);
+    l->SetLineStyle(kDashed);
+    l->SetLineWidth(3);
+    l->DrawLine(w->var(var)->getMin(),0.,w->var(var)->getMax(),0.);
     canvResid->Update();
     canvResid->Modified();
+    canvResid->Print(Form("plots/%s/pdf/splot_resid_v%s.pdf",fitterName.Data(),var.Data()));
+    canvResid->Print(Form("plots/%s/png/splot_resid_v%s.png",fitterName.Data(),var.Data()));
+    canvResid->Print(Form("plots/%s/C/splot_resid_v%s.C",    fitterName.Data(),var.Data()));
   }
-  TLine *l = new TLine();
-  l->SetLineColor(kBlack);
-  l->SetLineStyle(kDashed);
-  l->SetLineWidth(3);
-  l->DrawLine(w->var(var)->getMin(),0.,w->var(var)->getMax(),0.);
-  canvResid->Update();
-  canvResid->Modified();
-  canvResid->Print(Form("plots/%s/pdf/splot_resid_v%s.pdf",fitterName.Data(),var.Data()));
-  canvResid->Print(Form("plots/%s/png/splot_resid_v%s.png",fitterName.Data(),var.Data()));
-  canvResid->Print(Form("plots/%s/C/splot_resid_v%s.C",    fitterName.Data(),var.Data()));
 
 }
 
@@ -811,4 +994,110 @@ void FitterBase::printEntry(int entry){
   }
   print("----------------------------------------------",true);
 
+}
+
+void FitterBase::addParameter(TString name, double val) {
+  RooRealVar *var = new RooRealVar(name, name, val);
+  var->setConstant(false);
+  var->removeRange();
+  w->import(*var);
+  if ( debug ) {
+    print("Added variable with name "+name);
+  }
+  delete var;
+}
+
+void FitterBase::addParameter(TString name, double val, double low, double high) {
+  addParameter(name, val);
+  w->var(name)->setRange(low,high);
+}
+
+void FitterBase::addParameter(TString name, double low, double high) {
+  double val = low + (high-low)/2.;
+  addParameter(name, val, low, high);
+}
+
+void FitterBase::addConstraint(TString var) {
+  if (!w->var(var)) {
+    cerr << "WARNING -- FitterBase::addConstraint() -- variable " << var << " not in workspace. Ignoring." << endl;
+    return;
+  }
+  addConstraint(var, w->var(var)->getVal(), w->var(var)->getError());
+}
+
+void FitterBase::addConstraint(TString var, double mean, double sigma) {
+  TString name = var + "_constraint";
+  if (w->pdf(name)) {
+    cerr << "WARNING -- FitterBase::addConstraint() -- constraint pdf " << name << " already in workspace. Ignoring." << endl;
+    return;
+  }
+  if (!w->var(var)) {
+    cerr << "WARNING -- FitterBase::addConstraint() -- variable " << var << " not in workspace. Ignoring." << endl;
+    return;
+  }
+  RooGaussian *constraint = new RooGaussian(name,name,*w->var(var),RooConst(mean),RooConst(sigma));
+  w->import(*constraint);
+  delete constraint;
+  ((RooArgSet*)w->set("constraints"))->add(*w->pdf(name));
+}
+
+void FitterBase::makeGaussConstrainedParameter(TString name, TString par, double mean, double sigma) {
+  if (w->pdf(name)) {
+    cerr << "WARNING -- FitterBase::makeGaussConstrainedParameter() -- gaussian " << name << "already in workspace. Ignoring." << endl;
+    return;
+  }
+  if (!w->var(par)) {
+    cerr << "WARNING -- FitterBase::makeGaussConstrainedParameter() -- parameter " << par << " not found in workspace. Ignoring." << endl;
+    return;
+  }
+  w->factory( Form("Gaussian::%s(%s,%f,%f)",name.Data(),par.Data(),mean,sigma) );
+}
+
+void FitterBase::makeGaussConstraintFromParameter(TString name, TString par) {
+
+  if (w->pdf(name)) {
+    cerr << "WARNING -- FitterBase::makeGaussConstrainedParameter() -- gaussian " << name << "already in workspace. Ignoring." << endl;
+    return;
+  }
+  if (!w->var(par)) {
+    cerr << "WARNING -- FitterBase::makeGaussConstrainedParameter() -- parameter " << par << " not found in workspace. Ignoring." << endl;
+    return;
+  }
+  w->factory( Form("Gaussian::%s(%s,%f,%f)",name.Data(),par.Data(),w->var(par)->getVal(),w->var(par)->getError()) );
+
+}
+
+void FitterBase::makeGaussianPDF(TString name, TString par) {
+
+  addParameter(name+"_mean", 5300);
+  addParameter(name+"_sigma", 20);
+  RooGaussian *pdf = new RooGaussian(name,name,*w->var(par),*w->var(name+"_mean"),*w->var(name+"_sigma"));
+  w->import(*pdf);
+  delete pdf;
+  defineParamSet(name);
+
+}
+
+void FitterBase::makeCBPDF(TString name, TString par) {
+
+  addParameter(name+"_mean"  , 5300 );
+  addParameter(name+"_sigma" , 20   );
+  addParameter(name+"_alpha" , 0.5  );
+  addParameter(name+"_n"     , 0.5  );
+  RooCBShape *pdf = new RooCBShape(name,name,*w->var(par),*w->var(name+"_mean"),*w->var(name+"_sigma"),*w->var(name+"_alpha"),*w->var(name+"_n"));
+  w->import(*pdf);
+  delete pdf;
+  defineParamSet(name);
+}
+
+void FitterBase::makeDoubleCBPDF(TString name, TString par) {
+
+  addParameter(name+"_mean"  , 5300 );
+  addParameter(name+"_sigma" , 20   );
+  addParameter(name+"_alpha" , 0.5  );
+  addParameter(name+"_n"     , 0.5  );
+  RooCBShape *pdf = new RooCBShape(name,name,*w->var(par),*w->var(name+"_mean"),*w->var(name+"_sigma"),*w->var(name+"_alpha"),*w->var(name+"_n"));
+  w->import(*pdf);
+  delete pdf;
+  defineParamSet(name);
 }

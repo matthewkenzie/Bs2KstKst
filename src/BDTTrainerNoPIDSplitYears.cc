@@ -18,7 +18,7 @@ BDTTrainerNoPIDSplitYears::BDTTrainerNoPIDSplitYears(TString _name):
 	BaseAnalyser(_name),
 	outfilename("MVATrainingNoPIDSplitYearsOutput.root"),
 	evCount(0),
-	numberOfBDTs(2),
+	numberOfBDTs(4),
   doBDTCycling(true)
 {
   if (!doBDTCycling) numberOfBDTs=1;
@@ -96,8 +96,8 @@ void BDTTrainerNoPIDSplitYears::Term(Looper *l){
 
 		// TMVA methods here
 		cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Booking TMVA methods" << endl;
-		factoryContainer["2011"][b]->BookMethod( Types::kBDT, Form("2011_BDT_%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
-		factoryContainer["2012"][b]->BookMethod( Types::kBDT, Form("2012_BDT_%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=3:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		factoryContainer["2011"][b]->BookMethod( Types::kBDT, Form("2011_BDT_%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=5:NegWeightTreatment=IgnoreNegWeightsInTraining" );
+		factoryContainer["2012"][b]->BookMethod( Types::kBDT, Form("2012_BDT_%d",b) , "!H:!V:VarTransform=D,G:NTrees=300:BoostType=AdaBoost:UseBaggedBoost:nCuts=-1:MinNodeSize=5:MaxDepth=5:NegWeightTreatment=IgnoreNegWeightsInTraining" );
 
 		// Train, Test and Evaluate
 		cout << Form("%-30s","BDTTrainerNoPIDSplitYears::Term()") << " " << "Train, test and evaluate TMVA methods" << endl;

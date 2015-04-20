@@ -14,13 +14,15 @@ canvs=[]
 xlabels = []
 ylabels = []
 
-def fillDict(hName, isEff=False):
+def fillDict(hName, isEff=False, skipStart=True):
   theDict = {}
   for f in infiles:
     tf = r.TFile.Open(f)
     hist = tf.Get(hName)
     for xbin in range(1,hist.GetNbinsX()+1):
       analyser_label = hist.GetXaxis().GetBinLabel(xbin)
+      if skipStart and analyser_label=='Start': continue
+      if 'BDTReader' in analyser_label: continue
       if analyser_label not in theDict.keys():
         theDict[analyser_label] = {}
         if analyser_label not in xlabels: xlabels.append(analyser_label)
@@ -56,6 +58,7 @@ def fillDict(hName, isEff=False):
 
 def convertDictToTH2(theDict, name):
 
+  global ylabels
   xbins = len(theDict.keys())
   ybins = len(theDict[theDict.keys()[0]])
 
@@ -66,12 +69,16 @@ def convertDictToTH2(theDict, name):
   assert( len(ylabels)==ybins )
 
   ylabels.sort()
+  ylabels_mc   = [ x for x in ylabels if 'Data' not in x ]
+  ylabels_data = [ x for x in ylabels if 'Data' in x ]
+  ylabels = sorted(ylabels_mc) + sorted(ylabels_data)
+  ylabels.reverse()
 
   th2f = r.TH2F(name,name,xbins,0,xbins,ybins,0,ybins)
 
   for xbin, xlabel in enumerate(xlabels):
     yDict = theDict[xlabel]
-    th2f.GetXaxis().SetBinLabel(xbin+1,xlabel)
+    th2f.GetXaxis().SetBinLabel(xbin+1,tidyLabelX(xlabel))
     for ybin, ylabel in enumerate(ylabels):
       th2f.GetYaxis().SetBinLabel(ybin+1,tidyLabel(ylabel))
       bin2d = th2f.FindBin(xbin,ybin)
@@ -92,9 +99,18 @@ def tidyLabel(label):
   new_label = new_label.replace('HighMass','(HM)')
   return new_label
 
+def tidyLabelX(label):
+  new_label = label
+  if 'ApplyBDTAndPIDCuts' in label:  new_label = 'BDT + PID Cut'
+  if 'BDTReader' in label:           new_label = 'BDT Cut'
+  if 'PreSelection' in label:        new_label = 'Pre-selection'
+  if 'TruthMatching' in label:       new_label = 'Truth Matching'
+  if 'PIDSelection' in label:        new_label = 'PID Cut'
+  return new_label
+
 def draw(th2f, name, textformat='', col=False):
 
-  canvs.append(r.TCanvas(name,name,1100,600))
+  canvs.append(r.TCanvas(name,name,1200,700))
   canvs[-1].SetLeftMargin(0.3)
   if col: canvs[-1].SetRightMargin(0.15)
   else: canvs[-1].SetRightMargin(0.05)
@@ -105,8 +121,22 @@ def draw(th2f, name, textformat='', col=False):
   th2f.SetMarkerSize(2.0)
   #if col: th2f.SetMarkerColor(r.kWhite)
   th2f.SetStats(0)
+  th2f.GetZaxis().SetTitle("Efficiency (%)")
+  th2f.GetZaxis().SetTitleOffset(0.7)
+  th2f.GetZaxis().SetTitleSize(0.06)
   if col: th2f.Draw("TEXTcolz")
   else: th2f.Draw("TEXT")
+  ## highlight total
+  #box = r.TBox()
+  #box.SetLineWidth(6)
+  #box.SetLineColor(r.kRed)
+  #box.SetFillColor(0)
+  #box.SetFillStyle(0)
+  #box.DrawBox(th2f.GetNbinsX()-1,0.,th2f.GetNbinsX(),th2f.GetNbinsY())
+  #line = r.TLine()
+  #line.SetLineWidth(6)
+  #line.SetLineColor(r.kWhite)
+  #line.DrawLine(th2f.GetNbinsX()-1,0.,th2f.GetNbinsX()-1,th2f.GetNbinsY())
   canvs[-1].Update()
   canvs[-1].Modified()
   canvs[-1].Print("plots/eff_%s.pdf"%name)
